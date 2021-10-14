@@ -188,10 +188,18 @@ void recursivePolyEval(Ctxt& ret, const NTL::ZZX& poly, long k,
 }
 
 //! tools for comparison
-Comparator* generate_comparator(){
+Comparator* generate_comparator(bool output){
+	/**
+	 * func
+	 * 		生成比较器
+	 * para
+	 * 		output:是否输出报错信息
+	 * return
+	 * 		指向比较器的指针
+	 */ 
 
 	CircuitType type = UNI;         // 比较电路的类型
-    bool verbose = true ;           // 是否输出错误信息
+    bool verbose = output ;           // 是否输出错误信息
     unsigned long d = 2;            // field extension degree 域扩展次数
 
     unsigned long expansion_len = 3;    //!! maximal number of digits in a number

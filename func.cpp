@@ -133,14 +133,17 @@ void generate_beaver_set(int n, int data_range, vector<vector<int>>&c1_list, vec
 	}
 }
 
-void secret_share_N(vector<int>N, vector<int>&N1, vector<int>&N2){
+void secret_share_N(vector<int>N, cloud_one& c1, cloud_two& c2){
 	/**
-	 * func: 将由01构成的N数组，划分为由01构成的N1，N2两个点集
+	 * func: 将由01构成的N数组，划分为由01构成的N1，N2两个点集，并分别存入c1和c2中
      * *checked
 	 */
+    vector<int>N1(N), N2(N);
 	srand(time(NULL));
 	for(int i = 0; i < N.size(); ++i){
 		N1[i] = rand() % 2;
 		N2[i] = N1[i] ^ N[i];
 	}
+    c1.kd_tree.push_back(N1);
+    c2.kd_tree.push_back(N2);
 }

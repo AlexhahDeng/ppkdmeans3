@@ -8,14 +8,9 @@
 #include <cmath>
 #include <fstream>
 #include <sstream>
+#include "cloud.h"
 
 using namespace std;
-
-struct point {
-    int index;
-    vector<int>data;
-};
-
 
 //! tools for myself
 
@@ -38,4 +33,4 @@ vector<vector<int>> sort_data(vector<point>point_list);
 void generate_beaver_set(int n, int data_range, vector<vector<int>>&c1_list, vector<vector<int>>&c2_list);
 
 // 生成秘密共享位置信息
-void secret_share_N(vector<int>N, vector<int>&N1, vector<int>&N2);
+void secret_share_N(vector<int>N, cloud_one& c1, cloud_two& c2);            
