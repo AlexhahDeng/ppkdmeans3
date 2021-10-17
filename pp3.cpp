@@ -50,22 +50,22 @@ void generate_kd_tree(cloud_one& c1, cloud_two& c2){
     return; 
 }
 int main(){
-    Comparator* comparator = generate_comparator(false);
+    Comparator* comparator = generate_comparator(true);
 
-    // initialization 
-    int data_num = 5, dimension = 2;
-    vector<point>point_list, c1_data, c2_data;
-    random(point_list, data_num, dimension);
-    vector<vector<int>>sorted_index = sort_data(point_list);
-    divide_data(point_list, 10000, c1_data, c2_data);
+    // // initialization 
+    // int data_num = 5, dimension = 2;
+    // vector<point>point_list, c1_data, c2_data;
+    // random(point_list, data_num, dimension);
+    // vector<vector<int>>sorted_index = sort_data(point_list);
+    // divide_data(point_list, 10000, c1_data, c2_data);
 
-    cloud_one c1(c1_data, data_num, dimension, comparator);
-    cloud_two c2(c2_data, data_num, dimension, comparator, sorted_index);
+    // cloud_one c1(c1_data, data_num, dimension, comparator);
+    // cloud_two c2(c2_data, data_num, dimension, comparator, sorted_index);
 
-    generate_beaver_set(data_num, 100, c1.beaver_list, c2.beaver_list);
+    // generate_beaver_set(data_num, 100, c1.beaver_list, c2.beaver_list);
 
-    // generate kd tree
-    generate_kd_tree(c1, c2);
-
+    // // generate kd tree
+    // generate_kd_tree(c1, c2)      ;
+    comparator->sort();
     return 0;
 }
