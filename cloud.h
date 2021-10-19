@@ -40,7 +40,7 @@ class cloud_one: public cloud{
     vector<vector<int>> calculate_xi_Ni_square(vector<vector<int>>&e, vector<vector<int>>&f);
 };
 
-class cloud_two: public cloud{
+class cloud_two: public clo     ud{
     public:
     vector<vector<int>>sorted_index;
 
