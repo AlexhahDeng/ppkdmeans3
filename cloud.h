@@ -24,7 +24,12 @@ class cloud{
     // 计算xi * Ni的中间结果e,f
     void calculate_ef_xN(int N_index, vector<vector<int>>&e, vector<vector<int>>&f);
 
+    // 计算(xi*Ni)^2 的中间结果e，f
     void calculate_ef_xN_square(vector<vector<int>>xN, vector<vector<int>>&e, vector<vector<int>>&f);
+
+    // 计算(Σxi*Ni)^2的中间结果ef（存放在一个二维数组中
+    void calculate_ef_vari(vector<int>sum_xN, vector<vector<int>>&ef);
+
 };
 
 class cloud_one: public cloud{
@@ -38,9 +43,12 @@ class cloud_one: public cloud{
 
     // cloud_two calculate (xi*Ni)^2_1 = f*a1 + e*b1 + c1
     vector<vector<int>> calculate_xi_Ni_square(vector<vector<int>>&e, vector<vector<int>>&f);
+
+    // cloud_one calculate (Σxi*Ni)^2_1 = f*a1 + e*b1 + c1
+    vector<int> calculate_sec_part(vector<vector<int>>ef);
 };
 
-class cloud_two: public clo     ud{
+class cloud_two: public cloud{
     public:
     vector<vector<int>>sorted_index;
 
@@ -52,4 +60,6 @@ class cloud_two: public clo     ud{
     // cloud_two calculate (xi*Ni)^2_2 = e*f + f*a2 + e*b2 + c2
     vector<vector<int>> calculate_xi_Ni_square(vector<vector<int>>&e, vector<vector<int>>&f);
 
+    // cloud_two calculate (Σxi*Ni)^2_2 = e*f + f*a2 + e*b2 +c2
+    vector<int> calculate_sec_part(vector<vector<int>>ef);
 };

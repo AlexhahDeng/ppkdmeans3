@@ -7,7 +7,7 @@ cloud::cloud(vector<point>point_list, int data_num, int dimension, Comparator* c
     this->dimension = dimension;
     this->comparator = comparator;
     this->beaver_list = vector<vector<int>>(data_num);
-    cout<<"this is cloud!"<<endl;
+    // cout<<"this is cloud!"<<endl;
 }
 
 void cloud::calculate_ef_xN(int N_index, vector<vector<int>>&e, vector<vector<int>>&f){
@@ -36,10 +36,19 @@ void cloud::calculate_ef_xN_square(vector<vector<int>>xN, vector<vector<int>>&e,
     }
 }
 
+void cloud::calculate_ef_vari(vector<int>sum_xN, vector<vector<int>>&ef){
+    // calculate (Σxi*Ni)^2 middle result e and f
+    // first dimension is e, second dimension is f
+    for(int i = 0; i < ef.size(); ++i){
+        ef[i][0] = sum_xN[i] - beaver_list[i][0];   // e
+        ef[i][1] = sum_xN[i] - beaver_list[i][1];   // f
+    }
+}
+
 // cloud_one
 cloud_one::cloud_one(vector<point>point_list, int data_num, int dimension, Comparator* comparator):
             cloud(point_list, data_num, dimension, comparator){
-                cout<<"this is cloud_one"<<endl;
+                // cout<<"this is cloud_one"<<endl;
             }
 
 vector<vector<int>> cloud_one::calculate_xi_Ni(vector<vector<int>>&e, vector<vector<int>>&f){
@@ -66,11 +75,21 @@ vector<vector<int>> cloud_one::calculate_xi_Ni_square(vector<vector<int>>&e, vec
     return result;
 }
 
+vector<int> cloud_one::calculate_sec_part(vector<vector<int>>ef){
+    // ef是一个二维数组，rol1: e    rol2: f
+    vector<int>result(ef.size(), 0);
+    for(int i = 0; i < result.size(); ++i){
+        result[i] = ef[i][1] * beaver_list[i][0] + ef[i][0] * beaver_list[i][1] + beaver_list[i][2];
+    }
+    return result;
+}
+
+
 // cloud_two 
 cloud_two::cloud_two(vector<point>point_list, int data_num, int dimension, Comparator* comparator, vector<vector<int>>sorted_index):
             cloud(point_list, data_num, dimension, comparator){
                 this->sorted_index = sorted_index;
-                cout<<"this is cloud two"<<endl;
+                // cout<<"this is cloud two"<<endl;
             }
 
 vector<vector<int>> cloud_two::calculate_xi_Ni(vector<vector<int>>&e, vector<vector<int>>&f){
@@ -96,3 +115,12 @@ vector<vector<int>> cloud_two::calculate_xi_Ni_square(vector<vector<int>>&e, vec
     }
     return result;
 }
+
+vector<int> cloud_two::calculate_sec_part(vector<vector<int>>ef){
+    vector<int>result(ef.size(), 0);
+    for(int i = 0; i < ef.size(); ++i)
+        result[i] = ef[i][0] * ef[i][1] + ef[i][1] * beaver_list[i][0] + ef[i][0] * beaver_list[i][1] + beaver_list[i][2];
+
+    return result;
+}
+
