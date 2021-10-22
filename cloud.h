@@ -2,7 +2,8 @@
 #include <iostream>
 #include <vector>
 #include "tools.h"
-
+#include <ctime>
+#include <random>
 using namespace std;
 
 struct point {
@@ -30,6 +31,9 @@ class cloud{
     // 计算(Σxi*Ni)^2的中间结果ef（存放在一个二维数组中
     void calculate_ef_vari(vector<int>sum_xN, vector<vector<int>>&ef);
 
+    // 加密输入的数据
+    vector<Ctxt> encrypt_variance(vector<int>vari);  
+
 };
 
 class cloud_one: public cloud{
@@ -45,7 +49,10 @@ class cloud_one: public cloud{
     vector<vector<int>> calculate_xi_Ni_square(vector<vector<int>>&e, vector<vector<int>>&f);
 
     // cloud_one calculate (Σxi*Ni)^2_1 = f*a1 + e*b1 + c1
-    vector<int> calculate_sec_part(vector<vector<int>>ef);
+    vector<int> calculate_sec_part(vector<vector<int>>ef, int n);
+
+    // cloud_one figure out index of maximum variance 
+    Ctxt max_variance(vector<Ctxt>enc_variance);
 };
 
 class cloud_two: public cloud{
@@ -61,5 +68,21 @@ class cloud_two: public cloud{
     vector<vector<int>> calculate_xi_Ni_square(vector<vector<int>>&e, vector<vector<int>>&f);
 
     // cloud_two calculate (Σxi*Ni)^2_2 = e*f + f*a2 + e*b2 +c2
-    vector<int> calculate_sec_part(vector<vector<int>>ef);
+    vector<int> calculate_sec_part(vector<vector<int>>ef, int n);
+
+    /**
+     * cloud two decrypt enc_cipher, divide data set using N, index and sorted result
+     * enc_index: encrypted index for dimension
+     * vector<int>N1: shuffled secret share N, used to recover N
+     * N_index: index of N used for cloud two to get respect N2
+     * tot_p: number of points in this tree node
+     */
+    void divide_data_set(Ctxt enc_index, vector<int>N1, int N_index, int tot_p, cloud_one& c1);
+
+    // 生成秘密共享位置信息
+    void add_new_node(vector<int>N, vector<vector<int>>& c1_kdtree, vector<vector<int>>& c2_kdtree);
+
+    // 解密最大参数的下标
+    int decrypt_index(Ctxt enc_var_index);
 };
+

@@ -31,6 +31,4 @@ vector<vector<int>> sort_data(vector<point>point_list);
 
 // 生成beaver三元组
 void generate_beaver_set(int n, int data_range, vector<vector<int>>&c1_list, vector<vector<int>>&c2_list);
-
-// 生成秘密共享位置信息
-void secret_share_N(vector<int>N, cloud_one& c1, cloud_two& c2);            
+          

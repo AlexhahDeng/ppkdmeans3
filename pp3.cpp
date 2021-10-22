@@ -10,7 +10,8 @@ using namespace std;
 void generate_kd_tree(cloud_one& c1, cloud_two& c2){
     // 从root开始，首先secret share N{1,1,1,...}
     vector<int>N(c1.data_num, 1);
-    secret_share_N(N, c1, c2);
+    int num_point = c1.data_num;    //FIXME： 这是当前tree node中的点数
+    c2.add_new_node(N, c1.kd_tree, c2.kd_tree);
 
     // 计算xi*Ni
     vector<vector<int>>e1(c1.data_num, vector<int>(c1.dimension, 0)), e2(e1);
@@ -61,9 +62,9 @@ void generate_kd_tree(cloud_one& c1, cloud_two& c2){
             sum_xN1_sq[i] += xN1_sq[j][i];
             sum_xN2_sq[i] += xN2_sq[j][i];
         }
-        // nΣ(xi*Ni)^2 get
-        sum_xN1_sq[i] *= c1.data_num;
-        sum_xN2_sq[i] *= c2.data_num;
+        // nΣ(xi*Ni)^2 get， 改了改了
+        // sum_xN1_sq[i] *= c1.data_num;
+        // sum_xN2_sq[i] *= c2.data_num;
     }
 
     // 2. 再用一个beaver 三元组，算(Σxi*Ni)^2
@@ -76,8 +77,8 @@ void generate_kd_tree(cloud_one& c1, cloud_two& c2){
         ef1[i][1] += ef2[i][1];
     }
 
-    vector<int>sec_part1 = c1.calculate_sec_part(ef1);
-    vector<int>sec_part2 = c2.calculate_sec_part(ef1);
+    vector<int>sec_part1 = c1.calculate_sec_part(ef1, num_point);
+    vector<int>sec_part2 = c2.calculate_sec_part(ef1, num_point);
 
     // 3. 最后一步，组合起来！
     // 先在本地做减法，再加密组合成方差值
@@ -86,9 +87,25 @@ void generate_kd_tree(cloud_one& c1, cloud_two& c2){
         sum_xN2_sq[i] -= sec_part2[i];
     }// 结果暂存在sum_xNi_sq中
 
-    
+    /* above has been checked */
+
+    //TODO 要不还是留个接口出来，以后再处理把！
+    // 1. c1和c2分别加密s1和s2
+    vector<Ctxt>enc_s1 = c1.comparator->encrypt_input(sum_xN1_sq);
+    // vector<Ctxt>enc_s2 = c2.encrypt_variance(sum_xN2_sq);
+    // for(int i = 0; i < enc_s2.size(); ++i)  // result stored in enc_s1
+    //     enc_s1[i] += enc_s2[i];
+
+
+    // 2. c1 对密文{s1...sd}进行比较，求出最大值index，发给c2
+    // Ctxt enc_index = c1.max_variance(enc_s1); //-->俺好怕，加起来以后超过模数范围咋整，再说把！
+
+    // 3. c2 解密index，取 N 和 对应index的排序结果，划分，划分完了以后，秘密共享N_l N_r
+    // c2.divide_data_set(enc_index, c1.kd_tree[0], 0, c1.data_num, c1); //* 介里第二个参数可以变化的啦
+
     return; 
 }
+
 void tmp_data(vector<point>&point_list){
     point_list.push_back({0, vector<int>{123, 43}});
     point_list.push_back({1, vector<int>{76, 987}});
@@ -96,10 +113,9 @@ void tmp_data(vector<point>&point_list){
     point_list.push_back({3, vector<int>{67, 567}});
     point_list.push_back({4, vector<int>{59, 473}});
 }
+
 int main(){
     Comparator* comparator = generate_comparator(true);
-
-    // initialization P
     int data_num = 5, dimension = 2;
     vector<point>point_list, c1_data, c2_data;
     tmp_data(point_list);
@@ -114,5 +130,6 @@ int main(){
 
     // generate kd tree
     generate_kd_tree(c1, c2);
+    // comparator->test_compare();
     return 0;
 }

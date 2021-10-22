@@ -16,21 +16,28 @@ using namespace std;
 using namespace NTL;
 using namespace helib;
 
-namespace he_cmp{
-enum CircuitType{UNI, BI, TAN};
+namespace he_cmp
+{
+  enum CircuitType
+  {
+    UNI,
+    BI,
+    TAN
+  };
 
-class Comparator{
-public: //方便直接取用
-    const Context& m_context;
- 
+  class Comparator
+  {
+  public: //方便直接取用
+    const Context &m_context;
+
     // field extension degree (d)
-  	unsigned long m_slotDeg;
+    unsigned long m_slotDeg;
 
-  	// expansion length
-  	unsigned long m_expansionLen;
+    // expansion length
+    unsigned long m_expansionLen;
 
-  	// vector of multiplicative masks
-  	vector<DoubleCRT> m_mulMasks;
+    // vector of multiplicative masks
+    vector<DoubleCRT> m_mulMasks;
 
     // vector of multiplicative mask size
     vector<double> m_mulMasksSize;
@@ -45,7 +52,7 @@ public: //方便直接取用
     ZZX m_univar_min_max_poly;
 
     // bivariate comparison polynomial coefficients of the less-than function
-    mat_ZZ m_bivar_less_coefs; 
+    mat_ZZ m_bivar_less_coefs;
 
     // polynomial evaluation parameters of the Patterson-Stockmeyer algorithm
     // number of baby steps
@@ -60,7 +67,7 @@ public: //方便直接取用
     // extra coefficient
     ZZ m_extra_coef_comp;
     ZZ m_extra_coef_min;
-    
+
     // indexes to compute x^{p-1}
     long m_baby_index;
     long m_giant_index;
@@ -78,12 +85,12 @@ public: //方便直接取用
     vector<vector<DoubleCRT>> m_extraction_const;
     vector<vector<double>> m_extraction_const_size;
 
-  	// print/hide flag for debugging
-  	bool m_verbose;
+    // print/hide flag for debugging
+    bool m_verbose;
 
     // create multiplicative masks for shifts
-  	DoubleCRT create_shift_mask(double& size, long shift);
-  	void create_all_shift_masks();
+    DoubleCRT create_shift_mask(double &size, long shift);
+    void create_all_shift_masks();
 
     // compute Patterson-Stockmeyer parameters to evaluate the comparison polynomial
     void compute_poly_params();
@@ -95,108 +102,107 @@ public: //方便直接取用
     void extraction_init();
 
     // extract F_p elements from slots
-    void extract_mod_p(vector<Ctxt>& mod_p_coefs, const Ctxt& ctxt_x) const; 
+    void extract_mod_p(vector<Ctxt> &mod_p_coefs, const Ctxt &ctxt_x) const;
 
     // shifts ciphertext slots to the left by shift within batches of size m_expansionLen starting at start. Slots shifted outside their respective batches are zeroized.
-    void batch_shift(Ctxt& ctxt, long start, long shift) const;
-    
+    void batch_shift(Ctxt &ctxt, long start, long shift) const;
+
     // shifts ciphertext slots to the left by shift within batches of size m_expansionLen starting at start. Slots shifted outside their respective batches filled with 1.
-    void batch_shift_for_mul(Ctxt& ctxt, long start, long shift) const;
+    void batch_shift_for_mul(Ctxt &ctxt, long start, long shift) const;
 
     // running sums of slot batches
-    void shift_and_add(Ctxt& x, long start, long shift_direction = false) const;
+    void shift_and_add(Ctxt &x, long start, long shift_direction = false) const;
 
     // running products of slot batches
-    void shift_and_mul(Ctxt& x, long start, long shift_direction = false) const;
+    void shift_and_mul(Ctxt &x, long start, long shift_direction = false) const;
 
     // send non-zero elements of a field F_{p^d} to 1 and zero to 0
     // if pow = 1, this map operates on elements of the prime field F_p
-    void mapTo01_subfield(Ctxt& ctxt, long pow) const;
+    void mapTo01_subfield(Ctxt &ctxt, long pow) const;
 
     // univariate comparison polynomial evaluation
-    void evaluate_univar_less_poly(Ctxt& ret, Ctxt& ctxt_p_1, const Ctxt& x) const;
+    void evaluate_univar_less_poly(Ctxt &ret, Ctxt &ctxt_p_1, const Ctxt &x) const;
 
     // univariate min/max polynomial evaluation
-    void evaluate_min_max_poly(Ctxt& ctxt_min, Ctxt& ctxt_max, const Ctxt& ctxt_x, const Ctxt& ctxt_y) const;
+    void evaluate_min_max_poly(Ctxt &ctxt_min, Ctxt &ctxt_max, const Ctxt &ctxt_x, const Ctxt &ctxt_y) const;
 
     // bivariate less than function comparing slots one by one
-    void less_than_bivar(Ctxt& ctxt_res, const Ctxt& ctxt_x, const Ctxt& ctxt_y) const;
+    void less_than_bivar(Ctxt &ctxt_res, const Ctxt &ctxt_x, const Ctxt &ctxt_y) const;
 
     // bivariate less than function comparing slots one by one as in Tan et al.
-    void less_than_bivar_tan(Ctxt& ctxt_res, const Ctxt& ctxt_x, const Ctxt& ctxt_y) const;
+    void less_than_bivar_tan(Ctxt &ctxt_res, const Ctxt &ctxt_x, const Ctxt &ctxt_y) const;
 
     // less than function comparing slots one by one in F_2
-    void less_than_mod_2(Ctxt& ctxt_res, const Ctxt& ctxt_x, const Ctxt& ctxt_y) const;
-  
+    void less_than_mod_2(Ctxt &ctxt_res, const Ctxt &ctxt_x, const Ctxt &ctxt_y) const;
+
     // less than function comparing slots one by one in F_3
-    void less_than_mod_3(Ctxt& ctxt_res, const Ctxt& ctxt_x, const Ctxt& ctxt_y) const;
+    void less_than_mod_3(Ctxt &ctxt_res, const Ctxt &ctxt_x, const Ctxt &ctxt_y) const;
 
     // less than function comparing slots one by one in F_5
-    void less_than_mod_5(Ctxt& ctxt_res, const Ctxt& ctxt_x, const Ctxt& ctxt_y) const;
+    void less_than_mod_5(Ctxt &ctxt_res, const Ctxt &ctxt_x, const Ctxt &ctxt_y) const;
 
     // less than function comparing slots one by one in F_7
-    void less_than_mod_7(Ctxt& ctxt_res, const Ctxt& ctxt_x, const Ctxt& ctxt_y) const;  
+    void less_than_mod_7(Ctxt &ctxt_res, const Ctxt &ctxt_x, const Ctxt &ctxt_y) const;
 
     // less than function comparing slots one by one in F_17
-    void less_than_mod_any(Ctxt& ctxt_res, const Ctxt& ctxt_x, const Ctxt& ctxt_y) const;    
-  
-    // exact equality 
-    void is_zero(Ctxt& ctxt_res, const Ctxt& ctxt_z, long pow = 1) const;
+    void less_than_mod_any(Ctxt &ctxt_res, const Ctxt &ctxt_x, const Ctxt &ctxt_y) const;
+
+    // exact equality
+    void is_zero(Ctxt &ctxt_res, const Ctxt &ctxt_z, long pow = 1) const;
 
     // minimum/maximum function for digits (vectors of dimension 1 over F_p)
-    void min_max_digit(Ctxt& ctxt_min, Ctxt& ctxt_max, const Ctxt& ctxt_x, const Ctxt& ctxt_y) const; 
+    void min_max_digit(Ctxt &ctxt_min, Ctxt &ctxt_max, const Ctxt &ctxt_x, const Ctxt &ctxt_y) const;
 
     // conversion to slots
-    void int_to_slot(ZZX& poly, unsigned long input, unsigned long enc_base) const;
+    void int_to_slot(ZZX &poly, unsigned long input, unsigned long enc_base) const;
 
     // compute an array of positions of ciphertexts in ctxt_in when sorted
-    void get_sorting_index(vector<Ctxt>& ctxt_out, const vector<Ctxt>& ctxt_in) const;
+    void get_sorting_index(vector<Ctxt> &ctxt_out, const vector<Ctxt> &ctxt_in) const;
 
     // find the primitive root of a SIMD slot
-    void find_prim_root(ZZ_pE& root) const; 
+    void find_prim_root(ZZ_pE &root) const;
 
-// public:
-  // constructor
-	Comparator(const Context& context, CircuitType type, unsigned long d, unsigned long expansion_len, const SecKey& sk, bool verbose);
+    // public:
+    // constructor
+    Comparator(const Context &context, CircuitType type, unsigned long d, unsigned long expansion_len, const SecKey &sk, bool verbose);
 
-	const DoubleCRT& get_mask(double& size, long index) const;
-  const ZZX& get_less_than_poly() const;
-  const ZZX& get_min_max_poly() const;
+    const DoubleCRT &get_mask(double &size, long index) const;
+    const ZZX &get_less_than_poly() const;
+    const ZZX &get_min_max_poly() const;
 
-  // decrypt and print ciphertext
-  void print_decrypted(const Ctxt& ctxt) const;
+    // decrypt and print ciphertext
+    void print_decrypted(const Ctxt &ctxt) const;
 
-  // comparison function
-  void compare(Ctxt& ctxt_res, const Ctxt& ctxt_x, const Ctxt& ctxt_y) const;
+    // comparison function
+    void compare(Ctxt &ctxt_res, const Ctxt &ctxt_x, const Ctxt &ctxt_y) const;
 
-  // minimum/maximum function for general vectors
-  void min_max(Ctxt& ctxt_min, Ctxt& ctxt_max, const Ctxt& ctxt_x, const Ctxt& ctxt_y) const;
+    // minimum/maximum function for general vectors
+    void min_max(Ctxt &ctxt_min, Ctxt &ctxt_max, const Ctxt &ctxt_x, const Ctxt &ctxt_y) const;
 
-  // minimum/maximum of an array
-  void array_min(Ctxt& ctxt_res, const vector<Ctxt>& ctxt_in, long depth = 0) const;
+    // minimum/maximum of an array
+    void array_min(Ctxt &ctxt_res, const vector<Ctxt> &ctxt_in, long depth = 0) const;
 
-  // sorting
-  void sort(vector<Ctxt>& ctxt_out, const vector<Ctxt>& ctxt_in) const;
+    // sorting
+    void sort(vector<Ctxt> &ctxt_out, const vector<Ctxt> &ctxt_in) const;
 
-  // test compare function 'runs' times
-  void test_compare() const;
+    // test compare function 'runs' times
+    void test_compare() const;
 
-  // test min/max function 'runs' times
-  void test_min_max(long runs) const;
+    // test min/max function 'runs' times
+    void test_min_max(long runs) const;
 
-  // test compare function 'runs' times
-  void test_sorting(int num_to_sort, long runs) const;
+    // test compare function 'runs' times
+    void test_sorting(int num_to_sort, long runs) const;
 
-  // test array_minn function
-  void test_array_min(int input_len, long depth, long runs) const;
-  
-  // 原始输入->编码->加密
-  void encrypt_input(vector<unsigned long>x, vector<unsigned long>y) const;
+    // test array_minn function
+    void test_array_min(int input_len, long depth, long runs) const;
 
-  // 加密内容->比较->结果
-  void compare_input() const;
+    // 原始输入->编码->加密
+    vector<Ctxt> encrypt_input(vector<int> x) const;
 
-};
+    // 加密内容->比较->结果
+    void compare_input() const;
+  };
 }
 
 #endif // #ifndef COMPARATOR_H

@@ -17,6 +17,10 @@ vector
 -
 tools.h
 /mnt/c/Ubu20/ppkdmeans3/tools.h
+ctime
+-
+random
+-
 
 /mnt/c/Ubu20/ppkdmeans3/comparator.h
 helib/helib.h

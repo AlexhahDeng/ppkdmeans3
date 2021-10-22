@@ -2407,6 +2407,8 @@ void Comparator::test_compare() const
       }
 
       cout << "Output" << endl;
+	  ctxt_res.multiplyBy(ctxt_x);
+	  ctxt_res.multiplyBy(ctxt_y);
       print_decrypted(ctxt_res);
       cout << endl;
     }
@@ -2680,10 +2682,10 @@ void Comparator::test_array_min(int input_len, long depth, long runs) const
   //order of p
   unsigned long ord_p = m_context.getOrdP();
 
-  //amount of numbers in one ciphertext
+  //! 一个密文中加密的数字--amount of numbers in one ciphertext
   unsigned long numbers_size = nslots / m_expansionLen;
 
-  // number of slots occupied by encoded numbers
+  //! 编码数字占据几个槽--number of slots occupied by encoded numbers
   unsigned long occupied_slots = numbers_size * m_expansionLen;
 
   //encoding base, ((p+1)/2)^d
@@ -2719,7 +2721,7 @@ void Comparator::test_array_min(int input_len, long depth, long runs) const
     vector<vector<unsigned long>> input_xs;
     for (int i = 0; i < numbers_size; i++)
     {
-    	vector<unsigned long> tmp_vec(input_len,0);
+    	vector<unsigned long> tmp_vec(input_len,0); //! 参数input_len
     	input_xs.push_back(tmp_vec);
     }
 
@@ -2774,7 +2776,7 @@ void Comparator::test_array_min(int input_len, long depth, long runs) const
 	    Ctxt ctxt_x(m_pk);
     	ea.encrypt(ctxt_x, m_pk, pol_x);
 
-    	ctxt_in.push_back(ctxt_x);
+    	ctxt_in.push_back(ctxt_x);	// 总共input_len个
     }
 
     //cout << "Input" << endl;
@@ -2816,7 +2818,7 @@ void Comparator::test_array_min(int input_len, long depth, long runs) const
 
     // comparison function
     cout << "Start of array minimum" << endl;
-    this->array_min(ctxt_out, ctxt_in, depth);
+    this->array_min(ctxt_out, ctxt_in, depth);	//! 开始比较了，uu们
 
     printNamedTimer(cout, "Extraction");
     printNamedTimer(cout, "ComparisonCircuitBivar");
@@ -2861,76 +2863,64 @@ void Comparator::test_array_min(int input_len, long depth, long runs) const
   }
 }
 
-
-void Comparator::encrypt_input(vector<unsigned long>x, vector<unsigned long>y) const{
-    const EncryptedArray& ea = m_context.getEA();                   // 获取加密数组
+vector<Ctxt> Comparator::encrypt_input(vector<int>x) const{
+	const EncryptedArray& ea = m_context.getEA();                   // 获取加密数组
     long nslots = ea.size();                                        //! 提取槽slots的数量
     unsigned long p = m_context.getP();                             // p的值
     unsigned long ord_p = m_context.getOrdP();                      // p的次数
-    unsigned long numbers_size = nslots / m_expansionLen;           // ! 一个密文中包含的数字
-    unsigned long occupied_slots = numbers_size * m_expansionLen;   // ! 编码数字所需的槽数
+    unsigned long numbers_size = nslots / m_expansionLen;           //! 一个密文中包含的数字
+    unsigned long occupied_slots = numbers_size * m_expansionLen;   //! 编码数字所需的槽数
     
     //encoding base, ((p+1)/2)^d
     //if 2-variable comparison polynomial is used, it must be p^d
-    unsigned long enc_base = (p + 1) >> 1;
+    unsigned long enc_base = (p + 1) >> 1;	// 俺懂了，p=7，那么(p+1)>>1 = 4， 所以二次编码的时候，就是以4为底
     if (m_type == BI || m_type == TAN)
         enc_base = p;
-    unsigned long digit_base = power_long(enc_base, m_slotDeg);
+    unsigned long digit_base = power_long(enc_base, m_slotDeg);	//m_slotDeg 是初始参数d，这里d=2
 
 	// 检查field_size^expansion_len的值在64比特内
 	int space_bit_size = static_cast<int>(ceil(m_expansionLen * log2(digit_base)));
-	
+
 	unsigned long input_range = ULONG_MAX;
 	if(space_bit_size < 64)
 		//input_range = power_long(field_size, expansion_len);
 		input_range = power_long(digit_base, m_expansionLen);
-	
+
 	cout<< "最大输入："<< input_range <<endl;
 	cout<<"一个密文可以包含的数字："<< numbers_size <<endl;
 
 	//! 存放加解密的结果
 	vector<ZZX> expected_result(occupied_slots);
-    vector<ZZX> decrypted(occupied_slots);
+	vector<ZZX> decrypted(occupied_slots);
 
 	// 对文本和模式构建明文多项式
 	vector<ZZX> pol_x(nslots);
-    vector<ZZX> pol_y(nslots);
 
 	//! 输入的内容
 	unsigned long input_x;
-	unsigned long input_y;
 	ZZX pol_slot;
-	
+
 	// 开始对输入进行拆分
 	for(int i = 0; i < numbers_size; i++){
 		input_x = x[i] % input_range;
-		input_y = y[i] % input_range;
 
 		if(m_verbose){
 			cout << "Input " << i << endl;
 			cout << input_x << endl;
-			cout << input_y << endl;
 		} // 判断是否输出信息
-
-		if(input_x < input_y)	// 记录预期比较结果
-			expected_result[i * m_expansionLen] = ZZX(INIT_MONO, 0, 1);
-		else
-			expected_result[i * m_expansionLen] = ZZX(INIT_MONO, 0, 0);
 		
 		vector<long> decomp_int_x;
-		vector<long> decomp_int_y;
 		vector<long> decomp_char;
 
 		// 分解明文输入
 		// cout<<"分解明文输入取的底数"<<digit_base<<endl;
 		digit_decomp(decomp_int_x, input_x, digit_base, m_expansionLen);
-		digit_decomp(decomp_int_y, input_y, digit_base, m_expansionLen);
 
 		// 输出分解结果
 		if(m_verbose){
 			cout << "Input decomposition into digits" << endl;
 			for(int j = 0; j < m_expansionLen; j++)
-				cout << decomp_int_x[j] << " " << decomp_int_y[j] << endl;
+				cout << decomp_int_x[j] << endl;
 		}
 
 		//! 对槽进行编码
@@ -2939,45 +2929,25 @@ void Comparator::encrypt_input(vector<unsigned long>x, vector<unsigned long>y) c
 			int_to_slot(pol_slot, decomp_int_x[j], enc_base);
 			pol_x[i * m_expansionLen + j] = pol_slot;
 		}
-		for (int j = 0; j < m_expansionLen; j++){
-			//decomposition of a digit
-			int_to_slot(pol_slot, decomp_int_y[j], enc_base);
-			pol_y[i * m_expansionLen + j] = pol_slot;
-		}
 	}
+
 	// 输出槽编码的结果
 	if(m_verbose){
-      cout << "Input" << endl;
-      for(int i = 0; i < nslots; i++)
-      {
-          printZZX(cout, pol_x[i], ord_p);
-          printZZX(cout, pol_y[i], ord_p);
-          cout << endl;
-      }
-    }
+		cout << "Input" << endl;
+		for(int i = 0; i < nslots; i++)
+		{
+			printZZX(cout, pol_x[i], ord_p);
+			cout << endl;
+		}
+	}
 
 	//! 加密
 	Ctxt ctxt_x(m_pk);
-    Ctxt ctxt_y(m_pk);
-    ea.encrypt(ctxt_x, m_pk, pol_x);
-    ea.encrypt(ctxt_y, m_pk, pol_y);
-    
-    Ctxt ctxt_res(m_pk);
-	 
-	cout<<"开始比较操作："<<endl; 
-	compare(ctxt_res, ctxt_x, ctxt_y);
+	ea.encrypt(ctxt_x, m_pk, pol_x);
+	
+	Ctxt ctxt_res(m_pk);
 
-	if(m_verbose){
-      cout << "Input" << endl;
-      for(int j = 0; j < nslots; j++){
-		printZZX(cout, pol_x[j], ord_p);
-		printZZX(cout, pol_y[j], ord_p);
-		cout << endl;
-      }
+	vector<Ctxt>result;
 
-      cout << "Output" << endl;
-      print_decrypted(ctxt_res);
-      cout << endl;
-    }// 输出比较结果
-
+	return result;
 }
