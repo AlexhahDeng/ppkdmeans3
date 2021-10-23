@@ -6,10 +6,6 @@
 
 #IncludeRegexTransform: 
 
-/mnt/c/Ubu20/ppkdmeans3/cloud.cpp
-cloud.h
-/mnt/c/Ubu20/ppkdmeans3/cloud.h
-
 /mnt/c/Ubu20/ppkdmeans3/cloud.h
 iostream
 -
@@ -35,10 +31,6 @@ helib/binaryArith.h
 -
 helib/intraSlot.h
 -
-
-/mnt/c/Ubu20/ppkdmeans3/func.cpp
-func.h
-/mnt/c/Ubu20/ppkdmeans3/func.h
 
 /mnt/c/Ubu20/ppkdmeans3/func.h
 iostream

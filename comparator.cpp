@@ -2407,8 +2407,8 @@ void Comparator::test_compare() const
       }
 
       cout << "Output" << endl;
-	  ctxt_res.multiplyBy(ctxt_x);
-	  ctxt_res.multiplyBy(ctxt_y);
+	  // ctxt_res.multiplyBy(ctxt_x);
+	  // ctxt_res.multiplyBy(ctxt_y);
       print_decrypted(ctxt_res);
       cout << endl;
     }
@@ -2863,7 +2863,10 @@ void Comparator::test_array_min(int input_len, long depth, long runs) const
   }
 }
 
-vector<Ctxt> Comparator::encrypt_input(vector<int>x) const{
+vector<Ctxt> Comparator::encrypt_variance(vector<int>x, bool scale){
+	//* checked
+	// scale参数标识是否对输入x进行缩放
+	vector<Ctxt>result;												// 密文数组结果
 	const EncryptedArray& ea = m_context.getEA();                   // 获取加密数组
     long nslots = ea.size();                                        //! 提取槽slots的数量
     unsigned long p = m_context.getP();                             // p的值
@@ -2900,54 +2903,93 @@ vector<Ctxt> Comparator::encrypt_input(vector<int>x) const{
 	unsigned long input_x;
 	ZZX pol_slot;
 
+	//FIXME:方差太大，会出现"Input character is too big to be converted"问题
+	//方法1: 那就每个数字都减去，当前数组的最小值，没问题的，反正是同减，但是减了之后会不会超过就不好说了❌，行不通
+	//SOLUTION:那么，我们就每个都除以100！虽然简单粗暴，但是出问题再说吧！
+	 
 	// 开始对输入进行拆分
-	for(int i = 0; i < numbers_size; i++){
-		input_x = x[i] % input_range;
+	for(int i = 0; i < x.size(); ++i){
+		input_x = scale? int(x[i] / 100) : x[i];	// 用scale参数来控制缩放
+
+		if(input_x > input_range){
+			cout<<input_x<<" 数据超过加密范围..."<<endl;
+			exit(0);
+		}
+
+		for(int j = 0; j < numbers_size; ++j){	
+			if(m_verbose){
+				cout << "Input " << i << endl;
+				cout << input_x << endl;
+			}// 判断是否输出信息
+
+			vector<long> decomp_int_x;
+			vector<long> decomp_char;
+
+			digit_decomp(decomp_int_x, input_x, digit_base, m_expansionLen);	// 分解数字
+
+			if(m_verbose){
+				cout << "Input decomposition into digits" << endl;
+				for(int k = 0; k < m_expansionLen; k++)
+					cout << decomp_int_x[k] << endl;
+			}// 输出分解结果
+
+			for(int k = 0; k < m_expansionLen; ++k){// 对槽进行编码
+				// 分解数字
+				int_to_slot(pol_slot, decomp_int_x[k], enc_base);
+				pol_x[j * m_expansionLen + k] = pol_slot;
+			}
+		}// encode-->packing-->encrypt
 
 		if(m_verbose){
-			cout << "Input " << i << endl;
-			cout << input_x << endl;
-		} // 判断是否输出信息
-		
-		vector<long> decomp_int_x;
-		vector<long> decomp_char;
+			cout << "Input" << endl;
+			for(int i = 0; i < nslots; i++)
+			{
+				printZZX(cout, pol_x[i], ord_p);
+				cout << endl;
+			}
+		}// 输出槽编码的结果
 
-		// 分解明文输入
-		// cout<<"分解明文输入取的底数"<<digit_base<<endl;
-		digit_decomp(decomp_int_x, input_x, digit_base, m_expansionLen);
+		//! 加密
+		Ctxt ctxt_x(m_pk);
+		ea.encrypt(ctxt_x, m_pk, pol_x);		
 
-		// 输出分解结果
-		if(m_verbose){
-			cout << "Input decomposition into digits" << endl;
-			for(int j = 0; j < m_expansionLen; j++)
-				cout << decomp_int_x[j] << endl;
-		}
+		result.push_back(ctxt_x);
 
-		//! 对槽进行编码
-		for (int j = 0; j < m_expansionLen; j++){
-			//decomposition of a digit
-			int_to_slot(pol_slot, decomp_int_x[j], enc_base);
-			pol_x[i * m_expansionLen + j] = pol_slot;
-		}
-	}
+	}// 每个数字加密为一个ciphertext，packing的数字都一样
 
-	// 输出槽编码的结果
-	if(m_verbose){
-		cout << "Input" << endl;
-		for(int i = 0; i < nslots; i++)
-		{
-			printZZX(cout, pol_x[i], ord_p);
-			cout << endl;
-		}
-	}
+	// 俺来测试一哈子--> 么有问题啦！
+	// Ctxt ctxt_res(m_pk);
+	// compare(ctxt_res, result[0], result[0]);
 
-	//! 加密
-	Ctxt ctxt_x(m_pk);
-	ea.encrypt(ctxt_x, m_pk, pol_x);
-	
-	Ctxt ctxt_res(m_pk);
-
-	vector<Ctxt>result;
-
+    // if(m_verbose)
+    // {
+    //   cout << "Output" << endl;
+    //   print_decrypted(ctxt_res);
+    //   cout << endl;
+    // }
+	result[2].multiplyBy(result[1]);
+	cout<<"result"<<endl;
+	print_decrypted(result[2]);
 	return result;
 }
+
+Ctxt Comparator::compare_variance(vector<Ctxt>enc_variance){
+	/**
+	 * func: 密文上比较方差大小，获取，最大方差的密文index
+	 */ 
+	//SOLUTION: 虽然我不知道，怎么获取index 0的packing密文，但是我用compare比较相同的数，LT结果是0，这不就，曲线救国了么，嘿嘿
+	Ctxt ctxt_max_index(m_pk);
+	Ctxt ctxt_max_value(m_pk);
+	Ctxt ctxt_less_than(m_pk);
+
+	ctxt_max_value = enc_variance[0];
+	compare(ctxt_max_index, ctxt_max_value, ctxt_max_value);
+
+	// for(int i = 1; i < enc_variance.size; ++i){
+	// 	compare(ctxt_less_than, ctxt_max_value, enc_variance[i]);
+	// 	ctxt_max_value = ctxt_less_than.multiplyBy(enc_variance[i]) + 
+	// }
+
+	return ctxt_max_index;
+}
+

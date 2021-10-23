@@ -91,10 +91,11 @@ void generate_kd_tree(cloud_one& c1, cloud_two& c2){
 
     //TODO 要不还是留个接口出来，以后再处理把！
     // 1. c1和c2分别加密s1和s2
-    vector<Ctxt>enc_s1 = c1.comparator->encrypt_input(sum_xN1_sq);
-    // vector<Ctxt>enc_s2 = c2.encrypt_variance(sum_xN2_sq);
-    // for(int i = 0; i < enc_s2.size(); ++i)  // result stored in enc_s1
-    //     enc_s1[i] += enc_s2[i];
+    vector<Ctxt>zero_one = c1.comparator->encrypt_variance(vector<int>{0,4369,5080}, false); //FIXME：不可以直接加密1
+    // vector<Ctxt>enc_s1 = c1.comparator->encrypt_variance(sum_xN1_sq);
+    // vector<Ctxt>enc_s2 = c2.comparator->encrypt_variance(sum_xN2_sq);
+    // for(int i = 0; i < enc_s2.size(); ++i)  // 暂存在enc_s1中
+        // enc_s1[i] += enc_s2[i];
 
 
     // 2. c1 对密文{s1...sd}进行比较，求出最大值index，发给c2
