@@ -2867,7 +2867,7 @@ vector<Ctxt> Comparator::encrypt_variance(vector<int>x, bool scale){
 	//* checked
 	// scale参数标识是否对输入x进行缩放
 	vector<Ctxt>result;												// 密文数组结果
-	const EncryptedArray& ea = m_context.getEA();                   // 获取加密数组
+	const EncryptedArray& ea = m_context.getEA();                     // 获取加密数组
     long nslots = ea.size();                                        //! 提取槽slots的数量
     unsigned long p = m_context.getP();                             // p的值
     unsigned long ord_p = m_context.getOrdP();                      // p的次数
@@ -2916,18 +2916,19 @@ vector<Ctxt> Comparator::encrypt_variance(vector<int>x, bool scale){
 			exit(0);
 		}
 
+		if(m_verbose){
+			cout << "Input " << i << endl;
+			cout << input_x << endl;
+		}// 判断是否输出信息
+
 		for(int j = 0; j < numbers_size; ++j){	
-			if(m_verbose){
-				cout << "Input " << i << endl;
-				cout << input_x << endl;
-			}// 判断是否输出信息
 
 			vector<long> decomp_int_x;
 			vector<long> decomp_char;
 
 			digit_decomp(decomp_int_x, input_x, digit_base, m_expansionLen);	// 分解数字
 
-			if(m_verbose){
+			if(m_verbose && !j){
 				cout << "Input decomposition into digits" << endl;
 				for(int k = 0; k < m_expansionLen; k++)
 					cout << decomp_int_x[k] << endl;
@@ -2967,9 +2968,10 @@ vector<Ctxt> Comparator::encrypt_variance(vector<int>x, bool scale){
     //   print_decrypted(ctxt_res);
     //   cout << endl;
     // }
-	result[2].multiplyBy(result[1]);
-	cout<<"result"<<endl;
-	print_decrypted(result[2]);
+	// 测试0，1
+	// result[2].multiplyBy(result[1]);
+	// cout<<"result"<<endl;
+	// print_decrypted(result[2]);
 	return result;
 }
 
