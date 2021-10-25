@@ -2863,7 +2863,7 @@ void Comparator::test_array_min(int input_len, long depth, long runs) const
   }
 }
 
-vector<Ctxt> Comparator::encrypt_variance(vector<int>x, bool scale){
+vector<Ctxt> Comparator::encrypt_vector(vector<int>x, bool scale){
 	//* checked
 	// scale参数标识是否对输入x进行缩放
 	vector<Ctxt>result;												// 密文数组结果
@@ -2969,28 +2969,40 @@ vector<Ctxt> Comparator::encrypt_variance(vector<int>x, bool scale){
     //   cout << endl;
     // }
 	// 测试0，1
-	// result[2].multiplyBy(result[1]);
+	// result[2].multiplyBy(8);
 	// cout<<"result"<<endl;
 	// print_decrypted(result[2]);
 	return result;
 }
 
-Ctxt Comparator::compare_variance(vector<Ctxt>enc_variance){
+Ctxt Comparator::compare_variance(vector<Ctxt>enc_variance, vector<Ctxt>zero_one, vector<Ctxt>enc_index){
 	/**
 	 * func: 密文上比较方差大小，获取，最大方差的密文index
 	 */ 
-	//SOLUTION: 虽然我不知道，怎么获取index 0的packing密文，但是我用compare比较相同的数，LT结果是0，这不就，曲线救国了么，嘿嘿
 	Ctxt ctxt_max_index(m_pk);
 	Ctxt ctxt_max_value(m_pk);
 	Ctxt ctxt_less_than(m_pk);
+	Ctxt one_minus_LT(m_pk);
 
 	ctxt_max_value = enc_variance[0];
-	compare(ctxt_max_index, ctxt_max_value, ctxt_max_value);
+	ctxt_max_index = zero_one[0];
 
-	// for(int i = 1; i < enc_variance.size; ++i){
-	// 	compare(ctxt_less_than, ctxt_max_value, enc_variance[i]);
-	// 	ctxt_max_value = ctxt_less_than.multiplyBy(enc_variance[i]) + 
-	// }
+	for(int i = 1; i < enc_variance.size(); ++i){
+		compare(ctxt_less_than, ctxt_max_value, enc_variance[i]);	//LT(max_value, curr_value)
+
+		one_minus_LT = zero_one[1];				// 1
+		one_minus_LT -= ctxt_less_than;		// 1 - LT
+
+		ctxt_max_value.multiplyBy(one_minus_LT);			// max_value * (1 - LT)
+		enc_variance[i].multiplyBy(ctxt_less_than);		// curr_value * LT
+		ctxt_max_value += enc_variance[i];						// 
+		
+		ctxt_max_index.multiplyBy(one_minus_LT);			// max_index * (1 - LT)
+		enc_index[i].multiplyBy(ctxt_less_than);
+		ctxt_max_index += enc_index[i];
+	}
+
+	//FIXME: 总之是有很大问题，暂且无法解决
 
 	return ctxt_max_index;
 }

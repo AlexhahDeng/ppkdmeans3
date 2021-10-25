@@ -52,7 +52,7 @@ class cloud_one: public cloud{
     vector<int> calculate_sec_part(vector<vector<int>>ef, int n);
 
     // cloud_one figure out index of maximum variance 
-    Ctxt max_variance(vector<Ctxt>enc_variance);
+    Ctxt max_variance(vector<Ctxt>enc_variance, vector<Ctxt>zero_one);
 };
 
 class cloud_two: public cloud{
@@ -77,7 +77,7 @@ class cloud_two: public cloud{
      * N_index: index of N used for cloud two to get respect N2
      * tot_p: number of points in this tree node
      */
-    void divide_data_set(Ctxt enc_index, vector<int>N1, int N_index, int tot_p, cloud_one& c1);
+    void divide_data_set(Ctxt enc_index, cloud_one& c1, int N_index);
 
     // 生成秘密共享位置信息
     void add_new_node(vector<int>N, vector<vector<int>>& c1_kdtree, vector<vector<int>>& c2_kdtree);

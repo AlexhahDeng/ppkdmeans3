@@ -97,19 +97,19 @@ vector<int> cloud_one::calculate_sec_part(vector<vector<int>>ef, int n){
     // ef是一个二维数组，rol1: e    rol2: f
     vector<int>result(ef.size(), 0);
     for(int i = 0; i < result.size(); ++i){
-        result[i] = (ef[i][1] * beaver_list[i][0] + ef[i][0] * beaver_list[i][1] + beaver_list[i][2]) / n;
+        result[i] = int((ef[i][1] * beaver_list[i][0] + ef[i][0] * beaver_list[i][1] + beaver_list[i][2]) / n);
     }
     return result;
 }
 
-Ctxt cloud_one::max_variance(vector<Ctxt>enc_variance){
+Ctxt cloud_one::max_variance(vector<Ctxt>enc_variance, vector<Ctxt>zero_one){
     /**
      * func: 比较密文方差的大小，得到最大值的密文index
      * * 参考comparator部分的代码，自己写哦，没法直接调用库函数，因为俺把加密和比较的过程拆开了
      * ! 要特别注意乘法深度，和噪声的问题，可以手动实现一下 “两两比较”
      */
 
-    return enc_variance[0];
+    return zero_one[0];
 }
 
 
@@ -148,7 +148,7 @@ vector<int> cloud_two::calculate_sec_part(vector<vector<int>>ef, int n){
     // n is the number of points in this tree node
     vector<int>result(ef.size(), 0);
     for(int i = 0; i < ef.size(); ++i)
-        result[i] = (ef[i][0] * ef[i][1] + ef[i][1] * beaver_list[i][0] + ef[i][0] * beaver_list[i][1] + beaver_list[i][2]) / n;
+        result[i] = int((ef[i][0] * ef[i][1] + ef[i][1] * beaver_list[i][0] + ef[i][0] * beaver_list[i][1] + beaver_list[i][2]) / n);
 
     return result;
 }
@@ -158,7 +158,7 @@ int cloud_two::decrypt_index(Ctxt enc_var_index){
     return 1;
 }
 
-void cloud_two::divide_data_set(Ctxt enc_index, vector<int>N1, int N_index, int tot_p, cloud_one& c1){
+void cloud_two::divide_data_set(Ctxt enc_index, cloud_one& c1, int N_index){
     /**
      * func: 1. merge N1 and N2 as N(noted that although N is plaintext, its order has been shuffled)
      *       2. decrypt index and obtain according sorted index
@@ -168,12 +168,17 @@ void cloud_two::divide_data_set(Ctxt enc_index, vector<int>N1, int N_index, int 
      */
 
     // N = N1 + N2
-    vector<int>N(data_num, 0);
-    for(int i = 0; i < N.size(); ++i)
-        N[i] = N1[i] + kd_tree[N_index][i];
+    vector<int>N(data_num);
+    int curr_data_num = 0;
+    for(int i = 0; i < data_num; ++i){
+        N[i] = c1.kd_tree[N_index][i] ^ this->kd_tree[N_index][i]; // 异或！
+        if(N[i])
+            curr_data_num++;
+    }
+        
 
     //TODO decrypt and decode ciphertext index
-    int plain_index = 0; //get_index();   //-->解密的函数有现成的，但是怎么decode需要自己写撒
+    int plain_index = 0; //get_index();   //-->解密的函数有现成的，但是怎么decode需要自己写
 
     // get according sorted result
     vector<int>curr_sort_index = sorted_index[plain_index];
@@ -185,10 +190,10 @@ void cloud_two::divide_data_set(Ctxt enc_index, vector<int>N1, int N_index, int 
         int curr = curr_sort_index[i];
 
         if(N[curr]){    // curr exists in curr tree node
-            if(count < tot_p/2){    // bigger than median, change Nl
-                Nl[curr] = 0;
-            }else{              // smaller than median, change Nr
+            if(count < curr_data_num/2){    // smaller than median, change Nr
                 Nr[curr] = 0;
+            }else{              // bigger than median, change Nl
+                Nl[curr] = 0;
             }
             count ++;
         }
@@ -208,7 +213,7 @@ void cloud_two::add_new_node(vector<int>N, vector<vector<int>>& c1_kdtree, vecto
     srand(time(NULL));
     for(int i = 0; i < N.size(); ++i){
         N1[i] = rand() % 2;
-        N2[i] = N1[i] ^ N[i];
+        N2[i] = N1[i] ^ N[i];   // 不是做的加减法，是做的异或！
     }
     c1_kdtree.push_back(N1);
     c2_kdtree.push_back(N2);

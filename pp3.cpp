@@ -82,29 +82,34 @@ void generate_kd_tree(cloud_one& c1, cloud_two& c2){
 
     // 3. 最后一步，组合起来！
     // 先在本地做减法，再加密组合成方差值
+    vector<int>index(c1.dimension);     // 因为后面获取最大方差，还需要index的密文
     for(int i = 0; i < c1.dimension; i++){
         sum_xN1_sq[i] -= sec_part1[i];
         sum_xN2_sq[i] -= sec_part2[i];
+        index[i] = i;
     }// 结果暂存在sum_xNi_sq中
 
     /* above has been checked */
 
     //TODO 要不还是留个接口出来，以后再处理把！
     // 1. c1和c2分别加密s1和s2
-    vector<Ctxt>zero_one = c1.comparator->encrypt_variance(vector<int>{0,4369}, false); //FIXME：不可以直接加密1
-    vector<Ctxt>enc_s1 = c1.comparator->encrypt_variance(sum_xN1_sq, true);
-    vector<Ctxt>enc_s2 = c2.comparator->encrypt_variance(sum_xN2_sq, true);
+    vector<Ctxt>zero_one = c1.comparator->encrypt_vector(vector<int>{0,4369}, false); //FIXME：要根据整数分解的位数灵活变化
+    vector<Ctxt>enc_index = c1.comparator->encrypt_vector(index, false);
+    vector<Ctxt>enc_s1 = c1.comparator->encrypt_vector(sum_xN1_sq, true);
+    vector<Ctxt>enc_s2 = c2.comparator->encrypt_vector(sum_xN2_sq, true);
     for(int i = 0; i < enc_s2.size(); ++i)  // 暂存在enc_s1中
         enc_s1[i] += enc_s2[i];
 
 
     // 2. c1 对密文{s1...sd}进行比较，求出最大值index，发给c2
-    // Ctxt enc_index = c1.max_variance(enc_s1); //-->俺好怕，加起来以后超过模数范围咋整，再说把！
+    Ctxt max_index = c1.max_variance(enc_s1, zero_one); //! 没实现，就先默认第一个维度最大把
+    // cout<<"result..."<<endl;
+    // c1.comparator->print_decrypted(max_index);
 
     // 3. c2 解密index，取 N 和 对应index的排序结果，划分，划分完了以后，秘密共享N_l N_r
-    // c2.divide_data_set(enc_index, c1.kd_tree[0], 0, c1.data_num, c1); //* 介里第二个参数可以变化的啦
-
+    c2.divide_data_set(max_index, c1, 0);
     return; 
+
 }
 
 void tmp_data(vector<point>&point_list){

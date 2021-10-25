@@ -198,10 +198,10 @@ namespace he_cmp
     void test_array_min(int input_len, long depth, long runs) const;
 
     // 原始输入->编码->加密
-    vector<Ctxt> encrypt_variance(vector<int>x, bool scale);
+    vector<Ctxt> encrypt_vector(vector<int>x, bool scale);
 
     // 加密内容->比较->密文比较结果
-    Ctxt compare_variance(vector<Ctxt>enc_variance);
+    Ctxt compare_variance(vector<Ctxt>enc_variance, vector<Ctxt>zero_one, vector<Ctxt>enc_index);
 
     // 加密单个输入
     // vector<Ctxt> enc_zero_one();-->俺是傻狗，直接用vector存放0，1，然后调用encrypt_variance就好啦
