@@ -158,27 +158,19 @@ int cloud_two::decrypt_index(Ctxt enc_var_index){
     return 1;
 }
 
-void cloud_two::divide_data_set(Ctxt enc_index, cloud_one& c1, int N_index){
+void cloud_two::divide_data_set(Ctxt enc_index, cloud_one& c1, vector<int>& N, int curr_data_num){
     /**
      * func: 1. merge N1 and N2 as N(noted that although N is plaintext, its order has been shuffled)
      *       2. decrypt index and obtain according sorted index
      *       3. divide result Nl and Nr, send Nl1, Nr1 to cloud 1
      * points:
      *       1. how to decrypt and decode data?
+     *       2. 因为主函数也要算N，干脆直接在那里算完！
      */
-
-    // N = N1 + N2
-    vector<int>N(data_num);
-    int curr_data_num = 0;
-    for(int i = 0; i < data_num; ++i){
-        N[i] = c1.kd_tree[N_index][i] ^ this->kd_tree[N_index][i]; // 异或！
-        if(N[i])
-            curr_data_num++;
-    }
         
 
     //TODO decrypt and decode ciphertext index
-    int plain_index = 0; //get_index();   //-->解密的函数有现成的，但是怎么decode需要自己写
+    int plain_index = 0; //get_index(enc_index);   //-->解密的函数有现成的，但是怎么decode需要自己写
 
     // get according sorted result
     vector<int>curr_sort_index = sorted_index[plain_index];
@@ -213,7 +205,9 @@ void cloud_two::add_new_node(vector<int>N, vector<vector<int>>& c1_kdtree, vecto
     srand(time(NULL));
     for(int i = 0; i < N.size(); ++i){
         N1[i] = rand() % 2;
-        N2[i] = N1[i] ^ N[i];   // 不是做的加减法，是做的异或！
+        N2[i] = N[i] - N1[i];   
+        // 不是做的加减法，是做的异或！
+        // UPDATE: 只能做加减法，不然后续乘法部分会出错哦！
     }
     c1_kdtree.push_back(N1);
     c2_kdtree.push_back(N2);

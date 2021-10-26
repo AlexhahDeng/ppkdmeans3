@@ -77,7 +77,7 @@ class cloud_two: public cloud{
      * N_index: index of N used for cloud two to get respect N2
      * tot_p: number of points in this tree node
      */
-    void divide_data_set(Ctxt enc_index, cloud_one& c1, int N_index);
+    void divide_data_set(Ctxt enc_index, cloud_one& c1, vector<int>& N, int curr_data_num);
 
     // 生成秘密共享位置信息
     void add_new_node(vector<int>N, vector<vector<int>>& c1_kdtree, vector<vector<int>>& c2_kdtree);

@@ -2909,7 +2909,13 @@ vector<Ctxt> Comparator::encrypt_vector(vector<int>x, bool scale){
 	 
 	// 开始对输入进行拆分
 	for(int i = 0; i < x.size(); ++i){
-		input_x = scale? int(x[i] / 100) : x[i];	// 用scale参数来控制缩放
+		// 处理负数
+		// bool isNeg = x[i] > 0 ? false : true;
+		// if(isNeg)
+		// 	x[i] = -x[i];
+		// shift 本来想着，负数就加密绝对值，最后用0-ctxt，shift错的
+		// FIXME 没辙儿了，先都加密绝对值把！	
+		input_x = scale? int(abs(x[i]) / 100) : x[i];	// 用scale参数来控制缩放
 
 		if(input_x > input_range){
 			cout<<input_x<<" 数据超过加密范围..."<<endl;
@@ -2952,8 +2958,19 @@ vector<Ctxt> Comparator::encrypt_vector(vector<int>x, bool scale){
 
 		//! 加密
 		Ctxt ctxt_x(m_pk);
-		ea.encrypt(ctxt_x, m_pk, pol_x);		
-
+		ea.encrypt(ctxt_x, m_pk, pol_x);
+		// if(isNeg){
+		// 	// 给爷生成一个0的密文！
+		// 	int_to_slot(pol_slot, 0, enc_base);
+		// 	vector<ZZX>pol_0(nslots, pol_slot);
+		// 	Ctxt zero(m_pk);
+		// 	ea.encrypt(zero, m_pk, pol_0);
+		// 	print_decrypted(zero);
+		// 	zero -= ctxt_x;
+		// 	result.push_back(zero);
+		// }
+		// else
+		// 	result.push_back(ctxt_x);
 		result.push_back(ctxt_x);
 
 	}// 每个数字加密为一个ciphertext，packing的数字都一样
