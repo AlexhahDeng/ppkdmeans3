@@ -1,0 +1,14 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/mnt/c/Ubu20/HElib/examples/BGV_packed_arithmetic/BGV_packed_arithmetic.cpp
+iostream
+-
+helib/helib.h
+-
+
