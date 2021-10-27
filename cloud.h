@@ -11,6 +11,12 @@ struct point {
     vector<int>data;
 };
 
+struct kd_node {
+    int point_num;
+    vector<int>N;
+    vector<int>xN;
+}
+
 class cloud{
     public:
     int data_num;                   // number of data record

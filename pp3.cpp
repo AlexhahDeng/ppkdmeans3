@@ -134,6 +134,10 @@ void generate_kd_tree(cloud_one& c1, cloud_two& c2){
 
 }
 
+void filtering(cloud_one& c1, cloud_two& c2){
+    // 计算中心
+}
+
 void tmp_data(vector<point>&point_list){
     point_list.push_back({0, vector<int>{123, 43}});
     point_list.push_back({1, vector<int>{76, 987}});
