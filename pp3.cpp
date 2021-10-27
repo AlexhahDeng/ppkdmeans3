@@ -13,14 +13,14 @@ using namespace std;
 void generate_kd_tree(cloud_one& c1, cloud_two& c2){
     // 从root开始，首先secret share N{1,1,1,...}
     vector<int>N(c1.data_num, 1);
-    c2.add_new_node(N, c1.kd_tree, c2.kd_tree);
+    c2.add_new_node(N, c1.dimension, c1.kd_tree, c2.kd_tree);
     int N_index = 0;
 
     while(true){
         // 计算当前tree node中包含点个数，组合N
         int num_point = 0;
         for(int i = 0; i < c1.data_num; ++i){
-            N[i] = c1.kd_tree[N_index][i] + c2.kd_tree[N_index][i]; // 还原秘密共享分解值 
+            N[i] = c1.kd_tree[N_index].N[i] + c2.kd_tree[N_index].N[i]; // 还原秘密共享分解值 
             if(N[i])
                 num_point++;                          
         }

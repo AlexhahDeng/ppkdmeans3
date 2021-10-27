@@ -12,19 +12,20 @@ struct point {
 };
 
 struct kd_node {
-    int point_num;
-    vector<int>N;
-    vector<int>xN;
-}
+    int node_point_num;                 // number of points in current node
+    vector<int>N;                       // secret share of division info, size = data_num
+    vector<int>node_sum_x;              // Σxi*Ni, size = dimension
+    vector<vector<int>>node_min_max;    // store max and min value of every dimension in curr node, size = dimension * 2
+};
 
 class cloud{
     public:
-    int data_num;                   // number of data record
-    int dimension;                  // dimension of a single point
-    Comparator* comparator;         // comparator for later comparison
-    vector<point>point_list;        // store data for secret sharing 
-    vector<vector<int>>beaver_list; // beaver triple list for multiplication
-    vector<vector<int>>kd_tree;     // store data division info
+    int data_num;                       // number of data record
+    int dimension;                      // dimension of a single point
+    Comparator* comparator;             // comparator for later comparison
+    vector<point>point_list;            // store data for secret sharing 
+    vector<vector<int>>beaver_list;     // beaver triple list for multiplication
+    vector<kd_node>kd_tree;     // store data division info
 
     cloud(vector<point>point_list, int data_num, int dimension, Comparator* comparator);
     
@@ -86,7 +87,7 @@ class cloud_two: public cloud{
     void divide_data_set(Ctxt enc_index, cloud_one& c1, vector<int>& N, int curr_data_num);
 
     // 生成秘密共享位置信息
-    void add_new_node(vector<int>N, vector<vector<int>>& c1_kdtree, vector<vector<int>>& c2_kdtree);
+    void add_new_node(vector<int>N, int point_num,vector<kd_node>& c1_kdtree, vector<kd_node>& c2_kdtree);
 
     // 解密最大参数的下标
     int decrypt_index(Ctxt enc_var_index);

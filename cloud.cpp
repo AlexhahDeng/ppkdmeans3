@@ -7,6 +7,7 @@ cloud::cloud(vector<point>point_list, int data_num, int dimension, Comparator* c
     this->dimension = dimension;
     this->comparator = comparator;
     this->beaver_list = vector<vector<int>>(data_num);
+    // this->kd_tree = vector<vector<kd_node>>();
     // cout<<"this is cloud!"<<endl;
 }
 
@@ -20,7 +21,7 @@ void cloud::calculate_ef_xN(int N_index, vector<vector<int>>&e, vector<vector<in
         // 理论上来说，f只要一列就好了，但是这里为了保持一致性，就和e规模一样，但是每一行都一样啦
         for(int j = 0; j < dimension; ++j){
             e[i][j] = point_list[i].data[j] - beaver_list[i][0];    // eij = xij - ai
-            f[i][j] = kd_tree[N_index][i] - beaver_list[i][1];      // fij = Ni - bi
+            f[i][j] = kd_tree[N_index].N[i] - beaver_list[i][1];      // fij = Ni - bi
         }
     }
 }
@@ -192,11 +193,11 @@ void cloud_two::divide_data_set(Ctxt enc_index, cloud_one& c1, vector<int>& N, i
     }
 
     // add new node to kd_tree
-    add_new_node(Nl, c1.kd_tree, this->kd_tree);
-    add_new_node(Nr, c1.kd_tree, this->kd_tree);
+    add_new_node(Nl, curr_data_num, c1.kd_tree, this->kd_tree);
+    add_new_node(Nr, curr_data_num, c1.kd_tree, this->kd_tree);
 }
 
-void cloud_two::add_new_node(vector<int>N, vector<vector<int>>& c1_kdtree, vector<vector<int>>& c2_kdtree){
+void cloud_two::add_new_node(vector<int>N, int point_num, vector<kd_node>& c1_kdtree, vector<kd_node>& c2_kdtree){
     /**
      * func: 将由01构成的N数组，划分为由01构成的N1，N2两个点集，并分别存入c1和c2中
      * *checked
@@ -209,7 +210,8 @@ void cloud_two::add_new_node(vector<int>N, vector<vector<int>>& c1_kdtree, vecto
         // 不是做的加减法，是做的异或！
         // UPDATE: 只能做加减法，不然后续乘法部分会出错哦！
     }
-    c1_kdtree.push_back(N1);
-    c2_kdtree.push_back(N2);
+    
+    c1_kdtree.push_back({point_num, N1, vector<int>(dimension), vector<vector<int>>(dimension, vector<int>(2))});
+    c2_kdtree.push_back({point_num, N2, vector<int>(dimension), vector<vector<int>>(dimension, vector<int>(2))});
 }
 
