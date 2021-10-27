@@ -4,11 +4,11 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/mnt/c/Users/ddd/ubu20/ppkdmeans3/cloud.cpp" "/mnt/c/Users/ddd/ubu20/ppkdmeans3/CMakeFiles/ppkdmeans3.dir/cloud.cpp.o"
-  "/mnt/c/Users/ddd/ubu20/ppkdmeans3/comparator.cpp" "/mnt/c/Users/ddd/ubu20/ppkdmeans3/CMakeFiles/ppkdmeans3.dir/comparator.cpp.o"
-  "/mnt/c/Users/ddd/ubu20/ppkdmeans3/func.cpp" "/mnt/c/Users/ddd/ubu20/ppkdmeans3/CMakeFiles/ppkdmeans3.dir/func.cpp.o"
-  "/mnt/c/Users/ddd/ubu20/ppkdmeans3/pp3.cpp" "/mnt/c/Users/ddd/ubu20/ppkdmeans3/CMakeFiles/ppkdmeans3.dir/pp3.cpp.o"
-  "/mnt/c/Users/ddd/ubu20/ppkdmeans3/tools.cpp" "/mnt/c/Users/ddd/ubu20/ppkdmeans3/CMakeFiles/ppkdmeans3.dir/tools.cpp.o"
+  "/mnt/c/Ubu20/ppkdmeans3/cloud.cpp" "/mnt/c/Ubu20/ppkdmeans3/CMakeFiles/ppkdmeans3.dir/cloud.cpp.o"
+  "/mnt/c/Ubu20/ppkdmeans3/comparator.cpp" "/mnt/c/Ubu20/ppkdmeans3/CMakeFiles/ppkdmeans3.dir/comparator.cpp.o"
+  "/mnt/c/Ubu20/ppkdmeans3/func.cpp" "/mnt/c/Ubu20/ppkdmeans3/CMakeFiles/ppkdmeans3.dir/func.cpp.o"
+  "/mnt/c/Ubu20/ppkdmeans3/pp3.cpp" "/mnt/c/Ubu20/ppkdmeans3/CMakeFiles/ppkdmeans3.dir/pp3.cpp.o"
+  "/mnt/c/Ubu20/ppkdmeans3/tools.cpp" "/mnt/c/Ubu20/ppkdmeans3/CMakeFiles/ppkdmeans3.dir/tools.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

@@ -13,7 +13,7 @@ using namespace std;
 void generate_kd_tree(cloud_one& c1, cloud_two& c2){
     // 从root开始，首先secret share N{1,1,1,...}
     vector<int>N(c1.data_num, 1);
-    c2.add_new_node(N, c1.dimension, c1.kd_tree, c2.kd_tree);
+    c2.add_new_node(N, c1.data_num, c1.kd_tree, c2.kd_tree);
     int N_index = 0;
 
     while(true){
@@ -68,7 +68,7 @@ void generate_kd_tree(cloud_one& c1, cloud_two& c2){
         vector<vector<int>>xN2_sq = c2.calculate_xi_Ni_square(e1, f1);
 
         //* 计算方差了，uu们
-        // 1. 首先计算(Σxi*Ni)^2， nΣ(xi*Ni)^2
+        // 1. 首先计算(Σxi*Ni)^2， Σ(xi*Ni)^2
         vector<int>sum_xN1(c1.dimension,0), sum_xN2(sum_xN1), sum_xN1_sq(sum_xN1), sum_xN2_sq(sum_xN1);
 
         for(int i = 0; i < c1.dimension; ++i){
@@ -82,6 +82,10 @@ void generate_kd_tree(cloud_one& c1, cloud_two& c2){
             // sum_xN1_sq[i] *= c1.data_num;
             // sum_xN2_sq[i] *= c2.data_num;
         }
+
+        //! 将(Σxi*Ni)补充到kd_node中
+        c1.kd_tree[N_index].node_sum_x = sum_xN1;
+        c2.kd_tree[N_index].node_sum_x = sum_xN2;
 
         // 2. 再用一个beaver 三元组，算(Σxi*Ni)^2
         vector<vector<int>>ef1(c1.dimension, vector<int>(2)), ef2(ef1); // u1s1，我刚刚怎么没想到用一个二维数组存放ef，反正都在同一边！
@@ -126,7 +130,7 @@ void generate_kd_tree(cloud_one& c1, cloud_two& c2){
         // c1.comparator->print_decrypted(max_index);
 
         // 3. c2 解密index，取 N 和 对应index的排序结果，划分，划分完了以后，秘密共享N_l N_r
-        c2.divide_data_set(max_index, c1, N, num_point);
+        c2.divide_data_set(max_index, c1, N, num_point, N_index);
         N_index++;
     }
 
