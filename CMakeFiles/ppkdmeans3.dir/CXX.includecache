@@ -6,10 +6,6 @@
 
 #IncludeRegexTransform: 
 
-/mnt/c/Ubu20/ppkdmeans3/cloud.cpp
-cloud.h
-/mnt/c/Ubu20/ppkdmeans3/cloud.h
-
 /mnt/c/Ubu20/ppkdmeans3/cloud.h
 iostream
 -

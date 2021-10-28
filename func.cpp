@@ -1,23 +1,26 @@
 #include "func.h"
 
-void read_data() {
+void read_data()
+{
 	// 29 attributes, 65554 data
 	ifstream inFile("../../data/Reaction Network (Undirected).data", ios::in);
 	string lineStr;
 	vector<vector<string>> strArray;
-	//float array[65554][29] = { 0 };
-	vector<vector<float>>array;
+	// float array[65554][29] = { 0 };
+	vector<vector<float>> array;
 
 	if (inFile.fail())
 		cout << "read failure!" << endl;
 
-	while (getline(inFile, lineStr)) {
+	while (getline(inFile, lineStr))
+	{
 		stringstream ss(lineStr);
 		string str;
-		vector<float>data;
+		vector<float> data;
 
 		getline(ss, str, ','); // leave out the first one
-		while (getline(ss, str, ',')) {
+		while (getline(ss, str, ','))
+		{
 			data.push_back(atof(str.c_str()));
 		}
 		array.push_back(data);
@@ -27,15 +30,18 @@ void read_data() {
 	cout << "number of attributes: " << array[0].size() << endl;
 }
 
-void quick_sort(vector<point>& s, int dimension, int l, int r) {
+void quick_sort(vector<point> &s, int dimension, int l, int r)
+{
 	/**
-	* func: 对同一维度的数据进行排序
-    * *checked
-	*/
-	if (l < r) {
+	 * func: 对同一维度的数据进行排序
+	 * *checked
+	 */
+	if (l < r)
+	{
 		int i = l, j = r;
 		point x = s[l];
-		while (i < j) {
+		while (i < j)
+		{
 			while (i < j && s[j].data[dimension] >= x.data[dimension])
 				j--;
 
@@ -47,7 +53,6 @@ void quick_sort(vector<point>& s, int dimension, int l, int r) {
 
 			if (i < j)
 				s[j--] = s[i];
-
 		}
 		s[i] = x;
 		quick_sort(s, dimension, l, i - 1);
@@ -55,32 +60,36 @@ void quick_sort(vector<point>& s, int dimension, int l, int r) {
 	}
 }
 
-void random(vector<point>& point_list, int n, int m) {
+void random(vector<point> &point_list, int n, int m)
+{
 	// number of data, number of dimension
-	int l = 0, r = 1000;        // number range
+	int l = 0, r = 1000; // number range
 	srand(time(NULL));
 
-	for (int i = 0; i < n; i++) {
+	for (int i = 0; i < n; i++)
+	{
 
-		vector<int>curr_data;
+		vector<int> curr_data;
 		for (int j = 0; j < m; j++)
 			curr_data.push_back(rand() % (r - l + 1) + l);
-		point_list.push_back({ i, curr_data });
+		point_list.push_back({i, curr_data});
 	}
 }
 
-vector<vector<int>> sort_data(vector<point>point_list){
+vector<vector<int>> sort_data(vector<point> point_list)
+{
 	/**
 	 * func: sort data of every dimension
 	 */
 	int dimension = point_list[0].data.size();
-	vector<vector<int>>sort_list;
-	for(int i = 0; i < dimension; ++i){
-		vector<int>res(point_list.size());
+	vector<vector<int>> sort_list;
+	for (int i = 0; i < dimension; ++i)
+	{
+		vector<int> res(point_list.size());
 
 		quick_sort(point_list, i, 0, point_list.size() - 1);
 
-		for(int j = 0; j < point_list.size(); ++j)
+		for (int j = 0; j < point_list.size(); ++j)
 			res[j] = point_list[j].index;
 
 		sort_list.push_back(res);
@@ -88,33 +97,37 @@ vector<vector<int>> sort_data(vector<point>point_list){
 	return sort_list;
 }
 
-void divide_data(vector<point>point_list, int data_range, vector<point>&c1, vector<point>&c2){
+void divide_data(vector<point> point_list, int data_range, vector<point> &c1, vector<point> &c2)
+{
 	/**
 	 * func: 将数据随机拆分成两份
-     * *checked
+	 * *checked
 	 */
 	c1 = point_list;
 	c2 = point_list;
 	srand(time(NULL));
 
-	for(int i = 0; i < point_list.size(); ++i){
-		for(int j = 0; j < point_list[0].data.size(); ++j){
+	for (int i = 0; i < point_list.size(); ++i)
+	{
+		for (int j = 0; j < point_list[0].data.size(); ++j)
+		{
 			int num = rand() % point_list[i].data[j]; //! FIXME 这里没有模数据范围，而是模原始数据，保证秘密共享拆分结果都是整数，不知道会不会有问题
 			c1[i].data[j] = num;
 			c2[i].data[j] -= num;
 		}
 	}
-
 }
 
-void generate_beaver_set(int n, int data_range, vector<vector<int>>&c1_list, vector<vector<int>>&c2_list){
+void generate_beaver_set(int n, int data_range, vector<vector<int>> &c1_list, vector<vector<int>> &c2_list)
+{
 	/**
 	 * func: 生成乘法所需beaver三元组
 	 * note: c1_list, c2_list都是在云中生成好了的
 	 * *checked
 	 */
 	srand(time(NULL));
-	for(int i = 0; i < n; ++i){
+	for (int i = 0; i < n; ++i)
+	{
 		int a = rand() % data_range;
 		int b = rand() % data_range;
 		int c = a * b;
@@ -133,3 +146,68 @@ void generate_beaver_set(int n, int data_range, vector<vector<int>>&c1_list, vec
 	}
 }
 
+
+void tmp_data(vector<point> &point_list)
+{
+	/**
+	 * func: 固定化测试数据
+	 */ 
+    point_list.push_back({0, vector<int>{123, 43}});
+    point_list.push_back({1, vector<int>{76, 987}});
+    point_list.push_back({2, vector<int>{234, 76}});
+    point_list.push_back({3, vector<int>{67, 567}});
+    point_list.push_back({4, vector<int>{59, 473}});
+}
+
+// func: 用户初始化簇中心，确保点不重复--checked
+void ini_clu_cen(cloud_one &c1, cloud_two &c2)
+{
+    srand(time(NULL));
+    // FIXME: 如果由cloud来随机选择初始簇中心，那不就暴露最初的中心了？虽然没有暴露值
+    // 俺明白了，没关系！可以视为由用户初始化的啦！
+    vector<int> ran_index(c1.k);
+    int count = 0;
+
+    while (count < c1.k)
+    {
+        int k_index = rand() % c1.data_num, isExist = 0;
+        int i = 0;
+        while (i < count)
+        {
+            if (ran_index[i] == k_index)
+            {
+                isExist = 1;
+                break;
+            } // 随机下标已经取过了，不能要
+            i++;
+        }
+        if (isExist)
+            continue;
+        ran_index[count++] = k_index;
+    }
+
+    for (auto k_index : ran_index)
+    {
+        c1.clu_cen.push_back(c1.point_list[k_index].data);
+        c2.clu_cen.push_back(c2.point_list[k_index].data);
+    }
+
+    return;
+}
+
+// func: 用户初始化候选中心给root--checked
+void ini_candidate_k(cloud_one &c1, cloud_two &c2)
+{
+    vector<int>candidate1(c1.k);
+    vector<int>candidate2(c2.k);
+
+    srand(time(NULL));
+    for(int i = 0; i < c1.k; i++)
+    {
+        candidate1[i] = rand() % 2;
+        candidate2[i] = 1 - candidate1[i];
+    }
+
+    c1.kd_tree[0].candidate_k = candidate1;
+    c2.kd_tree[0].candidate_k = candidate2;
+}

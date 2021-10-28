@@ -31,4 +31,12 @@ vector<vector<int>> sort_data(vector<point>point_list);
 
 // 生成beaver三元组
 void generate_beaver_set(int n, int data_range, vector<vector<int>>&c1_list, vector<vector<int>>&c2_list);
-          
+
+// 固定化测试数据
+void tmp_data(vector<point> &point_list);
+
+// func: 用户初始化簇中心，确保点不重复--checked
+void ini_clu_cen(cloud_one &c1, cloud_two &c2);
+
+// func: 用户初始化候选中心给root--checked
+void ini_candidate_k(cloud_one &c1, cloud_two &c2);
