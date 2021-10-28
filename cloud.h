@@ -16,18 +16,22 @@ struct kd_node {
     vector<int>N;                       // secret share of division info, size = data_num
     vector<int>node_sum_x;              // Σxi*Ni, size = dimension
     vector<vector<int>>node_min_max;    // store max and min value of every dimension in curr node, size = dimension * 2
+    vector<int>candidate_k;             // possible cluster belonging to
 };
 
 class cloud{
     public:
+    int k;                              // number of clusters
     int data_num;                       // number of data record
     int dimension;                      // dimension of a single point
     Comparator* comparator;             // comparator for later comparison
     vector<point>point_list;            // store data for secret sharing 
-    vector<vector<int>>beaver_list;     // beaver triple list for multiplication
-    vector<kd_node>kd_tree;     // store data division info
+    vector<vector<int>>beaver_list;     // beaver triple list for multiplication, size = data_num×3
+    vector<kd_node>kd_tree;             // store data division info
 
-    cloud(vector<point>point_list, int data_num, int dimension, Comparator* comparator);
+    vector<vector<int>>clu_cen;       // size = k × dimension
+
+    cloud(vector<point>point_list, int data_num, int dimension, Comparator* comparator, int k);
     
     // 计算xi * Ni的中间结果e,f
     void calculate_ef_xN(int N_index, vector<vector<int>>&e, vector<vector<int>>&f);
@@ -47,7 +51,7 @@ class cloud_one: public cloud{
     public:
     //! 按道理来说有个shuffling rules，这里先不写（问题可能有点大，但我不想写
 
-    cloud_one(vector<point>point_list, int data_num, int dimension, Comparator* comparator);
+    cloud_one(vector<point>point_list, int data_num, int dimension, Comparator* comparator, int k);
 
     // cloud one calculate xi*Ni_1 = f *a1 + e * b1 + c1
     vector<vector<int>> calculate_xi_Ni(vector<vector<int>>&e, vector<vector<int>>&f);
@@ -66,7 +70,7 @@ class cloud_two: public cloud{
     public:
     vector<vector<int>>sorted_index; // size = dimension×data_num
 
-    cloud_two(vector<point>point_list, int data_num, int dimension, Comparator* comparator, vector<vector<int>>sorted_index);
+    cloud_two(vector<point>point_list, int data_num, int dimension, Comparator* comparator, vector<vector<int>>sorted_index, int k);
 
     // cloud two calculate xi*Ni_2 = e*f + f*a2 + e*b2 + c2
     vector<vector<int>> calculate_xi_Ni(vector<vector<int>>&e, vector<vector<int>>&f);
@@ -92,4 +96,3 @@ class cloud_two: public cloud{
     // 解密最大参数的下标
     int decrypt_index(Ctxt enc_var_index);
 };
-

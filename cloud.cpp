@@ -1,13 +1,14 @@
 #include "cloud.h"
 
 // cloud
-cloud::cloud(vector<point> point_list, int data_num, int dimension, Comparator *comparator)
+cloud::cloud(vector<point> point_list, int data_num, int dimension, Comparator *comparator, int k)
 {
     this->point_list = point_list;
     this->data_num = data_num;
     this->dimension = dimension;
     this->comparator = comparator;
     this->beaver_list = vector<vector<int>>(data_num);
+    this->k = k;
     // this->kd_tree = vector<vector<kd_node>>();
     // cout<<"this is cloud!"<<endl;
 }
@@ -73,7 +74,7 @@ vector<Ctxt> cloud::encrypt_variance(vector<int> vari)
 }
 
 // cloud_one
-cloud_one::cloud_one(vector<point> point_list, int data_num, int dimension, Comparator *comparator) : cloud(point_list, data_num, dimension, comparator)
+cloud_one::cloud_one(vector<point> point_list, int data_num, int dimension, Comparator *comparator, int k) : cloud(point_list, data_num, dimension, comparator, k)
 {
     // cout<<"this is cloud_one"<<endl;
 }
@@ -131,7 +132,7 @@ Ctxt cloud_one::max_variance(vector<Ctxt> enc_variance, vector<Ctxt> zero_one)
 }
 
 // cloud_two
-cloud_two::cloud_two(vector<point> point_list, int data_num, int dimension, Comparator *comparator, vector<vector<int>> sorted_index) : cloud(point_list, data_num, dimension, comparator)
+cloud_two::cloud_two(vector<point> point_list, int data_num, int dimension, Comparator *comparator, vector<vector<int>> sorted_index, int k) : cloud(point_list, data_num, dimension, comparator, k)
 {
     this->sorted_index = sorted_index;
     // cout<<"this is cloud two"<<endl;
@@ -254,6 +255,6 @@ void cloud_two::add_new_node(vector<int> N, int point_num, vector<kd_node> &c1_k
         // UPDATE: 只能做加减法，不然后续乘法部分会出错哦！
     }
 
-    c1_kdtree.push_back({point_num, N1, vector<int>(dimension), vector<vector<int>>(dimension, vector<int>(2))});
-    c2_kdtree.push_back({point_num, N2, vector<int>(dimension), vector<vector<int>>(dimension, vector<int>(2))});
+    c1_kdtree.push_back({point_num, N1, vector<int>(dimension), vector<vector<int>>(dimension, vector<int>(2)), vector<int>(k)});
+    c2_kdtree.push_back({point_num, N2, vector<int>(dimension), vector<vector<int>>(dimension, vector<int>(2)), vector<int>(k)});
 }

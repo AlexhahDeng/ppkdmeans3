@@ -1,0 +1,26 @@
+pseudo-code
+
+// add to cloud()
+vector<vector<int>>clu_cen(k, vector<int>(dimension)) 
+vector<vector<int>>new_clu_cen(clu_cen) 
+vector<int>clu_data_num(k, 1)// for first time cal dist, secret share between c1 and c2
+
+// initialze clustering centers k
+vector<int>index(k)
+void ini_clu_cen(cloud1 c1, cloud2 c2):
+	for i = 1 to k:
+		index = random() // pick random index of data point make sure no repeated index!
+		c1.clu_cen[i] = c1.point_list[index].data
+		do the same thing with c2
+	
+	
+// calculate center of current node
+// 似乎不用特意算，用的时候÷一下就好了！
+
+// calculate the dist between node_cen and clu_c no matter leaf node or not
+// add below to cloud()
+void calculate_dist(int N_index):
+	ci is already in kd_tree
+	
+
+

@@ -138,8 +138,40 @@ void generate_kd_tree(cloud_one& c1, cloud_two& c2){
 
 }
 
+void ini_clu_cen(cloud_one& c1, cloud_two& c2){
+    srand(time(NULL));
+    // FIXME: 如果由cloud来随机选择初始簇中心，那不就暴露最初的中心了？虽然没有暴露值
+    vector<int>ran_index(c1.k);
+    int count = 0;
+
+    while(count < c1.k){
+        int k_index = rand() % c1.data_num, isExist = 0;
+        int i = 0;
+        while(i < count){
+            if(ran_index[i] == k_index)
+            {
+                isExist = 1;
+                break;
+            }// 随机下标已经取过了，不能要
+            i++;
+        }
+        if(isExist)
+            continue;
+        ran_index[count++] = k_index;
+    }
+
+    for(auto k_index : ran_index)
+    {
+        c1.clu_cen.push_back(c1.point_list[k_index].data);
+        c2.clu_cen.push_back(c2.point_list[k_index].data);
+    }
+
+    return;
+}
+
 void filtering(cloud_one& c1, cloud_two& c2){
-    // 计算中心
+    // 初始化 ，随机选择 簇中心，以及candidate set为 全1秘密共享
+
 }
 
 void tmp_data(vector<point>&point_list){
@@ -151,21 +183,33 @@ void tmp_data(vector<point>&point_list){
 }
 
 int main(){
-    Comparator* comparator = generate_comparator(false);
-    int data_num = 5, dimension = 2;
+    // 初始化数据信息
+    int data_num = 10, dimension = 2;
     vector<point>point_list, c1_data, c2_data;
-    tmp_data(point_list);
-    // random(point_list, data_num, dimension);
+    // tmp_data(point_list);
+    random(point_list, data_num, dimension);
     vector<vector<int>>sorted_index = sort_data(point_list);
+
+    // 划分原始数据，用于秘密共享
     divide_data(point_list, 10000, c1_data, c2_data);
 
-    cloud_one c1(c1_data, data_num, dimension, comparator);
-    cloud_two c2(c2_data, data_num, dimension, comparator, sorted_index);
+    // 构造比较器
+    Comparator* comparator = generate_comparator(false);
 
+    // 初始化云
+    cloud_one c1(c1_data, data_num, dimension, comparator, 5);
+    cloud_two c2(c2_data, data_num, dimension, comparator, sorted_index, 5);
+
+    ini_clu_cen(c1, c2);
+
+    // 构造乘法所需beaver三元组
     generate_beaver_set(data_num, 100, c1.beaver_list, c2.beaver_list);
 
-    // generate kd tree
+    // 构造kd tree
     generate_kd_tree(c1, c2);
-    // comparator->test_compare();
+
+    // 聚类过程
+    filtering(c1, c2);
+
     return 0;
 }
