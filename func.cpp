@@ -195,9 +195,11 @@ void ini_clu_cen(cloud_one &c1, cloud_two &c2)
     return;
 }
 
-// func: 用户初始化候选中心给root--checked
+// func: 用户初始化候选中心和簇大小给root--checked
 void ini_candidate_k(cloud_one &c1, cloud_two &c2)
 {
+	// 初始每个簇中包含的点数为1，这样不影响公式的正常计算！
+	// 刚好vector的长度和candidate set一样，那就一家人不说两家话，弄成一样的呗
     vector<int>candidate1(c1.k);
     vector<int>candidate2(c2.k);
 
@@ -206,8 +208,18 @@ void ini_candidate_k(cloud_one &c1, cloud_two &c2)
     {
         candidate1[i] = rand() % 2;
         candidate2[i] = 1 - candidate1[i];
-    }
+    }	//一开始候选集全部成立
 
     c1.kd_tree[0].candidate_k = candidate1;
     c2.kd_tree[0].candidate_k = candidate2;
+
+	c1.clu_point_num = candidate1;
+	c2.clu_point_num = candidate2;
+
+}
+
+void mul_clu_point_num(cloud_one& c1, cloud_two& c2){
+	// 烦死啦！只能两个两个乘，二分把！
+	vector<int>e1(c1.k), e2(e1), f1(e1), f2(e1);
+	for(int i = 0; i < c1.k)
 }

@@ -152,8 +152,12 @@ void generate_kd_tree(cloud_one &c1, cloud_two &c2)
 void filtering(cloud_one &c1, cloud_two &c2)
 {
     
-    ini_clu_cen(c1, c2);        // 初始化簇中心
-    ini_candidate_k(c1, c2);    // 初始化候选集
+    ini_clu_cen(c1, c2);        // 初始化簇中心，存放在cloud中
+    ini_candidate_k(c1, c2);    // 初始化候选集和簇中点数，存放在kd_node中
+
+    // 开始计算node中心到簇中心的距离
+    
+    // 1. 预计算簇中心连乘的结果，最后期望get{α1...αk,α}
     
     return;
 

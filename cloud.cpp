@@ -9,6 +9,8 @@ cloud::cloud(vector<point> point_list, int data_num, int dimension, Comparator *
     this->comparator = comparator;
     this->beaver_list = vector<vector<int>>(data_num);
     this->k = k;
+    // this->clu_point_num = vector<int>(k);
+    // this->clu_cen = vector<vector<int
     // this->kd_tree = vector<vector<kd_node>>();
     // cout<<"this is cloud!"<<endl;
 }

@@ -32,7 +32,9 @@ public:
     vector<vector<int>> beaver_list; // beaver triple list for multiplication, size = data_num×3
     vector<kd_node> kd_tree;         // store data division info
 
-    vector<vector<int>> clu_cen; // size = k × dimension
+    vector<vector<int>> clu_cen;     // size = k × dimension, no need to initialize
+    vector<int>clu_point_num;        // len = k, update during iteration
+    vector<int>mul_point_num;        // multiply the number of points in clusters
 
     cloud(vector<point> point_list, int data_num, int dimension, Comparator *comparator, int k);
 

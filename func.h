@@ -38,5 +38,9 @@ void tmp_data(vector<point> &point_list);
 // func: 用户初始化簇中心，确保点不重复--checked
 void ini_clu_cen(cloud_one &c1, cloud_two &c2);
 
-// func: 用户初始化候选中心给root--checked
+// func: 用户初始化候选中心和初始簇中心给root--checked
 void ini_candidate_k(cloud_one &c1, cloud_two &c2);
+
+// func: 预计算簇中心连乘的结果
+void mul_clu_point_num(cloud_one& c1, cloud_two& c2);
+
