@@ -75,6 +75,17 @@ vector<Ctxt> cloud::encrypt_variance(vector<int> vari)
     return vec;
 }
 
+// v is single dimension
+vector<vector<int>> cloud::calculate_po_num_ef(vector<int>& v){
+    vector<vector<int>>result(v.size()/2, vector<int>(2));  // size = v.size()/2 × 2
+    for(int i = 0; i < v.size()/2; ++i){
+        result[i][0] = v[2*i] - beaver_list[i][0];        // e = x - a, x = α[2i]
+        result[i][1] = v[2*i + 1] - beaver_list[i][1];    // f = y - b, y = α[2i+1]
+    }// 如果长度为偶数，最后一个数，不处理哦！
+    return result;
+}
+
+
 // cloud_one
 cloud_one::cloud_one(vector<point> point_list, int data_num, int dimension, Comparator *comparator, int k) : cloud(point_list, data_num, dimension, comparator, k)
 {
@@ -131,6 +142,14 @@ Ctxt cloud_one::max_variance(vector<Ctxt> enc_variance, vector<Ctxt> zero_one)
      */
 
     return zero_one[0];
+}
+
+vector<int> cloud_one::calculate_po_num(vector<vector<int>>& ef){
+    vector<int>result(ef.size());
+    for(int i = 0; i < ef.size(); ++i){
+        result[i] = beaver_list[i][0] * ef[i][1] + beaver_list[i][1] * ef[i][0] + beaver_list[i][2];
+    }
+    return result;
 }
 
 // cloud_two
@@ -259,4 +278,12 @@ void cloud_two::add_new_node(vector<int> N, int point_num, vector<kd_node> &c1_k
 
     c1_kdtree.push_back({point_num, N1, vector<int>(dimension), vector<vector<int>>(dimension, vector<int>(2)), vector<int>(k)});
     c2_kdtree.push_back({point_num, N2, vector<int>(dimension), vector<vector<int>>(dimension, vector<int>(2)), vector<int>(k)});
+}
+
+vector<int> cloud_two::calculate_po_num(vector<vector<int>>& ef){
+    vector<int>result(ef.size());
+    for(int i = 0; i < ef.size(); ++i){ 
+        result[i] = ef[i][0] * ef[i][1] + beaver_list[i][0] * ef[i][1] + beaver_list[i][1] * ef[i][0] + beaver_list[i][2];
+    }
+    return result;
 }

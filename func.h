@@ -44,3 +44,5 @@ void ini_candidate_k(cloud_one &c1, cloud_two &c2);
 // func: 预计算簇中心连乘的结果
 void mul_clu_point_num(cloud_one& c1, cloud_two& c2);
 
+// func: 向量内互不相同元素按顺序两两相乘
+vector<vector<int>> mul_in_vec(cloud_one &c1, cloud_two &c2, vector<int>& v1, vector<int>& v2);

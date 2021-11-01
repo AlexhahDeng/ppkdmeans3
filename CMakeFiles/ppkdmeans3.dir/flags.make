@@ -6,5 +6,5 @@ CXX_FLAGS =   -std=c++17
 
 CXX_DEFINES = -DHELIB_BOOT_THREADS -DHELIB_THREADS
 
-CXX_INCLUDES = -I/mnt/c/Ubu20/ppkdmeans3 -isystem /usr/local/helib_pack/include 
+CXX_INCLUDES = -I/home/dd/Ubu20/ppkdmeans3 -isystem /usr/local/helib_pack/include 
 

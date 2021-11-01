@@ -1,3 +1,3 @@
-/mnt/c/Ubu20/ppkdmeans3/build/CMakeFiles/rebuild_cache.dir
-/mnt/c/Ubu20/ppkdmeans3/build/CMakeFiles/edit_cache.dir
-/mnt/c/Ubu20/ppkdmeans3/build/CMakeFiles/ppkdmeans3.dir
+/home/dd/Ubu20/ppkdmeans3/build/CMakeFiles/rebuild_cache.dir
+/home/dd/Ubu20/ppkdmeans3/build/CMakeFiles/edit_cache.dir
+/home/dd/Ubu20/ppkdmeans3/build/CMakeFiles/ppkdmeans3.dir

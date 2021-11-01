@@ -49,6 +49,9 @@ public:
 
     // 加密输入的数据
     vector<Ctxt> encrypt_variance(vector<int> vari);
+
+    // 计算(αi*αi+1)的中间结果e，f
+    vector<vector<int>> calculate_po_num_ef(vector<int>&v);
 };
 
 class cloud_one : public cloud
@@ -69,6 +72,10 @@ public:
 
     // cloud_one figure out index of maximum variance
     Ctxt max_variance(vector<Ctxt> enc_variance, vector<Ctxt> zero_one);
+
+    // cloud one calculate (αi*αi+1) = f*α1 + e*b1 + c1
+    vector<int> calculate_po_num(vector<vector<int>>& ef);
+
 };
 
 class cloud_two : public cloud
@@ -101,4 +108,8 @@ public:
 
     // 解密最大参数的下标
     int decrypt_index(Ctxt enc_var_index);
+
+    // cloud two calculate (αi*αi+1) = e*f + f*α2 + e*b2 + c2
+    vector<int> calculate_po_num(vector<vector<int>>& ef);
+
 };

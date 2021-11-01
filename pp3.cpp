@@ -158,7 +158,7 @@ void filtering(cloud_one &c1, cloud_two &c2)
     // 开始计算node中心到簇中心的距离
     
     // 1. 预计算簇中心连乘的结果，最后期望get{α1...αk,α}
-    
+    mul_clu_point_num(c1, c2);
     return;
 
 }
@@ -166,7 +166,7 @@ void filtering(cloud_one &c1, cloud_two &c2)
 int main()
 {
     // 初始化数据信息
-    int data_num = 10, dimension = 2;
+    int data_num = 10, dimension = 3;
     vector<point> point_list, c1_data, c2_data;
     // tmp_data(point_list);
     random(point_list, data_num, dimension);

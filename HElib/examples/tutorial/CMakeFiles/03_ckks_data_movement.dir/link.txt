@@ -1,1 +1,0 @@
-/usr/bin/c++     CMakeFiles/03_ckks_data_movement.dir/03_ckks_data_movement.cpp.o  -o ../bin/03_ckks_data_movement  -Wl,-rpath,/usr/local/helib_pack/lib /usr/local/helib_pack/lib/libhelib.a /usr/local/helib_pack/lib/libntl.so /usr/local/helib_pack/lib/libgmp.so -lpthread 
