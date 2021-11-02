@@ -76,15 +76,55 @@ vector<Ctxt> cloud::encrypt_variance(vector<int> vari)
 }
 
 // v is single dimension
-vector<vector<int>> cloud::calculate_po_num_ef(vector<int>& v){
-    vector<vector<int>>result(v.size()/2, vector<int>(2));  // size = v.size()/2 × 2
-    for(int i = 0; i < v.size()/2; ++i){
-        result[i][0] = v[2*i] - beaver_list[i][0];        // e = x - a, x = α[2i]
-        result[i][1] = v[2*i + 1] - beaver_list[i][1];    // f = y - b, y = α[2i+1]
-    }// 如果长度为偶数，最后一个数，不处理哦！
+vector<vector<int>> cloud::calculate_po_num_ef(vector<int> &v)
+{
+    vector<vector<int>> result(v.size() / 2, vector<int>(2)); // size = v.size()/2 × 2
+    for (int i = 0; i < v.size() / 2; ++i)
+    {
+        result[i][0] = v[2 * i] - beaver_list[i][0];     // e = x - a, x = α[2i]
+        result[i][1] = v[2 * i + 1] - beaver_list[i][1]; // f = y - b, y = α[2i+1]
+    }                                                    // 如果长度为偶数，最后一个数，不处理哦！
     return result;
 }
 
+vector<vector<int>> cloud::calculate_dist_ef(int node_index, int k_index)
+{
+    vector<vector<int>> ef(dimension * 3 + 3, vector<int>(2));
+    // 按照node中心{c0...cd},{k0...kd},{α, αj}的顺序依次排开
+    int i = 0;
+    while (i < dimension)
+    {
+        ef[i][0] = kd_tree[node_index].node_sum_x[i] / kd_tree[node_index].node_point_num - beaver_list[i][0]; // ci/n - a
+        ef[i][1] = kd_tree[node_index].node_sum_x[i] / kd_tree[node_index].node_point_num - beaver_list[i][1]; // ci/n - b
+        i++;
+    } // 计算Ci×Ci
+
+    while (i < dimension * 2)
+    {
+        ef[i][0] = clu_cen[k_index][i - dimension] - beaver_list[i][0]; // ki - a
+        ef[i][1] = clu_cen[k_index][i - dimension] - beaver_list[i][1]; // ki - b
+        ++i;
+    } // 计算Ki×Ki
+
+    while (i < dimension * 3)
+    {
+        ef[i][0] = kd_tree[node_index].node_sum_x[i - 2 * dimension] / kd_tree[node_index].node_point_num - beaver_list[i][0];  // ci - a
+        ef[i][1] = clu_cen[k_index][i - 2 * dimension] - beaver_list[i][1];                                                     // ki - b    
+    } // 计算 ci*ki
+
+    ef[i][0] = mul_point_num[k] - beaver_list[i][0]; // α - a
+    ef[i][1] = mul_point_num[k] - beaver_list[i][1]; // α - b
+    ++i;
+
+    ef[i][0] = mul_point_num[k_index] - beaver_list[i][0]; // αj - a
+    ef[i][1] = mul_point_num[k_index] - beaver_list[i][1]; // αj - b
+    i++;
+
+    ef[i][0] = mul_point_num[k] - beaver_list[i][0];       // α - a
+    ef[i][1] = mul_point_num[k_index] - beaver_list[i][1]; // αj - b
+
+    return ef;
+}
 
 // cloud_one
 cloud_one::cloud_one(vector<point> point_list, int data_num, int dimension, Comparator *comparator, int k) : cloud(point_list, data_num, dimension, comparator, k)
@@ -144,11 +184,39 @@ Ctxt cloud_one::max_variance(vector<Ctxt> enc_variance, vector<Ctxt> zero_one)
     return zero_one[0];
 }
 
-vector<int> cloud_one::calculate_po_num(vector<vector<int>>& ef){
-    vector<int>result(ef.size());
-    for(int i = 0; i < ef.size(); ++i){
+vector<int> cloud_one::calculate_mul_final(vector<vector<int>> &ef)
+{
+    vector<int> result(ef.size());
+    for (int i = 0; i < ef.size(); ++i)
+    {
         result[i] = beaver_list[i][0] * ef[i][1] + beaver_list[i][1] * ef[i][0] + beaver_list[i][2];
     }
+    return result;
+}
+
+vector<int> cloud_one::calculate_dist_para(vector<int> ef)
+{
+    vector<int> para(ef.size);
+    for (int i = 0; i < ef.size; i++)
+    {
+        para[i] = ef[i][0] * beaver_list[i][1] + ef[i][1] * beaver_list[i][0] + beaver_list[i][2];
+    }
+
+    // Σc^2
+    vector<int>result(3);
+    int sum_c_square = 0, sum_k_square = 0, c_mul_k = 0, i = 0;
+    while(i < dimension)
+        sum_c_square += para[i++];
+    result[0] = sum_c_square;
+
+    while(i < 2*dimension)
+        sum_k_square += para[i++];
+    result[1] = sum_k_square;
+
+    while(i < 3*dimension)
+        c_mul_k += para[i++];
+    result[2] = c_mul_k;
+
     return result;
 }
 
@@ -280,10 +348,38 @@ void cloud_two::add_new_node(vector<int> N, int point_num, vector<kd_node> &c1_k
     c2_kdtree.push_back({point_num, N2, vector<int>(dimension), vector<vector<int>>(dimension, vector<int>(2)), vector<int>(k)});
 }
 
-vector<int> cloud_two::calculate_po_num(vector<vector<int>>& ef){
-    vector<int>result(ef.size());
-    for(int i = 0; i < ef.size(); ++i){ 
+vector<int> cloud_two::calculate_mul_final(vector<vector<int>> &ef)
+{
+    vector<int> result(ef.size());
+    for (int i = 0; i < ef.size(); ++i)
+    {
         result[i] = ef[i][0] * ef[i][1] + beaver_list[i][0] * ef[i][1] + beaver_list[i][1] * ef[i][0] + beaver_list[i][2];
     }
+    return result;
+}
+
+vector<int> cloud_one::calculate_dist_para(vector<int> ef)
+{
+    vector<int> para(ef.size);
+    for (int i = 0; i < ef.size; i++)
+    {
+        para[i] = ef[i][1]*ef[i][0] + ef[i][0] * beaver_list[i][1] + ef[i][1] * beaver_list[i][0] + beaver_list[i][2];
+    }
+
+    // Σc^2
+    vector<int>result(3);
+    int sum_c_square = 0, sum_k_square = 0, c_mul_k = 0, i = 0;
+    while(i < dimension)
+        sum_c_square += para[i++];
+    result[0] = sum_c_square;
+
+    while(i < 2*dimension)
+        sum_k_square += para[i++];
+    result[1] = sum_k_square;
+
+    while(i < 3*dimension)
+        c_mul_k += para[i++];
+    result[2] = c_mul_k;
+
     return result;
 }

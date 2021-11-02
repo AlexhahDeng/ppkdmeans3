@@ -216,7 +216,7 @@ void ini_candidate_k(cloud_one &c1, cloud_two &c2)
 	c2.clu_point_num = candidate2;
 }
 
-vector<vector<int>> mul_in_vec(cloud_one &c1, cloud_two &c2, vector<int>& v1, vector<int>& v2)
+vector<vector<int>> mul_in_vec(cloud_one &c1, cloud_two &c2, vector<int> &v1, vector<int> &v2)
 {
 	// 向量v中所有奇偶元素相乘，也就是01，23，45...
 	// 最后剩下的元素直接添加到result末尾
@@ -232,8 +232,8 @@ vector<vector<int>> mul_in_vec(cloud_one &c1, cloud_two &c2, vector<int>& v1, ve
 	} // 合并e，f，暂存在1中
 
 	// 计算结果
-	vector<int> r1 = c1.calculate_po_num(ef1);
-	vector<int> r2 = c2.calculate_po_num(ef1);
+	vector<int> r1 = c1.calculate_mul_final(ef1);
+	vector<int> r2 = c2.calculate_mul_final(ef1);
 
 	if (v1.size() % 2 != 0)
 	{
@@ -247,18 +247,20 @@ vector<vector<int>> mul_in_vec(cloud_one &c1, cloud_two &c2, vector<int>& v1, ve
 void mul_clu_point_num(cloud_one &c1, cloud_two &c2)
 {
 	// TODO 烦死啦！只能两个两个乘，二分把！
-	vector<vector<int>>vec{c1.clu_point_num, c2.clu_point_num};
-	vector<int>r1(c1.k+1), r2(c2.k+1);
+	vector<vector<int>> vec{c1.clu_point_num, c2.clu_point_num};
+	vector<int> r1(c1.k + 1), r2(c2.k + 1);
 
-	for(int i = 0; i < c1.k; i++){
-		vec[0][i]=0;
-		vec[1][i]=1;
-		vector<vector<int>>result(vec);
+	for (int i = 0; i < c1.k; i++)
+	{
+		vec[0][i] = 0;
+		vec[1][i] = 1;
+		vector<vector<int>> result(vec);
 
-		while(true){
-			vector<vector<int>>aha = mul_in_vec(c1, c2, result[0], result[1]);
+		while (true)
+		{
+			vector<vector<int>> aha = mul_in_vec(c1, c2, result[0], result[1]);
 			result = aha;
-			if(aha[0].size() <= 1)
+			if (aha[0].size() <= 1)
 				break;
 		}
 		r1[i] = result[0][0];
@@ -269,13 +271,45 @@ void mul_clu_point_num(cloud_one &c1, cloud_two &c2)
 	}
 
 	// 全部相乘
-	vector<vector<int>>result = vec;
-	while(true){
-		vector<vector<int>>aha = mul_in_vec(c1, c2, result[0], result[1]);
+	vector<vector<int>> result = vec;
+	while (true)
+	{
+		vector<vector<int>> aha = mul_in_vec(c1, c2, result[0], result[1]);
 		result = aha;
-		if(aha[0].size() <= 1)
+		if (aha[0].size() <= 1)
 			break;
 	}
 	r1[c1.k] = result[0][0];
 	r2[c2.k] = result[1][0];
+
+	c1.mul_point_num = r1;
+	c2.mul_point_num = r2;
+
+	// by the way, clu_point_num 更新完就可以全部设置为0了
+	c1.clu_point_num = vector<int>(c1.k, 0);
+	c2.clu_point_num = vector<int>(c2.k, 0);
+	return;
+}
+
+void cal_dist(cloud_one &c1, cloud_two &c2, int node_index)
+{
+	for (int i = 0; i < c1.k; ++i)
+	{
+		vector<vector<int>> ef1 = c1.calculate_dist_ef(node_index, i);
+		vector<vector<int>> ef2 = c2.calculate_dist_ef(node_index, i);
+
+		for (int j = 0; j < ef1.size(); j++)
+		{
+			ef1[j][0] += ef2[j][0];
+			ef1[j][1] += ef2[j][1];
+		} // 合并e，f，暂存到ef1中
+
+		// 获取中间参数的乘法结果
+		vector<int> para1 = c1.calculate_dist_para(ef1);	// Σc^2, Σk^2, ci*ki
+		vector<int> para2 = c2.calculate_dist_para(ef2);
+
+		// 计算
+
+
+	} // 计算中心到第i个簇的距离
 }

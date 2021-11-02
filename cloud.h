@@ -52,6 +52,9 @@ public:
 
     // 计算(αi*αi+1)的中间结果e，f
     vector<vector<int>> calculate_po_num_ef(vector<int>&v);
+
+    // 计算距离的中间结果e，f
+    vector<vector<int>> calculate_dist_ef(int node_index, int k_index);
 };
 
 class cloud_one : public cloud
@@ -73,8 +76,11 @@ public:
     // cloud_one figure out index of maximum variance
     Ctxt max_variance(vector<Ctxt> enc_variance, vector<Ctxt> zero_one);
 
-    // cloud one calculate (αi*αi+1) = f*α1 + e*b1 + c1
-    vector<int> calculate_po_num(vector<vector<int>>& ef);
+    // cloud one using ef to get final result f*a1 + e*b1 + c1
+    vector<int> calculate_mul_final(vector<vector<int>>& ef);
+
+    // cloud one calculate secret sharing distance parameters
+    vector<int> calculate_dist_para(vector<int>ef);
 
 };
 
@@ -109,7 +115,14 @@ public:
     // 解密最大参数的下标
     int decrypt_index(Ctxt enc_var_index);
 
-    // cloud two calculate (αi*αi+1) = e*f + f*α2 + e*b2 + c2
-    vector<int> calculate_po_num(vector<vector<int>>& ef);
+    // cloud two using ef to calculate final result e*f + f*α2 + e*b2 + c2
+    vector<int> calculate_mul_final(vector<vector<int>>& ef);
+
+    // cloud one calculate secret sharing distance
+    vector<int> calculate_dist_res(vector<int>ef);
+
+    // cloud two calculate secret sharing distance parameters
+    vector<int> calculate_dist_para(vector<int> ef);
+
 
 };
