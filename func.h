@@ -45,4 +45,4 @@ void ini_candidate_k(cloud_one &c1, cloud_two &c2);
 void mul_clu_point_num(cloud_one& c1, cloud_two& c2);
 
 // func: 向量内互不相同元素按顺序两两相乘
-vector<vector<int>> mul_in_vec(cloud_one &c1, cloud_two &c2, vector<int>& v1, vector<int>& v2);
+vector<vector<int>> cal_dist(cloud_one &c1, cloud_two &c2, int node_index);

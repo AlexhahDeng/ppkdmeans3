@@ -188,7 +188,7 @@ void filtering(cloud_one &c1, cloud_two &c2)
     mul_clu_point_num(c1, c2);
 
     // 2. 计算中心到每个簇中心的距离
-    
+    vector<vector<int>>dist = cal_dist(c1, c2, 0);
 
     //
     return;

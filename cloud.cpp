@@ -87,7 +87,27 @@ vector<vector<int>> cloud::calculate_po_num_ef(vector<int> &v)
     return result;
 }
 
-vector<vector<int>> cloud::calculate_dist_ef(int node_index, int k_index)
+vector<vector<int>> cloud::calculate_dist_res_ef(vector<int>para){
+    // 0--Σc^2, 1--Σk^2, 2--Σci*ki, 3--α^2, 4--αj^2, 5--ααj，para的长度为6
+    vector<vector<int>>result(3, vector<int>(2)); // 总共三项
+
+    int i = 0;
+    result[i][0] = para[0] - beaver_list[i][0]; // c^2 - a = e
+    result[i][1] = para[3] - beaver_list[i][1]; // α^2 - b = f
+
+    i++;
+    result[i][0] = para[2] - beaver_list[i][0]; // Σci*ki - a = e
+    result[i][1] = para[5] - beaver_list[i][1]; // ααj - b = f
+
+    i++;
+    result[i][0] = para[4] - beaver_list[i][0]; // αj^2 - a = e
+    result[i][1] = para[1] - beaver_list[i][1]; // Σk^2 - b = f
+
+    return result;
+}
+
+
+vector<vector<int>> cloud::calculate_dist_para_ef(int node_index, int k_index)
 {
     vector<vector<int>> ef(dimension * 3 + 3, vector<int>(2));
     // 按照node中心{c0...cd},{k0...kd},{α, αj}的顺序依次排开
@@ -194,31 +214,45 @@ vector<int> cloud_one::calculate_mul_final(vector<vector<int>> &ef)
     return result;
 }
 
-vector<int> cloud_one::calculate_dist_para(vector<int> ef)
+vector<int> cloud_one::calculate_dist_para(vector<vector<int>> ef)
 {
-    vector<int> para(ef.size);
-    for (int i = 0; i < ef.size; i++)
+    vector<int> para(ef.size());
+    for (int i = 0; i < ef.size(); i++)
     {
         para[i] = ef[i][0] * beaver_list[i][1] + ef[i][1] * beaver_list[i][0] + beaver_list[i][2];
     }
-
-    // Σc^2
-    vector<int>result(3);
+   vector<int>result(6);
     int sum_c_square = 0, sum_k_square = 0, c_mul_k = 0, i = 0;
+    // Σc^2
     while(i < dimension)
         sum_c_square += para[i++];
     result[0] = sum_c_square;
 
+    // Σk^2
     while(i < 2*dimension)
         sum_k_square += para[i++];
     result[1] = sum_k_square;
 
+    // Σc*k
     while(i < 3*dimension)
         c_mul_k += para[i++];
     result[2] = c_mul_k;
 
+    result[3] = para[i++]; // α^2
+    result[4] = para[i++]; // αj^2
+    result[5] = para[i++]; // α*αj
+
     return result;
 }
+
+int cloud_one::calculate_dist_res(vector<vector<int>>ef){
+    vector<int>para(ef.size());
+    for(int i = 0; i < ef.size(); i++){
+        para[i] = ef[i][0]*beaver_list[i][1] + ef[i][1]*beaver_list[i][0] + beaver_list[i][2];
+    }
+    return para[0] - 2*para[1] + para[2];
+}
+
 
 // cloud_two
 cloud_two::cloud_two(vector<point> point_list, int data_num, int dimension, Comparator *comparator, vector<vector<int>> sorted_index, int k) : cloud(point_list, data_num, dimension, comparator, k)
@@ -358,28 +392,43 @@ vector<int> cloud_two::calculate_mul_final(vector<vector<int>> &ef)
     return result;
 }
 
-vector<int> cloud_one::calculate_dist_para(vector<int> ef)
+vector<int> cloud_two::calculate_dist_para(vector<vector<int>> ef)
 {
-    vector<int> para(ef.size);
-    for (int i = 0; i < ef.size; i++)
+    vector<int> para(ef.size());
+    for (int i = 0; i < ef.size(); i++)
     {
         para[i] = ef[i][1]*ef[i][0] + ef[i][0] * beaver_list[i][1] + ef[i][1] * beaver_list[i][0] + beaver_list[i][2];
     }
 
-    // Σc^2
-    vector<int>result(3);
+    vector<int>result(6);
     int sum_c_square = 0, sum_k_square = 0, c_mul_k = 0, i = 0;
+    // Σc^2
     while(i < dimension)
         sum_c_square += para[i++];
     result[0] = sum_c_square;
 
+    // Σk^2
     while(i < 2*dimension)
         sum_k_square += para[i++];
     result[1] = sum_k_square;
 
+    // Σc*k
     while(i < 3*dimension)
         c_mul_k += para[i++];
     result[2] = c_mul_k;
 
+    result[3] = para[i++]; // α^2
+    result[4] = para[i++]; // αj^2
+    result[5] = para[i++]; // α*αj
+
     return result;
+}
+
+
+int cloud_two::calculate_dist_res(vector<vector<int>>ef){
+    vector<int>para(ef.size());
+    for(int i = 0; i < ef.size(); i++){
+        para[i] = ef[i][0]*ef[i][1] + ef[i][0]*beaver_list[i][1] + ef[i][1]*beaver_list[i][0] + beaver_list[i][2];
+    }
+    return para[0] - 2*para[1] + para[2];
 }

@@ -53,8 +53,11 @@ public:
     // 计算(αi*αi+1)的中间结果e，f
     vector<vector<int>> calculate_po_num_ef(vector<int>&v);
 
-    // 计算距离的中间结果e，f
-    vector<vector<int>> calculate_dist_ef(int node_index, int k_index);
+    // 计算距离的中间结果para的e，f
+    vector<vector<int>> calculate_dist_para_ef(int node_index, int k_index);
+
+    // 计算距离结果的ef
+    vector<vector<int>> calculate_dist_res_ef(vector<int>para);
 };
 
 class cloud_one : public cloud
@@ -80,7 +83,10 @@ public:
     vector<int> calculate_mul_final(vector<vector<int>>& ef);
 
     // cloud one calculate secret sharing distance parameters
-    vector<int> calculate_dist_para(vector<int>ef);
+    vector<int> calculate_dist_para(vector<vector<int>>ef);
+
+    // cloud one calculate final distance result
+    int calculate_dist_res(vector<vector<int>>ef);
 
 };
 
@@ -118,11 +124,11 @@ public:
     // cloud two using ef to calculate final result e*f + f*α2 + e*b2 + c2
     vector<int> calculate_mul_final(vector<vector<int>>& ef);
 
-    // cloud one calculate secret sharing distance
-    vector<int> calculate_dist_res(vector<int>ef);
-
     // cloud two calculate secret sharing distance parameters
-    vector<int> calculate_dist_para(vector<int> ef);
+    vector<int> calculate_dist_para(vector<vector<int>> ef);
+
+    // cloud two calculate final distance result
+    int calculate_dist_res(vector<vector<int>>ef);
 
 
 };

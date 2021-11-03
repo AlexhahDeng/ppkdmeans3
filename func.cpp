@@ -291,12 +291,13 @@ void mul_clu_point_num(cloud_one &c1, cloud_two &c2)
 	return;
 }
 
-void cal_dist(cloud_one &c1, cloud_two &c2, int node_index)
+vector<vector<int>> cal_dist(cloud_one &c1, cloud_two &c2, int node_index)
 {
+	vector<vector<int>>result(c1.k, vector<int>(2)); 
 	for (int i = 0; i < c1.k; ++i)
 	{
-		vector<vector<int>> ef1 = c1.calculate_dist_ef(node_index, i);
-		vector<vector<int>> ef2 = c2.calculate_dist_ef(node_index, i);
+		vector<vector<int>> ef1 = c1.calculate_dist_para_ef(node_index, i);
+		vector<vector<int>> ef2 = c2.calculate_dist_para_ef(node_index, i);
 
 		for (int j = 0; j < ef1.size(); j++)
 		{
@@ -305,11 +306,24 @@ void cal_dist(cloud_one &c1, cloud_two &c2, int node_index)
 		} // 合并e，f，暂存到ef1中
 
 		// 获取中间参数的乘法结果
-		vector<int> para1 = c1.calculate_dist_para(ef1);	// Σc^2, Σk^2, ci*ki
+		vector<int> para1 = c1.calculate_dist_para(ef1);	// Σc^2, Σk^2, ci*ki, α^2, αj^2, ααj
 		vector<int> para2 = c2.calculate_dist_para(ef2);
 
-		// 计算
+		// 计算distance中间结果ef
+		ef1 = c1.calculate_dist_res_ef(para1);
+		ef2 = c2.calculate_dist_res_ef(para2);
 
+		// 合并e和f
+		for(int j = 0; j < ef1.size(); j++)
+		{
+			ef1[j][0] += ef2[j][0];
+			ef1[j][1] += ef1[j][1];
+		}
+
+		// 计算到簇k距离最终结果
+		result[i][0] = c1.calculate_dist_res(ef1);
+		result[i][1] = c2.calculate_dist_res(ef2);
 
 	} // 计算中心到第i个簇的距离
+	return result;
 }
