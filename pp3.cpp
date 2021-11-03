@@ -198,10 +198,10 @@ void filtering(cloud_one &c1, cloud_two &c2)
 int main()
 {
     // 初始化数据信息
-    int data_num = 10, dimension = 3;
+    int data_num = 10, dimension = 2;
     vector<point> point_list, c1_data, c2_data;
-    // tmp_data(point_list);
-    random(point_list, data_num, dimension);
+    tmp_data(point_list);
+    // random(point_list, data_num, dimension);
     vector<vector<int>> sorted_index = sort_data(point_list);
 
     // 划分原始数据，用于秘密共享

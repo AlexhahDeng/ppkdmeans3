@@ -130,6 +130,7 @@ vector<vector<int>> cloud::calculate_dist_para_ef(int node_index, int k_index)
     {
         ef[i][0] = kd_tree[node_index].node_sum_x[i - 2 * dimension] / kd_tree[node_index].node_point_num - beaver_list[i][0];  // ci - a
         ef[i][1] = clu_cen[k_index][i - 2 * dimension] - beaver_list[i][1];                                                     // ki - b    
+        ++i;
     } // 计算 ci*ki
 
     ef[i][0] = mul_point_num[k] - beaver_list[i][0]; // α - a
