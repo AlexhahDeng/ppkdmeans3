@@ -6,23 +6,23 @@
 
 #IncludeRegexTransform: 
 
-/home/dd/ubu20/ppkdmeans3/cloud.cpp
+/home/dd/Ubu20/ppkdmeans3/cloud.cpp
 cloud.h
-/home/dd/ubu20/ppkdmeans3/cloud.h
+/home/dd/Ubu20/ppkdmeans3/cloud.h
 
-/home/dd/ubu20/ppkdmeans3/cloud.h
+/home/dd/Ubu20/ppkdmeans3/cloud.h
 iostream
 -
 vector
 -
 tools.h
-/home/dd/ubu20/ppkdmeans3/tools.h
+/home/dd/Ubu20/ppkdmeans3/tools.h
 ctime
 -
 random
 -
 
-/home/dd/ubu20/ppkdmeans3/comparator.h
+/home/dd/Ubu20/ppkdmeans3/comparator.h
 helib/helib.h
 -
 helib/Ptxt.h
@@ -36,7 +36,7 @@ helib/binaryArith.h
 helib/intraSlot.h
 -
 
-/home/dd/ubu20/ppkdmeans3/tools.h
+/home/dd/Ubu20/ppkdmeans3/tools.h
 iostream
 -
 cmath
@@ -62,7 +62,7 @@ NTL/mat_ZZ_pE.h
 helib/Ptxt.h
 -
 comparator.h
-/home/dd/ubu20/ppkdmeans3/comparator.h
+/home/dd/Ubu20/ppkdmeans3/comparator.h
 
 /usr/local/helib_pack/include/NTL/ALL_FEATURES.h
 NTL/HAVE_ALIGNED_ARRAY.h

@@ -161,9 +161,6 @@ void tmp_data(vector<point> &point_list)
 	point_list.push_back({7, vector<int>{22, 45}});
 	point_list.push_back({8, vector<int>{29, 46}});
 	point_list.push_back({9, vector<int>{24, 48}});
-
-
-
 }
 
 // func: 用户初始化簇中心，确保点不重复--checked
@@ -190,7 +187,7 @@ void ini_clu_cen(cloud_one &c1, cloud_two &c2)
 		}
 		if (isExist)
 			continue;
-		ran_index[count++] = k_index;
+		ran_index[count++] = 0; // FIXME 暂且将所有初始簇中心定为第一个点
 	}
 
 	for (auto k_index : ran_index)
@@ -301,7 +298,8 @@ void mul_clu_point_num(cloud_one &c1, cloud_two &c2)
 
 vector<vector<int>> cal_dist(cloud_one &c1, cloud_two &c2, int node_index)
 {
-	vector<vector<int>>result(c1.k, vector<int>(2)); 
+	vector<vector<int>>result(c1.k, vector<int>(2));
+
 	for (int i = 0; i < c1.k; ++i)
 	{
 		vector<vector<int>> ef1 = c1.calculate_dist_para_ef(node_index, i);
@@ -313,9 +311,9 @@ vector<vector<int>> cal_dist(cloud_one &c1, cloud_two &c2, int node_index)
 			ef1[j][1] += ef2[j][1];
 		} // 合并e，f，暂存到ef1中
 
-		// 获取中间参数的乘法结果
-		vector<int> para1 = c1.calculate_dist_para(ef1);	// Σc^2, Σk^2, ci*ki, α^2, αj^2, ααj
-		vector<int> para2 = c2.calculate_dist_para(ef2);
+		// 获取中间参数的乘法结果  Σc^2, Σk^2, ci*ki, α^2, αj^2, ααj
+		vector<int> para1 = c1.calculate_dist_para(ef1);	
+		vector<int> para2 = c2.calculate_dist_para(ef1); // 我好像找到bug了！！！
 
 		// 计算distance中间结果ef
 		ef1 = c1.calculate_dist_res_ef(para1);
@@ -325,12 +323,12 @@ vector<vector<int>> cal_dist(cloud_one &c1, cloud_two &c2, int node_index)
 		for(int j = 0; j < ef1.size(); j++)
 		{
 			ef1[j][0] += ef2[j][0];
-			ef1[j][1] += ef1[j][1];
+			ef1[j][1] += ef2[j][1];
 		}
 
 		// 计算到簇k距离最终结果
 		result[i][0] = c1.calculate_dist_res(ef1);
-		result[i][1] = c2.calculate_dist_res(ef2);
+		result[i][1] = c2.calculate_dist_res(ef1);
 
 	} // 计算中心到第i个簇的距离
 	return result;
