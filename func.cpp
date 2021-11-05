@@ -298,7 +298,7 @@ void mul_clu_point_num(cloud_one &c1, cloud_two &c2)
 
 vector<vector<int>> cal_dist(cloud_one &c1, cloud_two &c2, int node_index)
 {
-	vector<vector<int>>result(c1.k, vector<int>(2));
+	vector<vector<int>>result(2, vector<int>(c1.k));
 
 	for (int i = 0; i < c1.k; ++i)
 	{
@@ -327,8 +327,8 @@ vector<vector<int>> cal_dist(cloud_one &c1, cloud_two &c2, int node_index)
 		}
 
 		// 计算到簇k距离最终结果
-		result[i][0] = c1.calculate_dist_res(ef1);
-		result[i][1] = c2.calculate_dist_res(ef1);
+		result[0][i] = c1.calculate_dist_res(ef1);
+		result[1][i] = c2.calculate_dist_res(ef1);
 
 	} // 计算中心到第i个簇的距离
 	return result;

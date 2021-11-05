@@ -6,10 +6,6 @@
 
 #IncludeRegexTransform: 
 
-/home/dd/Ubu20/ppkdmeans3/cloud.cpp
-cloud.h
-/home/dd/Ubu20/ppkdmeans3/cloud.h
-
 /home/dd/Ubu20/ppkdmeans3/cloud.h
 iostream
 -
@@ -20,26 +16,6 @@ tools.h
 ctime
 -
 random
--
-
-/home/dd/Ubu20/ppkdmeans3/comparator.cpp
-comparator.h
-/home/dd/Ubu20/ppkdmeans3/comparator.h
-tools.h
-/home/dd/Ubu20/ppkdmeans3/tools.h
-helib/debugging.h
--
-helib/polyEval.h
--
-random
--
-map
--
-NTL/ZZ_pE.h
--
-NTL/mat_ZZ_pE.h
--
-helib/Ptxt.h
 -
 
 /home/dd/Ubu20/ppkdmeans3/comparator.h
@@ -55,10 +31,6 @@ helib/binaryArith.h
 -
 helib/intraSlot.h
 -
-
-/home/dd/Ubu20/ppkdmeans3/func.cpp
-func.h
-/home/dd/Ubu20/ppkdmeans3/func.h
 
 /home/dd/Ubu20/ppkdmeans3/func.h
 iostream
@@ -85,10 +57,6 @@ iostream
 -
 func.h
 /home/dd/Ubu20/ppkdmeans3/func.h
-
-/home/dd/Ubu20/ppkdmeans3/tools.cpp
-tools.h
-/home/dd/Ubu20/ppkdmeans3/tools.h
 
 /home/dd/Ubu20/ppkdmeans3/tools.h
 iostream

@@ -88,6 +88,9 @@ public:
     // cloud one calculate final distance result
     int calculate_dist_res(vector<vector<int>>ef);
 
+    // TODO cloud one figure out minimal distance result like [01000..]
+    vector<Ctxt> min_dist(vector<Ctxt>dist);
+
 };
 
 class cloud_two : public cloud
@@ -129,6 +132,8 @@ public:
 
     // cloud two calculate final distance result
     int calculate_dist_res(vector<vector<int>>ef);
+
+    //
 
 
 };

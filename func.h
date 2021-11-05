@@ -41,8 +41,8 @@ void ini_clu_cen(cloud_one &c1, cloud_two &c2);
 // func: 用户初始化候选中心和初始簇中心给root--checked
 void ini_candidate_k(cloud_one &c1, cloud_two &c2);
 
-// func: 预计算簇中心连乘的结果
+// func: 预计算簇中心连乘的结果，最后get{α1...αk,α}存入c1 and c2 *checked
 void mul_clu_point_num(cloud_one& c1, cloud_two& c2);
 
-// func: 向量内互不相同元素按顺序两两相乘
+// func: 向量内互不相同元素按顺序两两相乘，返回数组的size=2xk
 vector<vector<int>> cal_dist(cloud_one &c1, cloud_two &c2, int node_index);

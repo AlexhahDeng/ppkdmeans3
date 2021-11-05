@@ -149,7 +149,7 @@ void generate_kd_tree(cloud_one &c1, cloud_two &c2)
 
         /* above has been checked */
 
-        // 1. c1和c2分别加密s1和s2,用true or false 来标识是否缩放
+        //! 1. c1和c2分别加密s1和s2,用true or false 来标识是否缩放
         vector<Ctxt> enc_index = c1.comparator->encrypt_vector(index, false);
         vector<Ctxt> zero_one = c1.comparator->encrypt_vector(vector<int>{0, 4369}, false); // FIXME：要根据整数分解的位数灵活变化
 
@@ -178,21 +178,34 @@ void generate_kd_tree(cloud_one &c1, cloud_two &c2)
 // func: 聚类过程
 void filtering(cloud_one &c1, cloud_two &c2)
 {
-    
-    ini_clu_cen(c1, c2);        // 初始化簇中心，存放在cloud中
-    ini_candidate_k(c1, c2);    // 初始化候选集和簇中点数，存放在kd_node中
 
-    // 开始计算node中心到簇中心的距离
-    
-    // 1. 预计算簇中心连乘的结果，最后期望get{α1...αk,α}存入c1 and c2
+    ini_clu_cen(c1, c2);     // 初始化簇中心，存放在cloud中
+    ini_candidate_k(c1, c2); // 初始化候选集和簇中点数，存放在kd_node中
+
+    // 预计算簇中心连乘的结果，每一轮迭代只计算一次
     mul_clu_point_num(c1, c2);
 
-    // 2. 计算中心到每个簇中心的距离
-    vector<vector<int>>dist = cal_dist(c1, c2, 0);
+    // 遍历kd tree 所有节点
+    for (int i = 0; i < c1.kd_tree.size(); i++)
+    {
+        // 计算中心到每个簇中心的距离, size = 2 x k -->其实也可以直接合并后加密啦……emmm也不太影响嘛
+        vector<vector<int>> dist = cal_dist(c1, c2, 0);
 
-    //
+        vector<Ctxt> d1 = c1.encrypt_variance(dist[0]);
+        vector<Ctxt> d2 = c2.encrypt_variance(dist[1]);
+
+        // TODO 合并c1 和 c2 的计算结果
+        for (int i = 0; i < d1.size(); i++)
+        {
+            d1[i] += d2[i];
+        }
+        // TODO c1计算最小距离, 这里还要考虑一个问题-->筛掉哪些不在candidate set中的簇中心
+        vector<Ctxt> min_dist = c1.min_dist(d1);
+
+        // 根据是否为叶子节点分不同情况处理
+        //
+    }
     return;
-
 }
 
 int main()
