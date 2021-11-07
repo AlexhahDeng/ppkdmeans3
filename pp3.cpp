@@ -182,28 +182,30 @@ void filtering(cloud_one &c1, cloud_two &c2)
     ini_clu_cen(c1, c2);     // 初始化簇中心，存放在cloud中
     ini_candidate_k(c1, c2); // 初始化候选集和簇中点数，存放在kd_node中
 
-    // 预计算簇中心连乘的结果，每一轮迭代只计算一次
-    mul_clu_point_num(c1, c2);
+    while(true){// 一轮迭代
+        // 预计算簇中心连乘的结果，每一轮迭代只计算一次
+        mul_clu_point_num(c1, c2);
 
-    // 遍历kd tree 所有节点
-    for (int i = 0; i < c1.kd_tree.size(); i++)
-    {
-        // 计算中心到每个簇中心的距离, size = 2 x k -->其实也可以直接合并后加密啦……emmm也不太影响嘛
-        vector<vector<int>> dist = cal_dist(c1, c2, 0);
-
-        vector<Ctxt> d1 = c1.encrypt_variance(dist[0]);
-        vector<Ctxt> d2 = c2.encrypt_variance(dist[1]);
-
-        // TODO 合并c1 和 c2 的计算结果
-        for (int i = 0; i < d1.size(); i++)
+        // 遍历kd tree 所有节点
+        for (int i = 0; i < c1.kd_tree.size(); i++)
         {
-            d1[i] += d2[i];
-        }
-        // TODO c1计算最小距离, 这里还要考虑一个问题-->筛掉哪些不在candidate set中的簇中心
-        vector<Ctxt> min_dist = c1.min_dist(d1);
+            // 计算中心到每个簇中心的距离, size = 2 x k -->其实也可以直接合并后加密啦……emmm也不太影响嘛
+            vector<vector<int>> dist = cal_dist(c1, c2, 0);
 
-        // 根据是否为叶子节点分不同情况处理
-        //
+            vector<Ctxt> d1 = c1.encrypt_variance(dist[0]);
+            vector<Ctxt> d2 = c2.encrypt_variance(dist[1]);
+
+            // TODO 合并c1 和 c2 的计算结果
+            for (int i = 0; i < d1.size(); i++)
+            {
+                d1[i] += d2[i];
+            }
+            // TODO c1计算最小距离, 这里还要考虑一个问题-->筛掉哪些不在candidate set中的簇中心
+            vector<Ctxt> min_dist = c1.min_dist(d1);
+
+            // 根据是否为叶子节点分不同情况处理
+            //
+        }
     }
     return;
 }
