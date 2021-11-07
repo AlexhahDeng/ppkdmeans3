@@ -185,3 +185,7 @@ $\sum_{i=1}^{d}\left(\alpha c_{i}-\alpha_{j} k_{j i}\right)^{2}=\alpha^{2} \sum 
 现在的想法是，把存储的数据都变成float，只在做加密的时候才改为int类型
 
 ❗管他呢，先不管了，误差大就大把！
+
+## 1107
+![思路1](/img/1.jpg)
+![思路2](/img/2.jpg)

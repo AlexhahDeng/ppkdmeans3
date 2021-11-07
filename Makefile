@@ -48,10 +48,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/dd/Ubu20/ppkdmeans3
+CMAKE_SOURCE_DIR = /home/dd/ubu20/ppkdmeans3
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/dd/Ubu20/ppkdmeans3
+CMAKE_BINARY_DIR = /home/dd/ubu20/ppkdmeans3
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/dd/Ubu20/ppkdmeans3/CMakeFiles /home/dd/Ubu20/ppkdmeans3/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/dd/ubu20/ppkdmeans3/CMakeFiles /home/dd/ubu20/ppkdmeans3/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/dd/Ubu20/ppkdmeans3/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/dd/ubu20/ppkdmeans3/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -111,17 +111,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named ppkdmeans3
+# Target rules for targets named test_sc
 
 # Build rule for target.
-ppkdmeans3: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 ppkdmeans3
-.PHONY : ppkdmeans3
+test_sc: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 test_sc
+.PHONY : test_sc
 
 # fast build rule for target.
-ppkdmeans3/fast:
-	$(MAKE) -f CMakeFiles/ppkdmeans3.dir/build.make CMakeFiles/ppkdmeans3.dir/build
-.PHONY : ppkdmeans3/fast
+test_sc/fast:
+	$(MAKE) -f CMakeFiles/test_sc.dir/build.make CMakeFiles/test_sc.dir/build
+.PHONY : test_sc/fast
 
 cloud.o: cloud.cpp.o
 
@@ -129,7 +129,7 @@ cloud.o: cloud.cpp.o
 
 # target to build an object file
 cloud.cpp.o:
-	$(MAKE) -f CMakeFiles/ppkdmeans3.dir/build.make CMakeFiles/ppkdmeans3.dir/cloud.cpp.o
+	$(MAKE) -f CMakeFiles/test_sc.dir/build.make CMakeFiles/test_sc.dir/cloud.cpp.o
 .PHONY : cloud.cpp.o
 
 cloud.i: cloud.cpp.i
@@ -138,7 +138,7 @@ cloud.i: cloud.cpp.i
 
 # target to preprocess a source file
 cloud.cpp.i:
-	$(MAKE) -f CMakeFiles/ppkdmeans3.dir/build.make CMakeFiles/ppkdmeans3.dir/cloud.cpp.i
+	$(MAKE) -f CMakeFiles/test_sc.dir/build.make CMakeFiles/test_sc.dir/cloud.cpp.i
 .PHONY : cloud.cpp.i
 
 cloud.s: cloud.cpp.s
@@ -147,7 +147,7 @@ cloud.s: cloud.cpp.s
 
 # target to generate assembly for a file
 cloud.cpp.s:
-	$(MAKE) -f CMakeFiles/ppkdmeans3.dir/build.make CMakeFiles/ppkdmeans3.dir/cloud.cpp.s
+	$(MAKE) -f CMakeFiles/test_sc.dir/build.make CMakeFiles/test_sc.dir/cloud.cpp.s
 .PHONY : cloud.cpp.s
 
 comparator.o: comparator.cpp.o
@@ -156,7 +156,7 @@ comparator.o: comparator.cpp.o
 
 # target to build an object file
 comparator.cpp.o:
-	$(MAKE) -f CMakeFiles/ppkdmeans3.dir/build.make CMakeFiles/ppkdmeans3.dir/comparator.cpp.o
+	$(MAKE) -f CMakeFiles/test_sc.dir/build.make CMakeFiles/test_sc.dir/comparator.cpp.o
 .PHONY : comparator.cpp.o
 
 comparator.i: comparator.cpp.i
@@ -165,7 +165,7 @@ comparator.i: comparator.cpp.i
 
 # target to preprocess a source file
 comparator.cpp.i:
-	$(MAKE) -f CMakeFiles/ppkdmeans3.dir/build.make CMakeFiles/ppkdmeans3.dir/comparator.cpp.i
+	$(MAKE) -f CMakeFiles/test_sc.dir/build.make CMakeFiles/test_sc.dir/comparator.cpp.i
 .PHONY : comparator.cpp.i
 
 comparator.s: comparator.cpp.s
@@ -174,7 +174,7 @@ comparator.s: comparator.cpp.s
 
 # target to generate assembly for a file
 comparator.cpp.s:
-	$(MAKE) -f CMakeFiles/ppkdmeans3.dir/build.make CMakeFiles/ppkdmeans3.dir/comparator.cpp.s
+	$(MAKE) -f CMakeFiles/test_sc.dir/build.make CMakeFiles/test_sc.dir/comparator.cpp.s
 .PHONY : comparator.cpp.s
 
 func.o: func.cpp.o
@@ -183,7 +183,7 @@ func.o: func.cpp.o
 
 # target to build an object file
 func.cpp.o:
-	$(MAKE) -f CMakeFiles/ppkdmeans3.dir/build.make CMakeFiles/ppkdmeans3.dir/func.cpp.o
+	$(MAKE) -f CMakeFiles/test_sc.dir/build.make CMakeFiles/test_sc.dir/func.cpp.o
 .PHONY : func.cpp.o
 
 func.i: func.cpp.i
@@ -192,7 +192,7 @@ func.i: func.cpp.i
 
 # target to preprocess a source file
 func.cpp.i:
-	$(MAKE) -f CMakeFiles/ppkdmeans3.dir/build.make CMakeFiles/ppkdmeans3.dir/func.cpp.i
+	$(MAKE) -f CMakeFiles/test_sc.dir/build.make CMakeFiles/test_sc.dir/func.cpp.i
 .PHONY : func.cpp.i
 
 func.s: func.cpp.s
@@ -201,35 +201,35 @@ func.s: func.cpp.s
 
 # target to generate assembly for a file
 func.cpp.s:
-	$(MAKE) -f CMakeFiles/ppkdmeans3.dir/build.make CMakeFiles/ppkdmeans3.dir/func.cpp.s
+	$(MAKE) -f CMakeFiles/test_sc.dir/build.make CMakeFiles/test_sc.dir/func.cpp.s
 .PHONY : func.cpp.s
 
-pp3.o: pp3.cpp.o
+test_sc.o: test_sc.cpp.o
 
-.PHONY : pp3.o
+.PHONY : test_sc.o
 
 # target to build an object file
-pp3.cpp.o:
-	$(MAKE) -f CMakeFiles/ppkdmeans3.dir/build.make CMakeFiles/ppkdmeans3.dir/pp3.cpp.o
-.PHONY : pp3.cpp.o
+test_sc.cpp.o:
+	$(MAKE) -f CMakeFiles/test_sc.dir/build.make CMakeFiles/test_sc.dir/test_sc.cpp.o
+.PHONY : test_sc.cpp.o
 
-pp3.i: pp3.cpp.i
+test_sc.i: test_sc.cpp.i
 
-.PHONY : pp3.i
+.PHONY : test_sc.i
 
 # target to preprocess a source file
-pp3.cpp.i:
-	$(MAKE) -f CMakeFiles/ppkdmeans3.dir/build.make CMakeFiles/ppkdmeans3.dir/pp3.cpp.i
-.PHONY : pp3.cpp.i
+test_sc.cpp.i:
+	$(MAKE) -f CMakeFiles/test_sc.dir/build.make CMakeFiles/test_sc.dir/test_sc.cpp.i
+.PHONY : test_sc.cpp.i
 
-pp3.s: pp3.cpp.s
+test_sc.s: test_sc.cpp.s
 
-.PHONY : pp3.s
+.PHONY : test_sc.s
 
 # target to generate assembly for a file
-pp3.cpp.s:
-	$(MAKE) -f CMakeFiles/ppkdmeans3.dir/build.make CMakeFiles/ppkdmeans3.dir/pp3.cpp.s
-.PHONY : pp3.cpp.s
+test_sc.cpp.s:
+	$(MAKE) -f CMakeFiles/test_sc.dir/build.make CMakeFiles/test_sc.dir/test_sc.cpp.s
+.PHONY : test_sc.cpp.s
 
 tools.o: tools.cpp.o
 
@@ -237,7 +237,7 @@ tools.o: tools.cpp.o
 
 # target to build an object file
 tools.cpp.o:
-	$(MAKE) -f CMakeFiles/ppkdmeans3.dir/build.make CMakeFiles/ppkdmeans3.dir/tools.cpp.o
+	$(MAKE) -f CMakeFiles/test_sc.dir/build.make CMakeFiles/test_sc.dir/tools.cpp.o
 .PHONY : tools.cpp.o
 
 tools.i: tools.cpp.i
@@ -246,7 +246,7 @@ tools.i: tools.cpp.i
 
 # target to preprocess a source file
 tools.cpp.i:
-	$(MAKE) -f CMakeFiles/ppkdmeans3.dir/build.make CMakeFiles/ppkdmeans3.dir/tools.cpp.i
+	$(MAKE) -f CMakeFiles/test_sc.dir/build.make CMakeFiles/test_sc.dir/tools.cpp.i
 .PHONY : tools.cpp.i
 
 tools.s: tools.cpp.s
@@ -255,7 +255,7 @@ tools.s: tools.cpp.s
 
 # target to generate assembly for a file
 tools.cpp.s:
-	$(MAKE) -f CMakeFiles/ppkdmeans3.dir/build.make CMakeFiles/ppkdmeans3.dir/tools.cpp.s
+	$(MAKE) -f CMakeFiles/test_sc.dir/build.make CMakeFiles/test_sc.dir/tools.cpp.s
 .PHONY : tools.cpp.s
 
 # Help Target
@@ -266,7 +266,7 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
-	@echo "... ppkdmeans3"
+	@echo "... test_sc"
 	@echo "... cloud.o"
 	@echo "... cloud.i"
 	@echo "... cloud.s"
@@ -276,9 +276,9 @@ help:
 	@echo "... func.o"
 	@echo "... func.i"
 	@echo "... func.s"
-	@echo "... pp3.o"
-	@echo "... pp3.i"
-	@echo "... pp3.s"
+	@echo "... test_sc.o"
+	@echo "... test_sc.i"
+	@echo "... test_sc.s"
 	@echo "... tools.o"
 	@echo "... tools.i"
 	@echo "... tools.s"

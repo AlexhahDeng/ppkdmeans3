@@ -44,16 +44,16 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/dd/Ubu20/ppkdmeans3
+CMAKE_SOURCE_DIR = /home/dd/ubu20/ppkdmeans3
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/dd/Ubu20/ppkdmeans3/build
+CMAKE_BINARY_DIR = /home/dd/ubu20/ppkdmeans3/build
 
 #=============================================================================
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
-all: CMakeFiles/ppkdmeans3.dir/all
+all: CMakeFiles/test_sc.dir/all
 
 .PHONY : all
 
@@ -63,36 +63,36 @@ preinstall:
 .PHONY : preinstall
 
 # The main recursive "clean" target.
-clean: CMakeFiles/ppkdmeans3.dir/clean
+clean: CMakeFiles/test_sc.dir/clean
 
 .PHONY : clean
 
 #=============================================================================
-# Target rules for target CMakeFiles/ppkdmeans3.dir
+# Target rules for target CMakeFiles/test_sc.dir
 
 # All Build rule for target.
-CMakeFiles/ppkdmeans3.dir/all:
-	$(MAKE) -f CMakeFiles/ppkdmeans3.dir/build.make CMakeFiles/ppkdmeans3.dir/depend
-	$(MAKE) -f CMakeFiles/ppkdmeans3.dir/build.make CMakeFiles/ppkdmeans3.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dd/Ubu20/ppkdmeans3/build/CMakeFiles --progress-num=1,2,3,4,5,6 "Built target ppkdmeans3"
-.PHONY : CMakeFiles/ppkdmeans3.dir/all
+CMakeFiles/test_sc.dir/all:
+	$(MAKE) -f CMakeFiles/test_sc.dir/build.make CMakeFiles/test_sc.dir/depend
+	$(MAKE) -f CMakeFiles/test_sc.dir/build.make CMakeFiles/test_sc.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dd/ubu20/ppkdmeans3/build/CMakeFiles --progress-num=1,2,3,4,5,6 "Built target test_sc"
+.PHONY : CMakeFiles/test_sc.dir/all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/ppkdmeans3.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/dd/Ubu20/ppkdmeans3/build/CMakeFiles 6
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/ppkdmeans3.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/dd/Ubu20/ppkdmeans3/build/CMakeFiles 0
-.PHONY : CMakeFiles/ppkdmeans3.dir/rule
+CMakeFiles/test_sc.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/dd/ubu20/ppkdmeans3/build/CMakeFiles 6
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/test_sc.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/dd/ubu20/ppkdmeans3/build/CMakeFiles 0
+.PHONY : CMakeFiles/test_sc.dir/rule
 
 # Convenience name for target.
-ppkdmeans3: CMakeFiles/ppkdmeans3.dir/rule
+test_sc: CMakeFiles/test_sc.dir/rule
 
-.PHONY : ppkdmeans3
+.PHONY : test_sc
 
 # clean rule for target.
-CMakeFiles/ppkdmeans3.dir/clean:
-	$(MAKE) -f CMakeFiles/ppkdmeans3.dir/build.make CMakeFiles/ppkdmeans3.dir/clean
-.PHONY : CMakeFiles/ppkdmeans3.dir/clean
+CMakeFiles/test_sc.dir/clean:
+	$(MAKE) -f CMakeFiles/test_sc.dir/build.make CMakeFiles/test_sc.dir/clean
+.PHONY : CMakeFiles/test_sc.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

@@ -150,12 +150,12 @@ void generate_kd_tree(cloud_one &c1, cloud_two &c2)
         /* above has been checked */
 
         //! 1. c1和c2分别加密s1和s2,用true or false 来标识是否缩放
-        vector<Ctxt> enc_index = c1.comparator->encrypt_vector(index, false);
-        vector<Ctxt> zero_one = c1.comparator->encrypt_vector(vector<int>{0, 4369}, false); // FIXME：要根据整数分解的位数灵活变化
+        vector<Ctxt> enc_index = c1.comparator->encrypt_vector(index);
+        vector<Ctxt> zero_one = c1.comparator->encrypt_vector(vector<int>{0, 4369}); // FIXME：要根据整数分解的位数灵活变化
 
         // FIXME 加密负数的问题，先留着把！
-        vector<Ctxt> enc_s1 = c1.comparator->encrypt_vector(sum_xN1_sq, true);
-        vector<Ctxt> enc_s2 = c2.comparator->encrypt_vector(sum_xN2_sq, true);
+        vector<Ctxt> enc_s1 = c1.comparator->encrypt_vector(sum_xN1_sq);
+        vector<Ctxt> enc_s2 = c2.comparator->encrypt_vector(sum_xN2_sq);
         for (int i = 0; i < enc_s2.size(); ++i)
         {
             enc_s1[i] += enc_s2[i];

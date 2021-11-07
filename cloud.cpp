@@ -70,7 +70,7 @@ vector<Ctxt> cloud::encrypt_variance(vector<int> vari)
      */
 
     vector<Ctxt> vec;
-    comparator->test_compare();
+    comparator->test_compare(1);
 
     return vec;
 }

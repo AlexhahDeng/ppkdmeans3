@@ -6,19 +6,43 @@
 
 #IncludeRegexTransform: 
 
-/home/dd/Ubu20/ppkdmeans3/cloud.h
+/home/dd/ubu20/ppkdmeans3/cloud.cpp
+cloud.h
+/home/dd/ubu20/ppkdmeans3/cloud.h
+
+/home/dd/ubu20/ppkdmeans3/cloud.h
 iostream
 -
 vector
 -
 tools.h
-/home/dd/Ubu20/ppkdmeans3/tools.h
+/home/dd/ubu20/ppkdmeans3/tools.h
 ctime
 -
 random
 -
 
-/home/dd/Ubu20/ppkdmeans3/comparator.h
+/home/dd/ubu20/ppkdmeans3/comparator.cpp
+comparator.h
+/home/dd/ubu20/ppkdmeans3/comparator.h
+tools.h
+/home/dd/ubu20/ppkdmeans3/tools.h
+helib/debugging.h
+-
+helib/polyEval.h
+-
+random
+-
+map
+-
+NTL/ZZ_pE.h
+-
+NTL/mat_ZZ_pE.h
+-
+helib/Ptxt.h
+-
+
+/home/dd/ubu20/ppkdmeans3/comparator.h
 helib/helib.h
 -
 helib/Ptxt.h
@@ -27,16 +51,12 @@ helib/norms.h
 -
 NTL/mat_ZZ.h
 -
-helib/binaryArith.h
--
-helib/intraSlot.h
--
 
-/home/dd/Ubu20/ppkdmeans3/func.cpp
+/home/dd/ubu20/ppkdmeans3/func.cpp
 func.h
-/home/dd/Ubu20/ppkdmeans3/func.h
+/home/dd/ubu20/ppkdmeans3/func.h
 
-/home/dd/Ubu20/ppkdmeans3/func.h
+/home/dd/ubu20/ppkdmeans3/func.h
 iostream
 -
 ctime
@@ -54,15 +74,19 @@ fstream
 sstream
 -
 cloud.h
-/home/dd/Ubu20/ppkdmeans3/cloud.h
+/home/dd/ubu20/ppkdmeans3/cloud.h
 
-/home/dd/Ubu20/ppkdmeans3/pp3.cpp
+/home/dd/ubu20/ppkdmeans3/pp3.cpp
 iostream
 -
 func.h
-/home/dd/Ubu20/ppkdmeans3/func.h
+/home/dd/ubu20/ppkdmeans3/func.h
 
-/home/dd/Ubu20/ppkdmeans3/tools.h
+/home/dd/ubu20/ppkdmeans3/tools.cpp
+tools.h
+/home/dd/ubu20/ppkdmeans3/tools.h
+
+/home/dd/ubu20/ppkdmeans3/tools.h
 iostream
 -
 cmath
@@ -88,7 +112,7 @@ NTL/mat_ZZ_pE.h
 helib/Ptxt.h
 -
 comparator.h
-/home/dd/Ubu20/ppkdmeans3/comparator.h
+/home/dd/ubu20/ppkdmeans3/comparator.h
 
 /usr/local/helib_pack/include/NTL/ALL_FEATURES.h
 NTL/HAVE_ALIGNED_ARRAY.h
@@ -122,22 +146,6 @@ NTL/HAVE_POSIX_TIME.h
 NTL/HAVE_AES_NI.h
 -
 NTL/HAVE_KMA.h
--
-
-/usr/local/helib_pack/include/NTL/BasicThreadPool.h
-NTL/tools.h
--
-NTL/vector.h
--
-NTL/SmartPtr.h
--
-NTL/thread.h
--
-thread
--
-condition_variable
--
-exception
 -
 
 /usr/local/helib_pack/include/NTL/FFT.h
@@ -636,16 +644,6 @@ helib/JsonWrapper.h
 NTL/Lazy.h
 -
 
-/usr/local/helib_pack/include/helib/CtPtrs.h
-initializer_list
--
-helib/Ctxt.h
--
-helib/PtrVector.h
--
-helib/PtrMatrix.h
--
-
 /usr/local/helib_pack/include/helib/Ctxt.h
 helib/DoubleCRT.h
 -
@@ -828,26 +826,6 @@ NTL/ZZ_p.h
 vector
 -
 
-/usr/local/helib_pack/include/helib/PtrMatrix.h
-initializer_list
--
-helib/PtrVector.h
--
-
-/usr/local/helib_pack/include/helib/PtrVector.h
-stdexcept
--
-climits
--
-vector
--
-NTL/vector.h
--
-helib/assertions.h
--
-helib/apiAttributes.h
--
-
 /usr/local/helib_pack/include/helib/Ptxt.h
 type_traits
 -
@@ -878,12 +856,6 @@ helib/EncodedPtxt.h
 
 /usr/local/helib_pack/include/helib/assertions.h
 helib/exceptions.h
--
-
-/usr/local/helib_pack/include/helib/binaryArith.h
-helib/EncryptedArray.h
--
-helib/CtPtrs.h
 -
 
 /usr/local/helib_pack/include/helib/bluestein.h
@@ -928,18 +900,6 @@ helib/Ptxt.h
 
 /usr/local/helib_pack/include/helib/hypercube.h
 helib/NumbTh.h
--
-
-/usr/local/helib_pack/include/helib/intraSlot.h
-NTL/BasicThreadPool.h
--
-helib/Context.h
--
-helib/EncryptedArray.h
--
-helib/Ctxt.h
--
-helib/CtPtrs.h
 -
 
 /usr/local/helib_pack/include/helib/keySwitching.h
