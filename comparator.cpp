@@ -3031,5 +3031,5 @@ Ctxt Comparator::max_variance(vector<Ctxt> variance)
 		index = new_index;
 	}
 
-	return value.back();
+	return index.back();
 }

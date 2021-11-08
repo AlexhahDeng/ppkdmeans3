@@ -53,7 +53,7 @@ CMAKE_BINARY_DIR = /home/dd/Ubu20/ppkdmeans3/build
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
-all: CMakeFiles/test_sc.dir/all
+all: CMakeFiles/pp3.dir/all
 
 .PHONY : all
 
@@ -63,36 +63,36 @@ preinstall:
 .PHONY : preinstall
 
 # The main recursive "clean" target.
-clean: CMakeFiles/test_sc.dir/clean
+clean: CMakeFiles/pp3.dir/clean
 
 .PHONY : clean
 
 #=============================================================================
-# Target rules for target CMakeFiles/test_sc.dir
+# Target rules for target CMakeFiles/pp3.dir
 
 # All Build rule for target.
-CMakeFiles/test_sc.dir/all:
-	$(MAKE) -f CMakeFiles/test_sc.dir/build.make CMakeFiles/test_sc.dir/depend
-	$(MAKE) -f CMakeFiles/test_sc.dir/build.make CMakeFiles/test_sc.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dd/Ubu20/ppkdmeans3/build/CMakeFiles --progress-num=1,2,3,4,5,6 "Built target test_sc"
-.PHONY : CMakeFiles/test_sc.dir/all
+CMakeFiles/pp3.dir/all:
+	$(MAKE) -f CMakeFiles/pp3.dir/build.make CMakeFiles/pp3.dir/depend
+	$(MAKE) -f CMakeFiles/pp3.dir/build.make CMakeFiles/pp3.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dd/Ubu20/ppkdmeans3/build/CMakeFiles --progress-num=1,2,3,4,5,6,7 "Built target pp3"
+.PHONY : CMakeFiles/pp3.dir/all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/test_sc.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/dd/Ubu20/ppkdmeans3/build/CMakeFiles 6
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/test_sc.dir/all
+CMakeFiles/pp3.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/dd/Ubu20/ppkdmeans3/build/CMakeFiles 7
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/pp3.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/dd/Ubu20/ppkdmeans3/build/CMakeFiles 0
-.PHONY : CMakeFiles/test_sc.dir/rule
+.PHONY : CMakeFiles/pp3.dir/rule
 
 # Convenience name for target.
-test_sc: CMakeFiles/test_sc.dir/rule
+pp3: CMakeFiles/pp3.dir/rule
 
-.PHONY : test_sc
+.PHONY : pp3
 
 # clean rule for target.
-CMakeFiles/test_sc.dir/clean:
-	$(MAKE) -f CMakeFiles/test_sc.dir/build.make CMakeFiles/test_sc.dir/clean
-.PHONY : CMakeFiles/test_sc.dir/clean
+CMakeFiles/pp3.dir/clean:
+	$(MAKE) -f CMakeFiles/pp3.dir/build.make CMakeFiles/pp3.dir/clean
+.PHONY : CMakeFiles/pp3.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.
