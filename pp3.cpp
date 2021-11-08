@@ -204,7 +204,6 @@ void filtering(cloud_one &c1, cloud_two &c2)
             vector<Ctxt> min_dist = c1.min_dist(d1);
 
             // 根据是否为叶子节点分不同情况处理
-            //
         }
     }
     return;

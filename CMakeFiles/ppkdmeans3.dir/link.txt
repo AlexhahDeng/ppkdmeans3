@@ -1,1 +1,0 @@
-/usr/bin/c++     CMakeFiles/ppkdmeans3.dir/cloud.cpp.o CMakeFiles/ppkdmeans3.dir/comparator.cpp.o CMakeFiles/ppkdmeans3.dir/func.cpp.o CMakeFiles/ppkdmeans3.dir/pp3.cpp.o CMakeFiles/ppkdmeans3.dir/tools.cpp.o  -o ppkdmeans3  -Wl,-rpath,/usr/local/helib_pack/lib /usr/local/helib_pack/lib/libhelib.a /usr/local/helib_pack/lib/libntl.so /usr/local/helib_pack/lib/libgmp.so -lpthread 

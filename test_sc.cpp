@@ -20,11 +20,11 @@ using namespace he_cmp;
 // B 7 2 300 170 3 10 y
 int main(){
 	CircuitType type = BI;
-	bool verbose = true;//是否输出
+	bool verbose = false;//是否输出
 	unsigned long p = 7;
 	unsigned long d = 2;	// 改变这个值就可以把【比较范围】变得好大好大，但是用时会增加
 	unsigned long m = 300;
-	unsigned long nb_primes = 170; 
+	unsigned long nb_primes = 500; // 噪声溢出修改这里
 	unsigned long c = 3;
 
 	auto context = ContextBuilder<BGV>()
@@ -35,7 +35,7 @@ int main(){
 	        .c(c)
 	        .scale(6)
 	        .build();
-	unsigned long expansion_len = 4;
+	unsigned long expansion_len = 3;
 
 	SecKey secret_key(context);
 	secret_key.GenSecKey();
@@ -71,9 +71,10 @@ int main(){
 	Comparator comparator(context, type, d, expansion_len, secret_key, verbose);
 
 	int runs = 1;
-	vector<int>tmp{1024,1,3};
+	vector<int>tmp{1,3,2,5};
 
-	comparator.encrypt_vector(tmp);
+	vector<Ctxt>ctxt_vec = comparator.encrypt_vector(tmp);
+	comparator.max_variance(ctxt_vec);
 
 	return 0;
 

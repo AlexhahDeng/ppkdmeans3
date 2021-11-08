@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/dd/ubu20/ppkdmeans3
+CMAKE_SOURCE_DIR = /home/dd/Ubu20/ppkdmeans3
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/dd/ubu20/ppkdmeans3/build
+CMAKE_BINARY_DIR = /home/dd/Ubu20/ppkdmeans3/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/test_sc.dir/depend.make
@@ -59,68 +59,68 @@ include CMakeFiles/test_sc.dir/flags.make
 
 CMakeFiles/test_sc.dir/cloud.cpp.o: CMakeFiles/test_sc.dir/flags.make
 CMakeFiles/test_sc.dir/cloud.cpp.o: ../cloud.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dd/ubu20/ppkdmeans3/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/test_sc.dir/cloud.cpp.o"
-	/bin/x86_64-linux-gnu-g++-10  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/test_sc.dir/cloud.cpp.o -c /home/dd/ubu20/ppkdmeans3/cloud.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dd/Ubu20/ppkdmeans3/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/test_sc.dir/cloud.cpp.o"
+	/bin/x86_64-linux-gnu-g++-9  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/test_sc.dir/cloud.cpp.o -c /home/dd/Ubu20/ppkdmeans3/cloud.cpp
 
 CMakeFiles/test_sc.dir/cloud.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/test_sc.dir/cloud.cpp.i"
-	/bin/x86_64-linux-gnu-g++-10 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/dd/ubu20/ppkdmeans3/cloud.cpp > CMakeFiles/test_sc.dir/cloud.cpp.i
+	/bin/x86_64-linux-gnu-g++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/dd/Ubu20/ppkdmeans3/cloud.cpp > CMakeFiles/test_sc.dir/cloud.cpp.i
 
 CMakeFiles/test_sc.dir/cloud.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/test_sc.dir/cloud.cpp.s"
-	/bin/x86_64-linux-gnu-g++-10 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/dd/ubu20/ppkdmeans3/cloud.cpp -o CMakeFiles/test_sc.dir/cloud.cpp.s
+	/bin/x86_64-linux-gnu-g++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/dd/Ubu20/ppkdmeans3/cloud.cpp -o CMakeFiles/test_sc.dir/cloud.cpp.s
 
 CMakeFiles/test_sc.dir/comparator.cpp.o: CMakeFiles/test_sc.dir/flags.make
 CMakeFiles/test_sc.dir/comparator.cpp.o: ../comparator.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dd/ubu20/ppkdmeans3/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/test_sc.dir/comparator.cpp.o"
-	/bin/x86_64-linux-gnu-g++-10  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/test_sc.dir/comparator.cpp.o -c /home/dd/ubu20/ppkdmeans3/comparator.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dd/Ubu20/ppkdmeans3/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/test_sc.dir/comparator.cpp.o"
+	/bin/x86_64-linux-gnu-g++-9  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/test_sc.dir/comparator.cpp.o -c /home/dd/Ubu20/ppkdmeans3/comparator.cpp
 
 CMakeFiles/test_sc.dir/comparator.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/test_sc.dir/comparator.cpp.i"
-	/bin/x86_64-linux-gnu-g++-10 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/dd/ubu20/ppkdmeans3/comparator.cpp > CMakeFiles/test_sc.dir/comparator.cpp.i
+	/bin/x86_64-linux-gnu-g++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/dd/Ubu20/ppkdmeans3/comparator.cpp > CMakeFiles/test_sc.dir/comparator.cpp.i
 
 CMakeFiles/test_sc.dir/comparator.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/test_sc.dir/comparator.cpp.s"
-	/bin/x86_64-linux-gnu-g++-10 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/dd/ubu20/ppkdmeans3/comparator.cpp -o CMakeFiles/test_sc.dir/comparator.cpp.s
+	/bin/x86_64-linux-gnu-g++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/dd/Ubu20/ppkdmeans3/comparator.cpp -o CMakeFiles/test_sc.dir/comparator.cpp.s
 
 CMakeFiles/test_sc.dir/func.cpp.o: CMakeFiles/test_sc.dir/flags.make
 CMakeFiles/test_sc.dir/func.cpp.o: ../func.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dd/ubu20/ppkdmeans3/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/test_sc.dir/func.cpp.o"
-	/bin/x86_64-linux-gnu-g++-10  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/test_sc.dir/func.cpp.o -c /home/dd/ubu20/ppkdmeans3/func.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dd/Ubu20/ppkdmeans3/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/test_sc.dir/func.cpp.o"
+	/bin/x86_64-linux-gnu-g++-9  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/test_sc.dir/func.cpp.o -c /home/dd/Ubu20/ppkdmeans3/func.cpp
 
 CMakeFiles/test_sc.dir/func.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/test_sc.dir/func.cpp.i"
-	/bin/x86_64-linux-gnu-g++-10 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/dd/ubu20/ppkdmeans3/func.cpp > CMakeFiles/test_sc.dir/func.cpp.i
+	/bin/x86_64-linux-gnu-g++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/dd/Ubu20/ppkdmeans3/func.cpp > CMakeFiles/test_sc.dir/func.cpp.i
 
 CMakeFiles/test_sc.dir/func.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/test_sc.dir/func.cpp.s"
-	/bin/x86_64-linux-gnu-g++-10 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/dd/ubu20/ppkdmeans3/func.cpp -o CMakeFiles/test_sc.dir/func.cpp.s
+	/bin/x86_64-linux-gnu-g++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/dd/Ubu20/ppkdmeans3/func.cpp -o CMakeFiles/test_sc.dir/func.cpp.s
 
 CMakeFiles/test_sc.dir/test_sc.cpp.o: CMakeFiles/test_sc.dir/flags.make
 CMakeFiles/test_sc.dir/test_sc.cpp.o: ../test_sc.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dd/ubu20/ppkdmeans3/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/test_sc.dir/test_sc.cpp.o"
-	/bin/x86_64-linux-gnu-g++-10  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/test_sc.dir/test_sc.cpp.o -c /home/dd/ubu20/ppkdmeans3/test_sc.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dd/Ubu20/ppkdmeans3/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/test_sc.dir/test_sc.cpp.o"
+	/bin/x86_64-linux-gnu-g++-9  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/test_sc.dir/test_sc.cpp.o -c /home/dd/Ubu20/ppkdmeans3/test_sc.cpp
 
 CMakeFiles/test_sc.dir/test_sc.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/test_sc.dir/test_sc.cpp.i"
-	/bin/x86_64-linux-gnu-g++-10 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/dd/ubu20/ppkdmeans3/test_sc.cpp > CMakeFiles/test_sc.dir/test_sc.cpp.i
+	/bin/x86_64-linux-gnu-g++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/dd/Ubu20/ppkdmeans3/test_sc.cpp > CMakeFiles/test_sc.dir/test_sc.cpp.i
 
 CMakeFiles/test_sc.dir/test_sc.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/test_sc.dir/test_sc.cpp.s"
-	/bin/x86_64-linux-gnu-g++-10 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/dd/ubu20/ppkdmeans3/test_sc.cpp -o CMakeFiles/test_sc.dir/test_sc.cpp.s
+	/bin/x86_64-linux-gnu-g++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/dd/Ubu20/ppkdmeans3/test_sc.cpp -o CMakeFiles/test_sc.dir/test_sc.cpp.s
 
 CMakeFiles/test_sc.dir/tools.cpp.o: CMakeFiles/test_sc.dir/flags.make
 CMakeFiles/test_sc.dir/tools.cpp.o: ../tools.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dd/ubu20/ppkdmeans3/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/test_sc.dir/tools.cpp.o"
-	/bin/x86_64-linux-gnu-g++-10  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/test_sc.dir/tools.cpp.o -c /home/dd/ubu20/ppkdmeans3/tools.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dd/Ubu20/ppkdmeans3/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/test_sc.dir/tools.cpp.o"
+	/bin/x86_64-linux-gnu-g++-9  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/test_sc.dir/tools.cpp.o -c /home/dd/Ubu20/ppkdmeans3/tools.cpp
 
 CMakeFiles/test_sc.dir/tools.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/test_sc.dir/tools.cpp.i"
-	/bin/x86_64-linux-gnu-g++-10 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/dd/ubu20/ppkdmeans3/tools.cpp > CMakeFiles/test_sc.dir/tools.cpp.i
+	/bin/x86_64-linux-gnu-g++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/dd/Ubu20/ppkdmeans3/tools.cpp > CMakeFiles/test_sc.dir/tools.cpp.i
 
 CMakeFiles/test_sc.dir/tools.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/test_sc.dir/tools.cpp.s"
-	/bin/x86_64-linux-gnu-g++-10 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/dd/ubu20/ppkdmeans3/tools.cpp -o CMakeFiles/test_sc.dir/tools.cpp.s
+	/bin/x86_64-linux-gnu-g++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/dd/Ubu20/ppkdmeans3/tools.cpp -o CMakeFiles/test_sc.dir/tools.cpp.s
 
 # Object files for target test_sc
 test_sc_OBJECTS = \
@@ -143,7 +143,7 @@ test_sc: /usr/local/helib_pack/lib/libhelib.a
 test_sc: /usr/local/helib_pack/lib/libntl.so
 test_sc: /usr/local/helib_pack/lib/libgmp.so
 test_sc: CMakeFiles/test_sc.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/dd/ubu20/ppkdmeans3/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX executable test_sc"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/dd/Ubu20/ppkdmeans3/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX executable test_sc"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/test_sc.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -156,6 +156,6 @@ CMakeFiles/test_sc.dir/clean:
 .PHONY : CMakeFiles/test_sc.dir/clean
 
 CMakeFiles/test_sc.dir/depend:
-	cd /home/dd/ubu20/ppkdmeans3/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/dd/ubu20/ppkdmeans3 /home/dd/ubu20/ppkdmeans3 /home/dd/ubu20/ppkdmeans3/build /home/dd/ubu20/ppkdmeans3/build /home/dd/ubu20/ppkdmeans3/build/CMakeFiles/test_sc.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/dd/Ubu20/ppkdmeans3/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/dd/Ubu20/ppkdmeans3 /home/dd/Ubu20/ppkdmeans3 /home/dd/Ubu20/ppkdmeans3/build /home/dd/Ubu20/ppkdmeans3/build /home/dd/Ubu20/ppkdmeans3/build/CMakeFiles/test_sc.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/test_sc.dir/depend
 

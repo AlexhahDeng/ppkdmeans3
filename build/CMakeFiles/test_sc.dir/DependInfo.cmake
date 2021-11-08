@@ -4,11 +4,11 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/dd/ubu20/ppkdmeans3/cloud.cpp" "/home/dd/ubu20/ppkdmeans3/build/CMakeFiles/test_sc.dir/cloud.cpp.o"
-  "/home/dd/ubu20/ppkdmeans3/comparator.cpp" "/home/dd/ubu20/ppkdmeans3/build/CMakeFiles/test_sc.dir/comparator.cpp.o"
-  "/home/dd/ubu20/ppkdmeans3/func.cpp" "/home/dd/ubu20/ppkdmeans3/build/CMakeFiles/test_sc.dir/func.cpp.o"
-  "/home/dd/ubu20/ppkdmeans3/test_sc.cpp" "/home/dd/ubu20/ppkdmeans3/build/CMakeFiles/test_sc.dir/test_sc.cpp.o"
-  "/home/dd/ubu20/ppkdmeans3/tools.cpp" "/home/dd/ubu20/ppkdmeans3/build/CMakeFiles/test_sc.dir/tools.cpp.o"
+  "/home/dd/Ubu20/ppkdmeans3/cloud.cpp" "/home/dd/Ubu20/ppkdmeans3/build/CMakeFiles/test_sc.dir/cloud.cpp.o"
+  "/home/dd/Ubu20/ppkdmeans3/comparator.cpp" "/home/dd/Ubu20/ppkdmeans3/build/CMakeFiles/test_sc.dir/comparator.cpp.o"
+  "/home/dd/Ubu20/ppkdmeans3/func.cpp" "/home/dd/Ubu20/ppkdmeans3/build/CMakeFiles/test_sc.dir/func.cpp.o"
+  "/home/dd/Ubu20/ppkdmeans3/test_sc.cpp" "/home/dd/Ubu20/ppkdmeans3/build/CMakeFiles/test_sc.dir/test_sc.cpp.o"
+  "/home/dd/Ubu20/ppkdmeans3/tools.cpp" "/home/dd/Ubu20/ppkdmeans3/build/CMakeFiles/test_sc.dir/tools.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
