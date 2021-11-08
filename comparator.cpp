@@ -2844,6 +2844,8 @@ void Comparator::test_array_min(int input_len, long depth, long runs) const
 
 vector<Ctxt> Comparator::encrypt_vector(vector<int> x)
 {
+	// if(x.size()%2==1)
+	// 	x.push_back(0);//FIXME 如果x长度为奇数，末尾补0，不会影响求最大值，但是会影响求最小值
 	// scale参数标识是否对输入x进行缩放
 	Ctxt ctxt_x(m_pk);
 	vector<Ctxt> result(x.size(), ctxt_x);						  // 密文数组结果
@@ -2957,17 +2959,18 @@ vector<Ctxt> Comparator::encrypt_vector(vector<int> x)
 	return result;
 }
 
-vector<Ctxt> Comparator::max_variance(vector<Ctxt> variance)
+Ctxt Comparator::max_variance(vector<Ctxt> variance)
 {
 	// 构造所需的1密文 checked
-	unsigned long p = m_context.getP();							  // p的值
-	unsigned long enc_base = (p + 1) >> 1; 						// 俺懂了，p=7，那么(p+1)>>1 = 4， 所以二次编码的时候，就是以4为底
+	unsigned long p = m_context.getP();	   // p的值
+	unsigned long enc_base = (p + 1) >> 1; // 俺懂了，p=7，那么(p+1)>>1 = 4， 所以二次编码的时候，就是以4为底
 	if (m_type == BI || m_type == TAN)
 		enc_base = p;
 	unsigned long digit_base = power_long(enc_base, m_slotDeg); // m_slotDeg 是初始参数d，这里d=2
 
 	int plain_one = 0;
-	for(int i =0;i<m_expansionLen;i++){
+	for (int i = 0; i < m_expansionLen; i++)
+	{
 		plain_one += int(pow(digit_base, i));
 	}
 
@@ -2979,34 +2982,54 @@ vector<Ctxt> Comparator::max_variance(vector<Ctxt> variance)
 	Ctxt less_than(m_pk);
 	Ctxt mid_res(m_pk);
 
-	max_value = variance[0];
-	max_index *= 0l;
+	vector<int> plain_index(variance.size());
+	for (int i = 0; i < variance.size(); i++)
+		plain_index[i] = i;
+	vector<Ctxt> index = encrypt_vector(plain_index);
+	vector<Ctxt> value = variance;
 
-	for (long int i = 1; i < variance.size(); i++)
+	while (value.size() != 1)
 	{
-		compare(less_than, max_value, variance[i]);
-		// update max value
-		mid_res = ctxt_one;
-		mid_res-=less_than;
-		mid_res.multiplyBy(max_value);
-		max_value = mid_res;
+		vector<Ctxt> new_value(value.size() / 2, ctxt_one);
+		vector<Ctxt> new_index(value.size() / 2, ctxt_one);
 
-		mid_res = less_than;
-		mid_res.multiplyBy(variance[i]);
-		max_value += mid_res;
+		for (long int i = 0; i < value.size() / 2; i++)
+		{
+			compare(less_than, value[2 * i], value[2 * i + 1]);
+			// update max value
+			mid_res = ctxt_one;
+			mid_res -= less_than;
+			mid_res.multiplyBy(value[2 * i]);
+			max_value = mid_res;
 
-		// update max index
-		mid_res = ctxt_one;
-		mid_res-= less_than;
-		mid_res.multiplyBy(max_index);
-		max_index = mid_res;
+			mid_res = less_than;
+			mid_res.multiplyBy(value[2 * i + 1]);
+			max_value += mid_res;
 
-		mid_res = less_than;
-		mid_res *= i;
-		max_index += mid_res;
+			new_value[i] = max_value;
+
+			// update max index
+			mid_res = ctxt_one;
+			mid_res -= less_than;
+			mid_res.multiplyBy(index[2 * i]);
+			max_index = mid_res;
+
+			mid_res = less_than;
+			mid_res.multiplyBy(index[2 * i + 1]);
+			max_index += mid_res;
+
+			new_index[i] = max_index;
+		}
+
+		if (value.size() % 2 == 1)
+		{
+			new_value.push_back(value.back());
+			new_index.push_back(index.back());
+		}
+
+		value = new_value;
+		index = new_index;
 	}
-	cout<<"resule"<<endl; 
-	print_decrypted(max_index);
-	
-	return vector<Ctxt>{};
+
+	return value.back();
 }

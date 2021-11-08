@@ -24,7 +24,7 @@ int main(){
 	unsigned long p = 7;
 	unsigned long d = 2;	// 改变这个值就可以把【比较范围】变得好大好大，但是用时会增加
 	unsigned long m = 300;
-	unsigned long nb_primes = 500; // 噪声溢出修改这里
+	unsigned long nb_primes = 600; // 噪声溢出修改这里
 	unsigned long c = 3;
 
 	auto context = ContextBuilder<BGV>()
@@ -35,7 +35,7 @@ int main(){
 	        .c(c)
 	        .scale(6)
 	        .build();
-	unsigned long expansion_len = 3;
+	unsigned long expansion_len = 2;
 
 	SecKey secret_key(context);
 	secret_key.GenSecKey();
@@ -71,10 +71,10 @@ int main(){
 	Comparator comparator(context, type, d, expansion_len, secret_key, verbose);
 
 	int runs = 1;
-	vector<int>tmp{1,3,2,5};
+	vector<int>tmp{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29};
 
 	vector<Ctxt>ctxt_vec = comparator.encrypt_vector(tmp);
-	comparator.max_variance(ctxt_vec);
+	comparator.print_decrypted(comparator.max_variance(ctxt_vec)) ;
 
 	return 0;
 

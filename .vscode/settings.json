@@ -4,6 +4,7 @@
     "files.associations": {
         "ostream": "cpp",
         "vector": "cpp",
-        "cmath": "cpp"
+        "cmath": "cpp",
+        "functional": "cpp"
     }
 }

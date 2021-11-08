@@ -190,7 +190,7 @@ public:
   // 加密一个数组的数据
   vector<Ctxt> encrypt_vector(vector<int>x);
 
-  vector<Ctxt> max_variance(vector<Ctxt> variance);
+  Ctxt max_variance(vector<Ctxt> variance);
 
 
 };
