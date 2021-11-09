@@ -26,7 +26,7 @@
 					[
 						0
 					],
-					"name" : "pp3",
+					"name" : "test_sc",
 					"targetIndexes" : 
 					[
 						0
@@ -37,9 +37,9 @@
 			[
 				{
 					"directoryIndex" : 0,
-					"id" : "pp3::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-pp3-Debug-064bba772b50d67bfbd1.json",
-					"name" : "pp3",
+					"id" : "test_sc::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-test_sc-Debug-bb9046202f5256d2b0d7.json",
+					"name" : "test_sc",
 					"projectIndex" : 0
 				}
 			]
@@ -48,8 +48,8 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "/home/dd/ubu20/ppkdmeans3/build",
-		"source" : "/home/dd/ubu20/ppkdmeans3"
+		"build" : "/home/dd/Ubu20/ppkdmeans3/build",
+		"source" : "/home/dd/Ubu20/ppkdmeans3"
 	},
 	"version" : 
 	{

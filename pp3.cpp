@@ -144,32 +144,23 @@ void generate_kd_tree(cloud_one &c1, cloud_two &c2)
         {
             sum_xN1_sq[i] -= sec_part1[i];
             sum_xN2_sq[i] -= sec_part2[i];
-            index[i] = i;
+
+            sum_xN1_sq[i] += sum_xN2_sq[i];
         } // 结果暂存在sum_xNi_sq中
 
         /* above has been checked */
 
-        //! 1. c1和c2分别加密s1和s2,用true or false 来标识是否缩放
-        vector<Ctxt> enc_index = c1.comparator->encrypt_vector(index);
-        vector<Ctxt> zero_one = c1.comparator->encrypt_vector(vector<int>{0, 4369}); // FIXME：要根据整数分解的位数灵活变化
-
-        // FIXME 加密负数的问题，先留着把！
-        vector<Ctxt> enc_s1 = c1.comparator->encrypt_vector(sum_xN1_sq);
-        vector<Ctxt> enc_s2 = c2.comparator->encrypt_vector(sum_xN2_sq);
-        for (int i = 0; i < enc_s2.size(); ++i)
-        {
-            enc_s1[i] += enc_s2[i];
-            // c1.comparator->print_decrypted(enc_s1[i]);
-        } // 暂存在enc_s1中
+        //! 目前先直接合并秘密共享的方差，然后加密-->就不用解决负数的问题了
+        vector<Ctxt> enc_value = c1.comparator->encrypt_vector(sum_xN1_sq);
 
         // 2. c1 对密文{s1...sd}进行比较，求出最大值index，发给c2
-        Ctxt max_index = c1.max_variance(enc_s1, zero_one); //! 没实现，就先默认第一个维度最大把
-        // cout<<"result..."<<endl;
-        // c1.comparator->print_decrypted(max_index);
+        Ctxt max_index = c1.comparator->max_variance(enc_value); //! 没实现，就先默认第一个维度最大把
+        c1.comparator->decrypt_index(max_index);
 
         // 3. c2 解密index，取 N 和 对应index的排序结果，划分，划分完了以后，秘密共享N_l N_r
         c2.divide_data_set(max_index, c1, N, num_point, N_index);
         N_index++;
+        break;
     }
 
     return;
@@ -235,7 +226,7 @@ int main()
     generate_kd_tree(c1, c2);
 
     // 聚类过程
-    filtering(c1, c2);
+    // filtering(c1, c2);
 
     return 0;
 }

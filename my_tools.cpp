@@ -2,23 +2,23 @@
 
 //! 自定义工具函数
 CircuitType type = BI;
-bool verbose = false;//是否输出
+bool verbose = false; //是否输出
 unsigned long p = 7;
-unsigned long d = 2;	// 改变这个值就可以把【比较范围】变得好大好大，但是用时会增加
+unsigned long d = 2; // 改变这个值就可以把【比较范围】变得好大好大，但是用时会增加
 unsigned long m = 300;
 unsigned long nb_primes = 600; // 噪声溢出修改这里
 unsigned long c = 3;
 
 unsigned long expansion_len = 2;
 
-auto context = ContextBuilder<BGV>()// 初始化上下文
-	.m(m)// 分圆环的规模
-	.p(p)// 明文素数模数
-	.r(1)// 默认的什么东西
-	.bits(nb_primes)// 模数链中密文素数比特的数量
-	.c(c)// 密钥转换矩阵的列数
-	.scale(6)// 不知道啥东西
-	.build();
+auto context = ContextBuilder<BGV>() // 初始化上下文
+				   .m(m)			 // 分圆环的规模
+				   .p(p)			 // 明文素数模数
+				   .r(1)			 // 默认的什么东西
+				   .bits(nb_primes)	 // 模数链中密文素数比特的数量
+				   .c(c)			 // 密钥转换矩阵的列数
+				   .scale(6)		 // 不知道啥东西
+				   .build();
 
 //! tools for comparison
 Comparator *generate_comparator(bool output)
@@ -32,9 +32,9 @@ Comparator *generate_comparator(bool output)
 	 * 		指向比较器的指针
 	 */
 
-	CircuitType type = BI; 		// 比较电路的类型
-	bool verbose = output;		// 是否输出错误信息
-	unsigned long d = 2;		//! field extension degree 域扩展次数
+	CircuitType type = BI; // 比较电路的类型
+	bool verbose = output; // 是否输出错误信息
+	unsigned long d = 2;   //! field extension degree 域扩展次数
 
 	unsigned long expansion_len = 2;		  //!! maximal number of digits in a number
 	SecKey *secret_key = new SecKey(context); // Create a secret key associated with the context
@@ -125,7 +125,7 @@ vector<Ctxt> Comparator::encrypt_vector(vector<int> x)
 	// 开始对输入进行拆分
 	for (int i = 0; i < x.size(); ++i)
 	{
-		input_x = x[i];
+		input_x = x[i]% input_range;//SOLUTION 超过范围还没想到很好的办法，现在就简单粗暴，直接mod范围，肯定是有问题的
 		if (input_x < 0)
 		{
 			cout << "无法加密负数" << endl;
@@ -265,4 +265,34 @@ Ctxt Comparator::max_variance(vector<Ctxt> variance)
 	}
 
 	return index.back();
+}
+
+int Comparator::decrypt_index(Ctxt ctxt)
+{
+	helib::Ptxt<helib::BGV> ptxt(m_context);
+	m_sk.Decrypt(ptxt, ctxt);
+
+	vector<helib::BGV::SlotType> res = ptxt.getSlotRepr();
+
+	int p = m_context.getP();
+	int d = m_slotDeg;
+	int slot_p = 1;
+	int ptxt_index = 0;
+
+	for(int i = 0; i < m_expansionLen; i++){
+		int len = res[i].getData().rep.length();	// 当前slot的长度
+		int enc_base = 1, j = 0, curr = 0;
+		while(j<len){
+			long tmp=0;
+			conv(tmp,res[i].getData()[j] );
+			curr = curr + tmp * enc_base;
+			enc_base *= p;
+			j++;
+		}
+		ptxt_index += curr * slot_p;
+		slot_p *= int(pow(p,d));
+	}
+	cout<<ptxt_index<<endl;
+
+	return 0;
 }

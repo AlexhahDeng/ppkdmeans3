@@ -71,10 +71,11 @@ int main(){
 	Comparator comparator(context, type, d, expansion_len, secret_key, verbose);
 
 	int runs = 1;
-	vector<int>tmp{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29};
+	vector<int>tmp{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 30, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29};
 
 	vector<Ctxt>ctxt_vec = comparator.encrypt_vector(tmp);
-	comparator.print_decrypted(comparator.max_variance(ctxt_vec)) ;
+	Ctxt index = comparator.max_variance(ctxt_vec);
+	comparator.decrypt_index(index);
 
 	return 0;
 

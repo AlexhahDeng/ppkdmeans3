@@ -190,7 +190,12 @@ public:
   // 加密一个数组的数据
   vector<Ctxt> encrypt_vector(vector<int>x);
 
+  // 同态比较，获取最大方差的下标
   Ctxt max_variance(vector<Ctxt> variance);
+
+  // 解密密文，主要用于解密最大方差的下标
+  int decrypt_index(Ctxt ctxt);
+
 
 
 };

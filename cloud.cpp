@@ -323,7 +323,7 @@ void cloud_two::divide_data_set(Ctxt enc_index, cloud_one &c1, vector<int> &N, i
      */
 
     // TODO decrypt and decode ciphertext index
-    int max_var_index = 0; // get_index(enc_index);   //-->解密的函数有现成的，但是怎么decode需要自己写
+    int max_var_index = comparator->decrypt_index(enc_index);   //-->解密的函数有现成的，但是怎么decode需要自己写
     vector<vector<int>> node_min_max1(dimension, vector<int>(2)), node_min_max2(node_min_max1);
     int count = 0;
     vector<int> count_mm(dimension, 0);

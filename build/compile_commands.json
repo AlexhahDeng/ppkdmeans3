@@ -1,32 +1,32 @@
 [
 {
-  "directory": "/home/dd/ubu20/ppkdmeans3/build",
-  "command": "/bin/x86_64-linux-gnu-g++-10  -DHELIB_BOOT_THREADS -DHELIB_THREADS -I/home/dd/ubu20/ppkdmeans3 -isystem /usr/local/helib_pack/include  -g   -std=c++17 -o CMakeFiles/pp3.dir/my_tools.cpp.o -c /home/dd/ubu20/ppkdmeans3/my_tools.cpp",
-  "file": "/home/dd/ubu20/ppkdmeans3/my_tools.cpp"
+  "directory": "/home/dd/Ubu20/ppkdmeans3/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9  -DHELIB_BOOT_THREADS -DHELIB_THREADS -I/home/dd/Ubu20/ppkdmeans3 -isystem /usr/local/helib_pack/include  -g   -std=c++17 -o CMakeFiles/test_sc.dir/my_tools.cpp.o -c /home/dd/Ubu20/ppkdmeans3/my_tools.cpp",
+  "file": "/home/dd/Ubu20/ppkdmeans3/my_tools.cpp"
 },
 {
-  "directory": "/home/dd/ubu20/ppkdmeans3/build",
-  "command": "/bin/x86_64-linux-gnu-g++-10  -DHELIB_BOOT_THREADS -DHELIB_THREADS -I/home/dd/ubu20/ppkdmeans3 -isystem /usr/local/helib_pack/include  -g   -std=c++17 -o CMakeFiles/pp3.dir/cloud.cpp.o -c /home/dd/ubu20/ppkdmeans3/cloud.cpp",
-  "file": "/home/dd/ubu20/ppkdmeans3/cloud.cpp"
+  "directory": "/home/dd/Ubu20/ppkdmeans3/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9  -DHELIB_BOOT_THREADS -DHELIB_THREADS -I/home/dd/Ubu20/ppkdmeans3 -isystem /usr/local/helib_pack/include  -g   -std=c++17 -o CMakeFiles/test_sc.dir/cloud.cpp.o -c /home/dd/Ubu20/ppkdmeans3/cloud.cpp",
+  "file": "/home/dd/Ubu20/ppkdmeans3/cloud.cpp"
 },
 {
-  "directory": "/home/dd/ubu20/ppkdmeans3/build",
-  "command": "/bin/x86_64-linux-gnu-g++-10  -DHELIB_BOOT_THREADS -DHELIB_THREADS -I/home/dd/ubu20/ppkdmeans3 -isystem /usr/local/helib_pack/include  -g   -std=c++17 -o CMakeFiles/pp3.dir/comparator.cpp.o -c /home/dd/ubu20/ppkdmeans3/comparator.cpp",
-  "file": "/home/dd/ubu20/ppkdmeans3/comparator.cpp"
+  "directory": "/home/dd/Ubu20/ppkdmeans3/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9  -DHELIB_BOOT_THREADS -DHELIB_THREADS -I/home/dd/Ubu20/ppkdmeans3 -isystem /usr/local/helib_pack/include  -g   -std=c++17 -o CMakeFiles/test_sc.dir/comparator.cpp.o -c /home/dd/Ubu20/ppkdmeans3/comparator.cpp",
+  "file": "/home/dd/Ubu20/ppkdmeans3/comparator.cpp"
 },
 {
-  "directory": "/home/dd/ubu20/ppkdmeans3/build",
-  "command": "/bin/x86_64-linux-gnu-g++-10  -DHELIB_BOOT_THREADS -DHELIB_THREADS -I/home/dd/ubu20/ppkdmeans3 -isystem /usr/local/helib_pack/include  -g   -std=c++17 -o CMakeFiles/pp3.dir/func.cpp.o -c /home/dd/ubu20/ppkdmeans3/func.cpp",
-  "file": "/home/dd/ubu20/ppkdmeans3/func.cpp"
+  "directory": "/home/dd/Ubu20/ppkdmeans3/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9  -DHELIB_BOOT_THREADS -DHELIB_THREADS -I/home/dd/Ubu20/ppkdmeans3 -isystem /usr/local/helib_pack/include  -g   -std=c++17 -o CMakeFiles/test_sc.dir/func.cpp.o -c /home/dd/Ubu20/ppkdmeans3/func.cpp",
+  "file": "/home/dd/Ubu20/ppkdmeans3/func.cpp"
 },
 {
-  "directory": "/home/dd/ubu20/ppkdmeans3/build",
-  "command": "/bin/x86_64-linux-gnu-g++-10  -DHELIB_BOOT_THREADS -DHELIB_THREADS -I/home/dd/ubu20/ppkdmeans3 -isystem /usr/local/helib_pack/include  -g   -std=c++17 -o CMakeFiles/pp3.dir/pp3.cpp.o -c /home/dd/ubu20/ppkdmeans3/pp3.cpp",
-  "file": "/home/dd/ubu20/ppkdmeans3/pp3.cpp"
+  "directory": "/home/dd/Ubu20/ppkdmeans3/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9  -DHELIB_BOOT_THREADS -DHELIB_THREADS -I/home/dd/Ubu20/ppkdmeans3 -isystem /usr/local/helib_pack/include  -g   -std=c++17 -o CMakeFiles/test_sc.dir/test_sc.cpp.o -c /home/dd/Ubu20/ppkdmeans3/test_sc.cpp",
+  "file": "/home/dd/Ubu20/ppkdmeans3/test_sc.cpp"
 },
 {
-  "directory": "/home/dd/ubu20/ppkdmeans3/build",
-  "command": "/bin/x86_64-linux-gnu-g++-10  -DHELIB_BOOT_THREADS -DHELIB_THREADS -I/home/dd/ubu20/ppkdmeans3 -isystem /usr/local/helib_pack/include  -g   -std=c++17 -o CMakeFiles/pp3.dir/tools.cpp.o -c /home/dd/ubu20/ppkdmeans3/tools.cpp",
-  "file": "/home/dd/ubu20/ppkdmeans3/tools.cpp"
+  "directory": "/home/dd/Ubu20/ppkdmeans3/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9  -DHELIB_BOOT_THREADS -DHELIB_THREADS -I/home/dd/Ubu20/ppkdmeans3 -isystem /usr/local/helib_pack/include  -g   -std=c++17 -o CMakeFiles/test_sc.dir/tools.cpp.o -c /home/dd/Ubu20/ppkdmeans3/tools.cpp",
+  "file": "/home/dd/Ubu20/ppkdmeans3/tools.cpp"
 }
 ]
