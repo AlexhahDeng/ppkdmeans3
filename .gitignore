@@ -1,0 +1,7 @@
+build/
+CMakeFiles
+Makefile
+cmake_install.cmake
+pp3
+test_sc
+ppkdmeans3
