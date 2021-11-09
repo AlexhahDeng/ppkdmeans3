@@ -90,7 +90,7 @@ map<unsigned long, vector<vector<long>>> fcoefs{
 
 DoubleCRT Comparator::create_shift_mask(double &size, long shift)
 {
-	cout << "Mask for shift " << shift << " is being created" << endl;
+	// cout << "Mask for shift " << shift << " is being created" << endl;
 	// get EncryptedArray
 	const EncryptedArray &ea = m_context.getEA();
 
@@ -155,7 +155,7 @@ void Comparator::create_all_shift_masks()
 
 		shift <<= 1;
 	}
-	cout << "All masks are created" << endl;
+	// cout << "All masks are created" << endl;
 }
 
 void Comparator::compute_poly_params()
@@ -327,7 +327,7 @@ void Comparator::compute_poly_params()
 
 void Comparator::create_poly()
 {
-	cout << "Creating comparison polynomial" << endl;
+	// cout << "Creating comparison polynomial" << endl;
 	// get p
 	unsigned long p = m_context.getP();
 	;
@@ -442,7 +442,7 @@ void Comparator::create_poly()
 		}
 	}
 
-	cout << "Comparison polynomial is created" << endl;
+	// cout << "Comparison polynomial is created" << endl;
 }
 
 void Comparator::find_prim_root(ZZ_pE &root) const
@@ -797,7 +797,7 @@ void Comparator::mapTo01_subfield(Ctxt &ctxt, long pow) const
 void Comparator::less_than_mod_2(Ctxt &ctxt_res, const Ctxt &ctxt_x, const Ctxt &ctxt_y) const
 {
 	// Comp(x,y) = y(x+1)
-	cout << "Compute comparison polynomial" << endl;
+	// cout << "Compute comparison polynomial" << endl;
 
 	// x + 1
 	Ctxt x_plus_1 = ctxt_x;
@@ -817,7 +817,7 @@ void Comparator::less_than_mod_2(Ctxt &ctxt_res, const Ctxt &ctxt_x, const Ctxt 
 void Comparator::less_than_mod_3(Ctxt &ctxt_res, const Ctxt &ctxt_x, const Ctxt &ctxt_y) const
 {
 	// Comp(x,y) = -y(x-y)(x+1)
-	cout << "Compute comparison polynomial" << endl;
+	// cout << "Compute comparison polynomial" << endl;
 
 	// x + 1
 	Ctxt x_plus_1 = ctxt_x;
@@ -842,7 +842,7 @@ void Comparator::less_than_mod_3(Ctxt &ctxt_res, const Ctxt &ctxt_x, const Ctxt 
 void Comparator::less_than_mod_5(Ctxt &ctxt_res, const Ctxt &ctxt_x, const Ctxt &ctxt_y) const
 {
 	// Comp(x,y)=−(x+1) y(x−y) (x (x+1) − y(x−y)).
-	cout << "Compute comparison polynomial" << endl;
+	// cout << "Compute comparison polynomial" << endl;
 
 	// y(x - y)
 	Ctxt y_x_min_y = ctxt_x;
@@ -877,7 +877,7 @@ void Comparator::less_than_mod_5(Ctxt &ctxt_res, const Ctxt &ctxt_x, const Ctxt 
 void Comparator::less_than_mod_7(Ctxt &ctxt_res, const Ctxt &ctxt_x, const Ctxt &ctxt_y) const
 {
 	// Comp(x,y) = -y(x-y)(x+1)(x(x+1)(x(x+1)+3) + 5y(x-y)(x(x+1)+2x+3y(x-y)))
-	cout << "Compute comparison polynomial" << endl;
+	// cout << "Compute comparison polynomial" << endl;
 
 	// x
 	Ctxt y_x_min_y = ctxt_x;
@@ -928,7 +928,7 @@ void Comparator::less_than_mod_7(Ctxt &ctxt_res, const Ctxt &ctxt_x, const Ctxt 
 
 void Comparator::less_than_mod_any(Ctxt &ctxt_res, const Ctxt &ctxt_x, const Ctxt &ctxt_y) const
 {
-	cout << "Compute comparison polynomial" << endl;
+	// cout << "Compute comparison polynomial" << endl;
 
 	Ctxt Y = ctxt_x;
 	// x - y

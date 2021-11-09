@@ -183,19 +183,21 @@ void filtering(cloud_one &c1, cloud_two &c2)
             // 计算中心到每个簇中心的距离, size = 2 x k -->其实也可以直接合并后加密啦……emmm也不太影响嘛
             vector<vector<int>> dist = cal_dist(c1, c2, 0);
 
-            vector<Ctxt> d1 = c1.encrypt_variance(dist[0]);
-            vector<Ctxt> d2 = c2.encrypt_variance(dist[1]);
+            // 先直接合并，存到维度0中
+            for(int j =0;j<c1.k;j++)
+                dist[0][j] += dist[1][j];
+            // vector<Ctxt> d1 = c1.encrypt_variance(dist[0]);
+            // vector<Ctxt> d2 = c2.encrypt_variance(dist[1]);
 
-            // TODO 合并c1 和 c2 的计算结果
-            for (int i = 0; i < d1.size(); i++)
-            {
-                d1[i] += d2[i];
-            }
+            // 加密距离
+            vector<Ctxt> ctxt_dist = c1.comparator->encrypt_vector(dist[0]);
+
             // TODO c1计算最小距离, 这里还要考虑一个问题-->筛掉哪些不在candidate set中的簇中心
             vector<Ctxt> min_dist = c1.min_dist(d1);
 
             // 根据是否为叶子节点分不同情况处理
         }
+        break;
     }
     return;
 }
@@ -203,7 +205,7 @@ void filtering(cloud_one &c1, cloud_two &c2)
 int main()
 {
     // 初始化数据信息
-    int data_num = 10, dimension = 2;
+    int data_num = 5, dimension = 2;
     vector<point> point_list, c1_data, c2_data;
     tmp_data(point_list);
     // random(point_list, data_num, dimension);
@@ -226,7 +228,7 @@ int main()
     generate_kd_tree(c1, c2);
 
     // 聚类过程
-    // filtering(c1, c2);
+    filtering(c1, c2);
 
     return 0;
 }

@@ -6,10 +6,6 @@
 
 #IncludeRegexTransform: 
 
-/home/dd/Ubu20/ppkdmeans3/cloud.cpp
-cloud.h
-/home/dd/Ubu20/ppkdmeans3/cloud.h
-
 /home/dd/Ubu20/ppkdmeans3/cloud.h
 iostream
 -
@@ -89,10 +85,6 @@ iostream
 -
 my_tools.h
 /home/dd/Ubu20/ppkdmeans3/my_tools.h
-
-/home/dd/Ubu20/ppkdmeans3/tools.cpp
-tools.h
-/home/dd/Ubu20/ppkdmeans3/tools.h
 
 /home/dd/Ubu20/ppkdmeans3/tools.h
 iostream

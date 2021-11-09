@@ -156,11 +156,6 @@ void tmp_data(vector<point> &point_list)
 	point_list.push_back({2, vector<int>{234, 76}});
 	point_list.push_back({3, vector<int>{67, 567}});
 	point_list.push_back({4, vector<int>{59, 473}});
-	point_list.push_back({5, vector<int>{23, 422}});
-	point_list.push_back({6, vector<int>{26, 434}});
-	point_list.push_back({7, vector<int>{22, 45}});
-	point_list.push_back({8, vector<int>{29, 46}});
-	point_list.push_back({9, vector<int>{24, 48}});
 }
 
 // func: 用户初始化簇中心，确保点不重复--checked

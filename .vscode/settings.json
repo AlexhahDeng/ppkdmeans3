@@ -5,6 +5,10 @@
         "ostream": "cpp",
         "vector": "cpp",
         "cmath": "cpp",
-        "functional": "cpp"
+        "functional": "cpp",
+        "iostream": "cpp"
+    },
+    "search.exclude": {
+        "**/*.code-search": false
     }
 }

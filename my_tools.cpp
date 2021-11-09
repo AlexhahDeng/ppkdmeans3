@@ -104,8 +104,8 @@ vector<Ctxt> Comparator::encrypt_vector(vector<int> x)
 		// input_range = power_long(field_size, expansion_len);
 		input_range = power_long(digit_base, m_expansionLen); // 计算比较数字的最大范围
 
-	cout << "最大输入：" << input_range << endl;
-	cout << "一个密文可以包含的数字：" << numbers_size << endl;
+	// cout << "最大输入：" << input_range << endl;
+	// cout << "一个密文可以包含的数字：" << numbers_size << endl;
 
 	//! 存放加解密的结果
 	vector<ZZX> expected_result(occupied_slots);
@@ -125,7 +125,7 @@ vector<Ctxt> Comparator::encrypt_vector(vector<int> x)
 	// 开始对输入进行拆分
 	for (int i = 0; i < x.size(); ++i)
 	{
-		input_x = x[i]% input_range;//SOLUTION 超过范围还没想到很好的办法，现在就简单粗暴，直接mod范围，肯定是有问题的
+		input_x = x[i] % input_range; // FIXME 超过范围还没想到很好的办法，现在就简单粗暴，直接mod范围，肯定是有问题的
 		if (input_x < 0)
 		{
 			cout << "无法加密负数" << endl;
@@ -279,20 +279,97 @@ int Comparator::decrypt_index(Ctxt ctxt)
 	int slot_p = 1;
 	int ptxt_index = 0;
 
-	for(int i = 0; i < m_expansionLen; i++){
-		int len = res[i].getData().rep.length();	// 当前slot的长度
+	for (int i = 0; i < m_expansionLen; i++)
+	{
+		int len = res[i].getData().rep.length(); // 当前slot的长度
 		int enc_base = 1, j = 0, curr = 0;
-		while(j<len){
-			long tmp=0;
-			conv(tmp,res[i].getData()[j] );
+		while (j < len)
+		{
+			long tmp = 0;
+			conv(tmp, res[i].getData()[j]);
 			curr = curr + tmp * enc_base;
 			enc_base *= p;
 			j++;
 		}
 		ptxt_index += curr * slot_p;
-		slot_p *= int(pow(p,d));
+		slot_p *= int(pow(p, d));
 	}
-	cout<<ptxt_index<<endl;
+	// cout<<ptxt_index<<endl;
 
-	return 0;
+	return ptxt_index;
+}
+
+Ctxt Comparator::min_dist(vector<Ctxt> dist)
+{
+	// 构造所需的1密文 checked
+	unsigned long p = m_context.getP();	   // p的值
+	unsigned long enc_base = (p + 1) >> 1; // 俺懂了，p=7，那么(p+1)>>1 = 4， 所以二次编码的时候，就是以4为底
+	if (m_type == BI || m_type == TAN)
+		enc_base = p;
+	unsigned long digit_base = power_long(enc_base, m_slotDeg); // m_slotDeg 是初始参数d，这里d=2
+
+	int plain_one = 0;
+	for (int i = 0; i < m_expansionLen; i++)
+	{
+		plain_one += int(pow(digit_base, i));
+	}
+
+	Ctxt ctxt_one(m_pk);
+	ctxt_one = encrypt_vector(vector<int>{plain_one})[0];
+
+	Ctxt max_value(m_pk);
+	Ctxt max_index(m_pk);
+	Ctxt less_than(m_pk);
+	Ctxt mid_res(m_pk);
+
+	vector<int> plain_index(dist.size());
+	for (int i = 0; i < dist.size(); i++)
+		plain_index[i] = i;
+	vector<Ctxt> index = encrypt_vector(plain_index);
+	vector<Ctxt> value = dist;
+
+	while (value.size() != 1)
+	{
+		vector<Ctxt> new_value(value.size() / 2, ctxt_one);
+		vector<Ctxt> new_index(value.size() / 2, ctxt_one);
+
+		for (long int i = 0; i < value.size() / 2; i++)
+		{
+			compare(less_than, value[2 * i], value[2 * i + 1]);
+			// update max value
+			mid_res = ctxt_one;
+			mid_res -= less_than;
+			mid_res.multiplyBy(value[2 * i]);
+			max_value = mid_res;
+
+			mid_res = less_than;
+			mid_res.multiplyBy(value[2 * i + 1]);
+			max_value += mid_res;
+
+			new_value[i] = max_value;
+
+			// update max index
+			mid_res = ctxt_one;
+			mid_res -= less_than;
+			mid_res.multiplyBy(index[2 * i]);
+			max_index = mid_res;
+
+			mid_res = less_than;
+			mid_res.multiplyBy(index[2 * i + 1]);
+			max_index += mid_res;
+
+			new_index[i] = max_index;
+		}
+
+		if (value.size() % 2 == 1)
+		{
+			new_value.push_back(value.back());
+			new_index.push_back(index.back());
+		}
+
+		value = new_value;
+		index = new_index;
+	}
+
+	return index.back();
 }

@@ -196,6 +196,10 @@ public:
   // 解密密文，主要用于解密最大方差的下标
   int decrypt_index(Ctxt ctxt);
 
+  // 计算最小距离
+  Ctxt min_dist(vector<Ctxt> variance);
+
+
 
 
 };
