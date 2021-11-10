@@ -125,7 +125,8 @@ vector<Ctxt> Comparator::encrypt_vector(vector<int> x)
 	// 开始对输入进行拆分
 	for (int i = 0; i < x.size(); ++i)
 	{
-		input_x = x[i] % input_range; // FIXME 超过范围还没想到很好的办法，现在就简单粗暴，直接mod范围，肯定是有问题的
+		input_x = x[i];
+		// input_x = x[i] % input_range; // FIXME 超过范围还没想到很好的办法，现在就简单粗暴，直接mod范围，肯定是有问题的
 		if (input_x < 0)
 		{
 			cout << "无法加密负数" << endl;
@@ -136,7 +137,8 @@ vector<Ctxt> Comparator::encrypt_vector(vector<int> x)
 		if (input_x > input_range)
 		{
 			cout << input_x << " 数据超过加密范围..." << endl;
-			exit(0);
+			input_x = x[i] % input_range; // FIXME 超过范围还没想到很好的办法，现在就简单粗暴，直接mod范围，肯定是有问题的
+			// exit(0);
 		}
 
 		if (m_verbose)
@@ -299,8 +301,11 @@ int Comparator::decrypt_index(Ctxt ctxt)
 	return ptxt_index;
 }
 
-Ctxt Comparator::min_dist(vector<Ctxt> dist)
+//返回最小距离
+vector<Ctxt> Comparator::min_dist(vector<Ctxt> dist)
 {
+	
+
 	// 构造所需的1密文 checked
 	unsigned long p = m_context.getP();	   // p的值
 	unsigned long enc_base = (p + 1) >> 1; // 俺懂了，p=7，那么(p+1)>>1 = 4， 所以二次编码的时候，就是以4为底
@@ -317,54 +322,46 @@ Ctxt Comparator::min_dist(vector<Ctxt> dist)
 	Ctxt ctxt_one(m_pk);
 	ctxt_one = encrypt_vector(vector<int>{plain_one})[0];
 
-	Ctxt max_value(m_pk);
-	Ctxt max_index(m_pk);
+	Ctxt min_value(m_pk);
 	Ctxt less_than(m_pk);
 	Ctxt mid_res(m_pk);
 
-	vector<int> plain_index(dist.size());
-	for (int i = 0; i < dist.size(); i++)
-		plain_index[i] = i;
-	vector<Ctxt> index = encrypt_vector(plain_index);
+	// vector<int> plain_index(dist.size());
+	// for (int i = 0; i < dist.size(); i++)
+	// 	plain_index[i] = i;
+	// vector<Ctxt> index = encrypt_vector(plain_index);
+
+	vector<Ctxt> result(dist.size(), ctxt_one);
 	vector<Ctxt> value = dist;
 
 	while (value.size() != 1)
 	{
 		vector<Ctxt> new_value(value.size() / 2, ctxt_one);
-		vector<Ctxt> new_index(value.size() / 2, ctxt_one);
+		vector<Ctxt> new_result(value.size() / 2, ctxt_one);
 
 		for (long int i = 0; i < value.size() / 2; i++)
 		{
 			compare(less_than, value[2 * i], value[2 * i + 1]);
-			// update max value
+
+			// update min value
 			mid_res = ctxt_one;
-			mid_res -= less_than;
-			mid_res.multiplyBy(value[2 * i]);
-			max_value = mid_res;
+			mid_res -= less_than;					// 1 - LT
+			// new_result[2*i+1] *= mid_res;		// res[2i+1]*(1-LT)
+			mid_res.multiplyBy(value[2 * i + 1]);	//val[2i+1]*(1-LT)
+			min_value = mid_res;
 
 			mid_res = less_than;
-			mid_res.multiplyBy(value[2 * i + 1]);
-			max_value += mid_res;
+			mid_res.multiplyBy(value[2 * i]);// val[2i]*LT
+			min_value += mid_res;			 // val[2i+1]*(1-LT)+val[2i]*LT
 
-			new_value[i] = max_value;
-
-			// update max index
-			mid_res = ctxt_one;
-			mid_res -= less_than;
-			mid_res.multiplyBy(index[2 * i]);
-			max_index = mid_res;
-
-			mid_res = less_than;
-			mid_res.multiplyBy(index[2 * i + 1]);
-			max_index += mid_res;
-
-			new_index[i] = max_index;
+			new_value[i] = min_value;
+			new_result[i] = less_than;
+			// new_result[2*i] *= less_than;		 // res[2i]*LT			
 		}
 
 		if (value.size() % 2 == 1)
 		{
 			new_value.push_back(value.back());
-			new_index.push_back(index.back());
 		}
 
 		value = new_value;

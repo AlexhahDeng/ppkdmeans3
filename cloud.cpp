@@ -147,6 +147,11 @@ vector<vector<int>> cloud::calculate_dist_para_ef(int node_index, int k_index)
     return ef;
 }
 
+// cloud provides clu_cen, while node provide candidate_k
+void cloud::exclude_clusters(int node_index){
+
+}
+
 // cloud_one
 cloud_one::cloud_one(vector<point> point_list, int data_num, int dimension, Comparator *comparator, int k) : cloud(point_list, data_num, dimension, comparator, k)
 {
@@ -254,11 +259,6 @@ int cloud_one::calculate_dist_res(vector<vector<int>>ef){
     return para[0] - 2*para[1] + para[2];
 }
 
-// TODO cloud one figure out minimal distance result like [01000..]
-vector<Ctxt> cloud_one::min_dist(vector<Ctxt>dist){
-    // TODO 实现计算最短距离的功能
-    return vector<Ctxt>{};
-}
 
 // cloud_two
 cloud_two::cloud_two(vector<point> point_list, int data_num, int dimension, Comparator *comparator, vector<vector<int>> sorted_index, int k) : cloud(point_list, data_num, dimension, comparator, k)

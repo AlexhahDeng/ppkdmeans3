@@ -173,7 +173,8 @@ void filtering(cloud_one &c1, cloud_two &c2)
     ini_clu_cen(c1, c2);     // 初始化簇中心，存放在cloud中
     ini_candidate_k(c1, c2); // 初始化候选集和簇中点数，存放在kd_node中
 
-    while(true){// 一轮迭代
+    while (true)
+    { // 一轮迭代
         // 预计算簇中心连乘的结果，每一轮迭代只计算一次
         mul_clu_point_num(c1, c2);
 
@@ -181,21 +182,38 @@ void filtering(cloud_one &c1, cloud_two &c2)
         for (int i = 0; i < c1.kd_tree.size(); i++)
         {
             // 计算中心到每个簇中心的距离, size = 2 x k -->其实也可以直接合并后加密啦……emmm也不太影响嘛
-            vector<vector<int>> dist = cal_dist(c1, c2, 0);
+            vector<vector<int>> dist = cal_dist(c1, c2, i);
 
             // 先直接合并，存到维度0中
-            for(int j =0;j<c1.k;j++)
-                dist[0][j] += dist[1][j];
-            // vector<Ctxt> d1 = c1.encrypt_variance(dist[0]);
-            // vector<Ctxt> d2 = c2.encrypt_variance(dist[1]);
+            for (int j = 0; j < c1.k; j++)
+            {
+                int n = c1.kd_tree[i].candidate_k[j] + c2.kd_tree[i].candidate_k[j];
+                dist[0][j] = (dist[0][j] + dist[1][j]) * n + 2400; // 用来搞定0影响的下下策
+            }
 
             // 加密距离
             vector<Ctxt> ctxt_dist = c1.comparator->encrypt_vector(dist[0]);
 
+            //合并candidate_k,然后加密-->可能存在的问题是，这里做了一次乘法后面，做乘法的次数就变少
+            // SOLUTION 也可以换成秘密共享
+            // vector<int> can_k(c1.k);
+            // for (int j = 0; j < c1.k; ++j)
+            //     can_k = c1.kd_tree[i].candidate_k[j] + c2.kd_tree[i].candidate_k[j];
+            // vector<Ctxt> ctxt_can_k = c1.comparator->encrypt_vector(can_k);
+            // FIXME 俺想偷懒了！直接在这里乘法把，累了真的
+
             // TODO c1计算最小距离, 这里还要考虑一个问题-->筛掉哪些不在candidate set中的簇中心
-            vector<Ctxt> min_dist = c1.min_dist(d1);
+            vector<Ctxt> min_dist_index = c1.comprator->min_dist(d1);
 
             // 根据是否为叶子节点分不同情况处理
+            if (c1.kd_tree[i].node_point_num > 2)
+            {
+
+            } // 非叶子节点
+            else
+            {
+
+            } // 叶子节点
         }
         break;
     }

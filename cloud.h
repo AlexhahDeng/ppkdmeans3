@@ -58,6 +58,9 @@ public:
 
     // 计算距离结果的ef
     vector<vector<int>> calculate_dist_res_ef(vector<int>para);
+
+    // 计算Ni*Ki
+    void exclude_clusters(int node_index);
 };
 
 class cloud_one : public cloud
