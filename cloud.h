@@ -27,6 +27,7 @@ public:
     int k;                           // number of clusters
     int data_num;                    // number of data record
     int dimension;                   // dimension of a single point
+    // Ctxt ctxt_one
     Comparator *comparator;          // comparator for later comparison
     vector<point> point_list;        // store data for secret sharing
     vector<vector<int>> beaver_list; // beaver triple list for multiplication, size = data_num×3
@@ -90,9 +91,6 @@ public:
 
     // cloud one calculate final distance result
     int calculate_dist_res(vector<vector<int>>ef);
-
-    // TODO cloud one figure out minimal distance result like [01000..]
-    vector<Ctxt> min_dist(vector<Ctxt>dist);
 
 };
 

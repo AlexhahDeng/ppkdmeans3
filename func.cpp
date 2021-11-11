@@ -326,5 +326,6 @@ vector<vector<int>> cal_dist(cloud_one &c1, cloud_two &c2, int node_index)
 		result[1][i] = c2.calculate_dist_res(ef1);
 
 	} // 计算中心到第i个簇的距离
+	
 	return result;
 }

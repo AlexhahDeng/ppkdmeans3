@@ -191,16 +191,22 @@ public:
   vector<Ctxt> encrypt_vector(vector<int>x);
 
   // 同态比较，获取最大方差的下标
-  Ctxt max_variance(vector<Ctxt> variance);
+  Ctxt max_variance(vector<Ctxt> variance, Ctxt ctxt_one);
 
   // 解密密文，主要用于解密最大方差的下标
   int decrypt_index(Ctxt ctxt);
 
-  // 计算最小距离
-  Ctxt min_dist(vector<Ctxt> variance);
+	/**
+	 * @brief 用0，1的密文标识距离中心最近的簇
+	 * 
+	 * @param dist 
+	 * @return vector<Ctxt> 
+	 */
+  vector<Ctxt> min_dist(vector<Ctxt> dist, Ctxt ctxt_one);
 
+  Ctxt gen_ctxt_one();
 
-
+  long int dec_compare_res(Ctxt ctxt);
 
 };
 }

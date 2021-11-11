@@ -2841,3 +2841,4 @@ void Comparator::test_array_min(int input_len, long depth, long runs) const
 		}
 	}
 }
+

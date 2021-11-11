@@ -6,7 +6,11 @@
         "vector": "cpp",
         "cmath": "cpp",
         "functional": "cpp",
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "array": "cpp",
+        "string_view": "cpp",
+        "initializer_list": "cpp",
+        "utility": "cpp"
     },
     "search.exclude": {
         "**/*.code-search": false

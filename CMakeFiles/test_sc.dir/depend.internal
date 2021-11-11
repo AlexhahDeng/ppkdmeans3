@@ -484,7 +484,10 @@ CMakeFiles/test_sc.dir/my_tools.cpp.o
  /usr/local/helib_pack/include/helib/version.h
  /usr/local/helib_pack/include/helib/zzX.h
 CMakeFiles/test_sc.dir/test_sc.cpp.o
+ /home/dd/Ubu20/ppkdmeans3/cloud.h
  /home/dd/Ubu20/ppkdmeans3/comparator.h
+ /home/dd/Ubu20/ppkdmeans3/func.h
+ /home/dd/Ubu20/ppkdmeans3/my_tools.h
  /home/dd/Ubu20/ppkdmeans3/test_sc.cpp
  /home/dd/Ubu20/ppkdmeans3/tools.h
  /usr/local/helib_pack/include/NTL/ALL_FEATURES.h

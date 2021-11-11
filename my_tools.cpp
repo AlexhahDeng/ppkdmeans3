@@ -20,6 +20,10 @@ auto context = ContextBuilder<BGV>() // 初始化上下文
 				   .scale(6)		 // 不知道啥东西
 				   .build();
 
+// global paras
+// int PLAIN_ONE;
+long int INPUT_VALUE;
+
 //! tools for comparison
 Comparator *generate_comparator(bool output)
 {
@@ -72,14 +76,22 @@ Comparator *generate_comparator(bool output)
 	//! 创建比较器，然后发送给Cloud1，将公钥发送给User
 	Comparator *comparator = new Comparator(context, type, d, expansion_len, *secret_key, verbose);
 
+	unsigned long p = context.getP();	   // p的值
+	unsigned long enc_base = (p + 1) >> 1; // 俺懂了，p=7，那么(p+1)>>1 = 4， 所以二次编码的时候，就是以4为底
+
+	if (type == BI || type == TAN)
+		enc_base = p;
+	unsigned long digit_base = power_long(enc_base, d); // m_slotDeg 是初始参数d，这里d=2
+
+	// 初始化max value-->也就是加密能处理的范围-->后面min dist用得上
+	INPUT_VALUE = int(pow(digit_base, expansion_len)) - 1;
+	cout << "input value range == " << INPUT_VALUE << endl;
+
 	return comparator;
 }
 
 vector<Ctxt> Comparator::encrypt_vector(vector<int> x)
 {
-	// if(x.size()%2==1)
-	// 	x.push_back(0);//FIXME 如果x长度为奇数，末尾补0，不会影响求最大值，但是会影响求最小值
-	// scale参数标识是否对输入x进行缩放
 	Ctxt ctxt_x(m_pk);
 	vector<Ctxt> result(x.size(), ctxt_x);						  // 密文数组结果
 	const EncryptedArray &ea = m_context.getEA();				  // 获取加密数组
@@ -132,13 +144,12 @@ vector<Ctxt> Comparator::encrypt_vector(vector<int> x)
 			cout << "无法加密负数" << endl;
 			exit(0);
 		}
-		// input_x = scale ? int(abs(x[i]) / 100) : x[i]; // 用scale参数来控制缩放
 
 		if (input_x > input_range)
 		{
 			cout << input_x << " 数据超过加密范围..." << endl;
 			input_x = x[i] % input_range; // FIXME 超过范围还没想到很好的办法，现在就简单粗暴，直接mod范围，肯定是有问题的
-			// exit(0);
+										  // exit(0);
 		}
 
 		if (m_verbose)
@@ -194,23 +205,8 @@ vector<Ctxt> Comparator::encrypt_vector(vector<int> x)
 	return result;
 }
 
-Ctxt Comparator::max_variance(vector<Ctxt> variance)
+Ctxt Comparator::max_variance(vector<Ctxt> variance, Ctxt ctxt_one)
 {
-	// 构造所需的1密文 checked
-	unsigned long p = m_context.getP();	   // p的值
-	unsigned long enc_base = (p + 1) >> 1; // 俺懂了，p=7，那么(p+1)>>1 = 4， 所以二次编码的时候，就是以4为底
-	if (m_type == BI || m_type == TAN)
-		enc_base = p;
-	unsigned long digit_base = power_long(enc_base, m_slotDeg); // m_slotDeg 是初始参数d，这里d=2
-
-	int plain_one = 0;
-	for (int i = 0; i < m_expansionLen; i++)
-	{
-		plain_one += int(pow(digit_base, i));
-	}
-
-	Ctxt ctxt_one(m_pk);
-	ctxt_one = encrypt_vector(vector<int>{plain_one})[0];
 
 	Ctxt max_value(m_pk);
 	Ctxt max_index(m_pk);
@@ -301,72 +297,137 @@ int Comparator::decrypt_index(Ctxt ctxt)
 	return ptxt_index;
 }
 
-//返回最小距离
-vector<Ctxt> Comparator::min_dist(vector<Ctxt> dist)
+vector<Ctxt> Comparator::min_dist(vector<Ctxt> dist, Ctxt ctxt_one)
 {
-	
+	if (dist.size() != 5)
+		cout << "numbers of dist out of range" << endl;
 
-	// 构造所需的1密文 checked
-	unsigned long p = m_context.getP();	   // p的值
-	unsigned long enc_base = (p + 1) >> 1; // 俺懂了，p=7，那么(p+1)>>1 = 4， 所以二次编码的时候，就是以4为底
-	if (m_type == BI || m_type == TAN)
-		enc_base = p;
-	unsigned long digit_base = power_long(enc_base, m_slotDeg); // m_slotDeg 是初始参数d，这里d=2
-
-	int plain_one = 0;
-	for (int i = 0; i < m_expansionLen; i++)
-	{
-		plain_one += int(pow(digit_base, i));
-	}
-
-	Ctxt ctxt_one(m_pk);
-	ctxt_one = encrypt_vector(vector<int>{plain_one})[0];
-
+	// 默认dist的个数是5个，先写死把！
 	Ctxt min_value(m_pk);
 	Ctxt less_than(m_pk);
 	Ctxt mid_res(m_pk);
 
-	// vector<int> plain_index(dist.size());
-	// for (int i = 0; i < dist.size(); i++)
-	// 	plain_index[i] = i;
-	// vector<Ctxt> index = encrypt_vector(plain_index);
+	vector<Ctxt> result(dist.size(), ctxt_one); // 存放最终标识全局最小值的结果
+	vector<Ctxt> value = dist;					// 比较的内容
+	int count = 1;								// 比较的轮次
 
-	vector<Ctxt> result(dist.size(), ctxt_one);
-	vector<Ctxt> value = dist;
+	for (int i = 0; i < value.size(); i++) // 消除0的影响，转变为近似最大值
+		value[i] += INPUT_VALUE;
 
 	while (value.size() != 1)
 	{
-		vector<Ctxt> new_value(value.size() / 2, ctxt_one);
-		vector<Ctxt> new_result(value.size() / 2, ctxt_one);
+		vector<Ctxt> new_value(value.size() / 2, ctxt_one);		 // 存放一轮比较后的较小值，数量砍半
+		vector<long int> compare_reuslt(value.size() / 2, ctxt_one); // 存放比较的结果
 
-		for (long int i = 0; i < value.size() / 2; i++)
+		Ctxt min_value(m_pk);
+
+		for (int i = 0; i < value.size() / 2; i++)
 		{
-			compare(less_than, value[2 * i], value[2 * i + 1]);
+			compare(less_than, value[2 * i], value[2 * i + 1]); // whether value[2i] is smaller than value[2i+1]
 
-			// update min value
+
+			compare_reuslt[i] = less_than;
+
 			mid_res = ctxt_one;
-			mid_res -= less_than;					// 1 - LT
-			// new_result[2*i+1] *= mid_res;		// res[2i+1]*(1-LT)
-			mid_res.multiplyBy(value[2 * i + 1]);	//val[2i+1]*(1-LT)
+			mid_res -= less_than;				  // 1-LT
+			mid_res.multiplyBy(value[2 * i + 1]); //(1-LT)*value[2i+1]
 			min_value = mid_res;
 
 			mid_res = less_than;
-			mid_res.multiplyBy(value[2 * i]);// val[2i]*LT
-			min_value += mid_res;			 // val[2i+1]*(1-LT)+val[2i]*LT
+			mid_res.multiplyBy(value[2 * i]); // LT*value[2i]
+			min_value += mid_res;
 
-			new_value[i] = min_value;
-			new_result[i] = less_than;
-			// new_result[2*i] *= less_than;		 // res[2i]*LT			
+			new_value[i] = min_value; // store min value of two in new_value
 		}
 
 		if (value.size() % 2 == 1)
-		{
 			new_value.push_back(value.back());
+		value = new_value;
+
+		// 开始更新结果了！
+		if (count == 1)
+		{
+			for (int i = 0; i < compare_reuslt.size(); i++)
+			{
+				result[2 * i] *= compare_reuslt[i];
+				mid_res = ctxt_one;
+				mid_res -= compare_reuslt[i];
+				result[2 * i + 1] *= mid_res;
+			}
+		}
+		else if (count == 2)
+		{
+			for (int i = 0; i < compare_reuslt.size(); i++)
+			{
+				result[i] *= compare_reuslt[i];
+				result[i + 1] *= compare_reuslt[i];
+				mid_res = ctxt_one;
+				mid_res -= compare_reuslt[i];
+
+				result[i + 2] *= mid_res;
+				result[i + 3] *= mid_res;
+			}
+		}
+		else if (count == 3)
+		{
+			for (int i = 0; i < compare_reuslt.size(); i++)
+			{
+				result[i] *= compare_reuslt[i];
+				result[i + 1] *= compare_reuslt[i];
+				result[i + 2] *= compare_reuslt[i];
+				result[i + 3] *= compare_reuslt[i];
+
+				mid_res = ctxt_one;
+				mid_res -= compare_reuslt[i];
+				result[i + 4] *= mid_res;
+			}
+		}
+		else
+		{
+			cout << "woooops, sth went wrong!!!";
 		}
 
-		value = new_value;
-		index = new_index;
+		count++;
 	}
 
-	return index.back();
+	return result;
+}
+
+Ctxt Comparator::gen_ctxt_one()
+{
+	// 这里构建ctxt_one的密文
+	unsigned long p = m_context.getP();	   // p的值
+	unsigned long enc_base = (p + 1) >> 1; // 俺懂了，p=7，那么(p+1)>>1 = 4， 所以二次编码的时候，就是以4为底
+
+	if (type == BI || type == TAN)
+		enc_base = p;
+	unsigned long digit_base = power_long(enc_base, d); // m_slotDeg 是初始参数d，这里d=2
+
+	int plain_one = 0;
+	for (int i = 0; i < expansion_len; i++)
+		plain_one += int(pow(digit_base, i));
+	cout<<"plain one is "<<plain_one<<endl;
+
+	Ctxt CTXT_ONE = encrypt_vector(vector<int>{plain_one})[0];
+
+	return CTXT_ONE;
+}
+
+long int Comparator::dec_compare_res(Ctxt ctxt)
+{
+	helib::Ptxt<helib::BGV> ptxt(m_context);
+	m_sk.Decrypt(ptxt, ctxt);
+
+	vector<helib::BGV::SlotType> res = ptxt.getSlotRepr();
+
+	for(int i = 0; i < m_expansionLen; ++i){
+		long tmp = 0;
+		conv(tmp, res[i].getData()[0]);
+		if(tmp == 1)
+			return 1l;
+	}
+
+	return 0l;
+
+
 }

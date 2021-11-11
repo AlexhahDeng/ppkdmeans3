@@ -6,6 +6,18 @@
 
 #IncludeRegexTransform: 
 
+/home/dd/Ubu20/ppkdmeans3/cloud.h
+iostream
+-
+vector
+-
+tools.h
+/home/dd/Ubu20/ppkdmeans3/tools.h
+ctime
+-
+random
+-
+
 /home/dd/Ubu20/ppkdmeans3/comparator.h
 helib/helib.h
 -
@@ -16,25 +28,33 @@ helib/norms.h
 NTL/mat_ZZ.h
 -
 
-/home/dd/Ubu20/ppkdmeans3/test_sc.cpp
+/home/dd/Ubu20/ppkdmeans3/func.h
 iostream
 -
-time.h
+ctime
+-
+vector
 -
 random
 -
-helib/helib.h
+map
 -
-helib/debugging.h
+cmath
 -
-helib/Context.h
+fstream
 -
-helib/polyEval.h
+sstream
 -
-tools.h
-/home/dd/Ubu20/ppkdmeans3/tools.h
-comparator.h
-/home/dd/Ubu20/ppkdmeans3/comparator.h
+cloud.h
+/home/dd/Ubu20/ppkdmeans3/cloud.h
+
+/home/dd/Ubu20/ppkdmeans3/my_tools.cpp
+my_tools.h
+/home/dd/Ubu20/ppkdmeans3/my_tools.h
+
+/home/dd/Ubu20/ppkdmeans3/my_tools.h
+func.h
+/home/dd/Ubu20/ppkdmeans3/func.h
 
 /home/dd/Ubu20/ppkdmeans3/tools.h
 iostream

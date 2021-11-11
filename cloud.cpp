@@ -199,17 +199,6 @@ vector<int> cloud_one::calculate_sec_part(vector<vector<int>> ef, int n)
     return result;
 }
 
-Ctxt cloud_one::max_variance(vector<Ctxt> enc_variance, vector<Ctxt> zero_one)
-{
-    /**
-     * func: 比较密文方差的大小，得到最大值的密文index
-     * * 参考comparator部分的代码，自己写哦，没法直接调用库函数，因为俺把加密和比较的过程拆开了
-     * ! 要特别注意乘法深度，和噪声的问题，可以手动实现一下 “两两比较”
-     */
-
-    return zero_one[0];
-}
-
 vector<int> cloud_one::calculate_mul_final(vector<vector<int>> &ef)
 {
     vector<int> result(ef.size());

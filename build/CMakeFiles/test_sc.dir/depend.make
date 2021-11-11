@@ -483,7 +483,10 @@ CMakeFiles/test_sc.dir/my_tools.cpp.o: /usr/local/helib_pack/include/helib/timin
 CMakeFiles/test_sc.dir/my_tools.cpp.o: /usr/local/helib_pack/include/helib/version.h
 CMakeFiles/test_sc.dir/my_tools.cpp.o: /usr/local/helib_pack/include/helib/zzX.h
 
+CMakeFiles/test_sc.dir/test_sc.cpp.o: ../cloud.h
 CMakeFiles/test_sc.dir/test_sc.cpp.o: ../comparator.h
+CMakeFiles/test_sc.dir/test_sc.cpp.o: ../func.h
+CMakeFiles/test_sc.dir/test_sc.cpp.o: ../my_tools.h
 CMakeFiles/test_sc.dir/test_sc.cpp.o: ../test_sc.cpp
 CMakeFiles/test_sc.dir/test_sc.cpp.o: ../tools.h
 CMakeFiles/test_sc.dir/test_sc.cpp.o: /usr/local/helib_pack/include/NTL/ALL_FEATURES.h

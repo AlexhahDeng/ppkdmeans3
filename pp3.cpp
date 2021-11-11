@@ -154,7 +154,8 @@ void generate_kd_tree(cloud_one &c1, cloud_two &c2)
         vector<Ctxt> enc_value = c1.comparator->encrypt_vector(sum_xN1_sq);
 
         // 2. c1 对密文{s1...sd}进行比较，求出最大值index，发给c2
-        Ctxt max_index = c1.comparator->max_variance(enc_value); //! 没实现，就先默认第一个维度最大把
+        Ctxt ctxt_one = c1.comparator->gen_ctxt_one();
+        Ctxt max_index = c1.comparator->max_variance(enc_value, ctxt_one); //! 没实现，就先默认第一个维度最大把
         c1.comparator->decrypt_index(max_index);
 
         // 3. c2 解密index，取 N 和 对应index的排序结果，划分，划分完了以后，秘密共享N_l N_r
@@ -187,23 +188,16 @@ void filtering(cloud_one &c1, cloud_two &c2)
             // 先直接合并，存到维度0中
             for (int j = 0; j < c1.k; j++)
             {
-                int n = c1.kd_tree[i].candidate_k[j] + c2.kd_tree[i].candidate_k[j];
-                dist[0][j] = (dist[0][j] + dist[1][j]) * n + 2400; // 用来搞定0影响的下下策
+                int n = c1.kd_tree[i].candidate_k[j] + c2.kd_tree[i].candidate_k[j];// 合并n，候选为1，非候选为0
+                dist[0][j] = (dist[0][j] + dist[1][j]) * n; // 本来应该是要用ss乘法的，懒得实现了，麻了
             }
 
             // 加密距离
             vector<Ctxt> ctxt_dist = c1.comparator->encrypt_vector(dist[0]);
 
-            //合并candidate_k,然后加密-->可能存在的问题是，这里做了一次乘法后面，做乘法的次数就变少
-            // SOLUTION 也可以换成秘密共享
-            // vector<int> can_k(c1.k);
-            // for (int j = 0; j < c1.k; ++j)
-            //     can_k = c1.kd_tree[i].candidate_k[j] + c2.kd_tree[i].candidate_k[j];
-            // vector<Ctxt> ctxt_can_k = c1.comparator->encrypt_vector(can_k);
-            // FIXME 俺想偷懒了！直接在这里乘法把，累了真的
-
             // TODO c1计算最小距离, 这里还要考虑一个问题-->筛掉哪些不在candidate set中的簇中心
-            vector<Ctxt> min_dist_index = c1.comprator->min_dist(d1);
+            Ctxt ctxt_one = c1.comparator->gen_ctxt_one();
+            vector<Ctxt> min_dist_index = c1.comparator->min_dist(ctxt_dist);
 
             // 根据是否为叶子节点分不同情况处理
             if (c1.kd_tree[i].node_point_num > 2)
@@ -246,7 +240,7 @@ int main()
     generate_kd_tree(c1, c2);
 
     // 聚类过程
-    filtering(c1, c2);
+    // filtering(c1, c2);
 
     return 0;
 }
