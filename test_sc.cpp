@@ -11,7 +11,7 @@ int main(){
 	Comparator *comparator = generate_comparator(false);
 
 	int runs = 1;
-	vector<int>tmp{1,50,51,52,53};
+	vector<long int>tmp{5,4,8,2,5};
 	Ctxt ctxt_one = comparator->gen_ctxt_one();
 
 	vector<Ctxt>ctxt_vec = comparator->encrypt_vector(tmp);

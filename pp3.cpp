@@ -176,38 +176,72 @@ void filtering(cloud_one &c1, cloud_two &c2)
 
     while (true)
     { // 一轮迭代
-        // 预计算簇中心连乘的结果，每一轮迭代只计算一次
+
         mul_clu_point_num(c1, c2);
+        // 预计算簇中心连乘的结果，每一轮迭代只计算一次
+        //clu_point_num已经重置为0
 
-        // 遍历kd tree 所有节点
-        for (int i = 0; i < c1.kd_tree.size(); i++)
+        vector<vector<int>> new_clu_cen(k, vector<int>(c1.dimension, 0));
+        // 这里可以把密文结果累加，存储到一起，迭代完再进行ss划分成两份
+        //? 存在的问题是-->中间累加的结果可能会超过加密的范围，所以我们简化问题
+        // 直接存储明文结果把！
+
+        vector<int> new_clu_point_num(k);
+        // 包含的点数同理，存储明文
+
+        
+        for (int i = 0; i < c1.kd_tree.size(); i++)// 遍历kd tree 所有节点
         {
-            // 计算中心到每个簇中心的距离, size = 2 x k -->其实也可以直接合并后加密啦……emmm也不太影响嘛
             vector<vector<int>> dist = cal_dist(c1, c2, i);
+            // 计算中心到每个簇中心的距离, size = 2 x k -->其实也可以直接合并后加密啦……emmm也不太影响嘛
 
-            // 先直接合并，存到维度0中
-            for (int j = 0; j < c1.k; j++)
+            for (int j = 0; j < c1.k; j++)// 先直接合并，存到维度0中
             {
-                int n = c1.kd_tree[i].candidate_k[j] + c2.kd_tree[i].candidate_k[j];// 合并n，候选为1，非候选为0
-                dist[0][j] = (dist[0][j] + dist[1][j]) * n; // 本来应该是要用ss乘法的，懒得实现了，麻了
+                int n = c1.kd_tree[i].candidate_k[j] + c2.kd_tree[i].candidate_k[j]; 
+                // 合并n，候选为1，非候选为0
+                dist[0][j] = (dist[0][j] + dist[1][j]) * n;
+                // 本来应该是要用ss乘法的，懒得实现了，麻了
             }
 
-            // 加密距离
+            
             vector<Ctxt> ctxt_dist = c1.comparator->encrypt_vector(dist[0]);
+            // 加密距离-->可能面临超过范围的问题
 
-            // TODO c1计算最小距离, 这里还要考虑一个问题-->筛掉哪些不在candidate set中的簇中心
-            Ctxt ctxt_one = c1.comparator->gen_ctxt_one();
-            vector<Ctxt> min_dist_index = c1.comparator->min_dist(ctxt_dist);
+            Ctxt ctxt_one = c1.comparator->gen_ctxt_one();//目前没什么用，但是懒得改函数了
+            vector<Ctxt> min_dist_index = c1.comparator->min_dist(ctxt_dist, ctxt_one);
+            // 处理0影响的方法
+            // 对每个距离密文增加一个近似最大值，0就变成了最大值，但是其他的会被模，相对大小不改变
 
             // 根据是否为叶子节点分不同情况处理
-            if (c1.kd_tree[i].node_point_num > 2)
+            if (c1.kd_tree[i].node_point_num > 2)// 非叶子节点
             {
 
-            } // 非叶子节点
-            else
+            } 
+            else// 叶子节点
             {
+                vector<long>node_cen(c1.dimension);
+                // 合并点集中心结果
+                for(int j =0;j<c1.dimension;j++)
+                    node_cen[j] = c1.kd_tree[i].node_sum_x[j] + c2.kd_tree[i].node_sum_x[j];
+                
+                vector<Ctxt> ctxt_node_cen = c1.comparator->encrypt_vector(node_cen);
+                // 加密点集中心
 
-            } // 叶子节点
+                for(int j =0;j<c1.k;j++){
+                    
+                    for(int k=0;k<c1.dimension;k++){
+                        Ctxt curr = ctxt_node_cen[k];
+                        curr *= min_dist_index[j];
+                        int value = c2.comparator->decrypt_index(curr); 
+                        int ran = rand() % 10;
+                        
+                        new_clu_cen1[j][k] = value;
+                        new_clu_cen2[j][k] = value - curr;
+                    }
+                    int curr_node_sum = (c1.kd_tree[i].node_sum_x + c2.kd_tree[i].node_sum_x)
+                }// 将集合中的点拆分，分别存入c1，c2
+
+            } 
         }
         break;
     }

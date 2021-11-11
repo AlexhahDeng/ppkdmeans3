@@ -187,7 +187,10 @@ public:
   // test array_minn function
   void test_array_min(int input_len, long depth, long runs) const;
 
-  // 加密一个数组的数据
+  // 加密一个数组的数据，用于long int
+  vector<Ctxt> encrypt_vector(vector<long int>x);
+
+  // 加密一个数组的数据，用于int
   vector<Ctxt> encrypt_vector(vector<int>x);
 
   // 同态比较，获取最大方差的下标

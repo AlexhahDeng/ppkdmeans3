@@ -90,6 +90,121 @@ Comparator *generate_comparator(bool output)
 	return comparator;
 }
 
+vector<Ctxt> Comparator::encrypt_vector(vector<long> x)
+{
+	Ctxt ctxt_x(m_pk);
+	vector<Ctxt> result(x.size(), ctxt_x);						  // 密文数组结果
+	const EncryptedArray &ea = m_context.getEA();				  // 获取加密数组
+	long nslots = ea.size();									  //! 提取槽slots的数量
+	unsigned long p = m_context.getP();							  // p的值
+	unsigned long ord_p = m_context.getOrdP();					  // p的次数
+	unsigned long numbers_size = nslots / m_expansionLen;		  //! 一个密文中包含的数字
+	unsigned long occupied_slots = numbers_size * m_expansionLen; //! 编码数字所需的槽数
+
+	// encoding base, ((p+1)/2)^d
+	// if 2-variable comparison polynomial is used, it must be p^d
+	unsigned long enc_base = (p + 1) >> 1; // 俺懂了，p=7，那么(p+1)>>1 = 4， 所以二次编码的时候，就是以4为底
+	if (m_type == BI || m_type == TAN)
+		enc_base = p;
+	unsigned long digit_base = power_long(enc_base, m_slotDeg); // m_slotDeg 是初始参数d，这里d=2
+
+	// 检查field_size^expansion_len的值在64比特内
+	int space_bit_size = static_cast<int>(ceil(m_expansionLen * log2(digit_base)));
+
+	unsigned long input_range = ULONG_MAX;
+	if (space_bit_size < 64)
+		// input_range = power_long(field_size, expansion_len);
+		input_range = power_long(digit_base, m_expansionLen); // 计算比较数字的最大范围
+
+	// cout << "最大输入：" << input_range << endl;
+	// cout << "一个密文可以包含的数字：" << numbers_size << endl;
+
+	//! 存放加解密的结果
+	vector<ZZX> expected_result(occupied_slots);
+	vector<ZZX> decrypted(occupied_slots);
+
+	// 对文本和模式构建明文多项式
+	vector<ZZX> pol_x(nslots);
+
+	//! 输入的内容
+	unsigned long input_x;
+	ZZX pol_slot;
+
+	// FIXME 事情呢是这么个事儿
+	// 没法加密负数，那么，只好，保证输入大于0吧！
+	// 但是有点搞的是，加密整数，计算后如果是负数，再比较就没问题
+
+	// 开始对输入进行拆分
+	for (int i = 0; i < x.size(); ++i)
+	{
+		input_x = x[i];
+		// input_x = x[i] % input_range; // FIXME 超过范围还没想到很好的办法，现在就简单粗暴，直接mod范围，肯定是有问题的
+		if (input_x < 0)
+		{
+			cout << "无法加密负数" << endl;
+			exit(0);
+		}
+
+		if (input_x > input_range)
+		{
+			cout << input_x << " 数据超过加密范围..." << endl;
+			input_x = x[i] % input_range; // FIXME 超过范围还没想到很好的办法，现在就简单粗暴，直接mod范围，肯定是有问题的
+										  // exit(0);
+		}
+
+		if (m_verbose)
+		{
+			cout << "Input " << i << endl;
+			cout << input_x << endl;
+		} // 判断是否输出信息
+
+		for (int j = 0; j < numbers_size; ++j)
+		{
+
+			vector<long> decomp_int_x;
+			vector<long> decomp_char;
+
+			digit_decomp(decomp_int_x, input_x, digit_base, m_expansionLen); // 分解数字
+
+			if (m_verbose && !j)
+			{
+				cout << "Input decomposition into digits" << endl;
+				for (int k = 0; k < m_expansionLen; k++)
+					cout << decomp_int_x[k] << endl;
+			} // 输出分解结果
+
+			for (int k = 0; k < m_expansionLen; ++k)
+			{ // 对槽进行编码
+				// 分解数字
+				int_to_slot(pol_slot, decomp_int_x[k], enc_base);
+				pol_x[j * m_expansionLen + k] = pol_slot;
+			}
+		} // encode-->packing-->encrypt
+
+		if (m_verbose)
+		{
+			cout << "Input" << endl;
+			for (int i = 0; i < nslots; i++)
+			{
+				printZZX(cout, pol_x[i], ord_p);
+				cout << endl;
+			}
+		} // 输出槽编码的结果
+
+		//! 加密
+		// Ctxt ctxt_x(m_pk);
+		ea.encrypt(result[i], m_pk, pol_x);
+		// result.push_back(ctxt_x);
+
+	} // 每个数字加密为一个ciphertext，packing的数字都一样
+	// Ctxt ct_res(m_pk);
+	// compare(ct_res, result[0],result[1]);
+	// result[0].multiplyBy(result[1]);
+	// print_decrypted(result[0]);
+
+	return result;
+}
+
 vector<Ctxt> Comparator::encrypt_vector(vector<int> x)
 {
 	Ctxt ctxt_x(m_pk);
@@ -213,7 +328,7 @@ Ctxt Comparator::max_variance(vector<Ctxt> variance, Ctxt ctxt_one)
 	Ctxt less_than(m_pk);
 	Ctxt mid_res(m_pk);
 
-	vector<int> plain_index(variance.size());
+	vector<long int> plain_index(variance.size());
 	for (int i = 0; i < variance.size(); i++)
 		plain_index[i] = i;
 	vector<Ctxt> index = encrypt_vector(plain_index);
@@ -317,24 +432,24 @@ vector<Ctxt> Comparator::min_dist(vector<Ctxt> dist, Ctxt ctxt_one)
 	while (value.size() != 1)
 	{
 		vector<Ctxt> new_value(value.size() / 2, ctxt_one);		 // 存放一轮比较后的较小值，数量砍半
-		vector<long int> compare_reuslt(value.size() / 2, ctxt_one); // 存放比较的结果
+		vector<long> compare_reuslt(value.size() / 2, 1l); // 存放比较的结果(只能暂且弄成明文了)
 
 		Ctxt min_value(m_pk);
 
 		for (int i = 0; i < value.size() / 2; i++)
 		{
 			compare(less_than, value[2 * i], value[2 * i + 1]); // whether value[2i] is smaller than value[2i+1]
+			long int ptxt_less_than = dec_compare_res(less_than);
+			// cout<<"ptxt res is "<<ptxt_less_than<<endl;
 
+			compare_reuslt[i] = ptxt_less_than;
 
-			compare_reuslt[i] = less_than;
-
-			mid_res = ctxt_one;
-			mid_res -= less_than;				  // 1-LT
-			mid_res.multiplyBy(value[2 * i + 1]); //(1-LT)*value[2i+1]
+			mid_res = value[2 * i + 1];
+			mid_res *=(1l - ptxt_less_than);
 			min_value = mid_res;
 
-			mid_res = less_than;
-			mid_res.multiplyBy(value[2 * i]); // LT*value[2i]
+			mid_res = value[2 * i];
+			mid_res *= ptxt_less_than; // LT*value[2i]
 			min_value += mid_res;
 
 			new_value[i] = min_value; // store min value of two in new_value
@@ -350,9 +465,7 @@ vector<Ctxt> Comparator::min_dist(vector<Ctxt> dist, Ctxt ctxt_one)
 			for (int i = 0; i < compare_reuslt.size(); i++)
 			{
 				result[2 * i] *= compare_reuslt[i];
-				mid_res = ctxt_one;
-				mid_res -= compare_reuslt[i];
-				result[2 * i + 1] *= mid_res;
+				result[2 * i + 1] *= (1l - compare_reuslt[i]);
 			}
 		}
 		else if (count == 2)
@@ -361,11 +474,9 @@ vector<Ctxt> Comparator::min_dist(vector<Ctxt> dist, Ctxt ctxt_one)
 			{
 				result[i] *= compare_reuslt[i];
 				result[i + 1] *= compare_reuslt[i];
-				mid_res = ctxt_one;
-				mid_res -= compare_reuslt[i];
 
-				result[i + 2] *= mid_res;
-				result[i + 3] *= mid_res;
+				result[i + 2] *= (1l - compare_reuslt[i]);
+				result[i + 3] *= (1l - compare_reuslt[i]);
 			}
 		}
 		else if (count == 3)
@@ -377,9 +488,7 @@ vector<Ctxt> Comparator::min_dist(vector<Ctxt> dist, Ctxt ctxt_one)
 				result[i + 2] *= compare_reuslt[i];
 				result[i + 3] *= compare_reuslt[i];
 
-				mid_res = ctxt_one;
-				mid_res -= compare_reuslt[i];
-				result[i + 4] *= mid_res;
+				result[i + 4] *= (1l - compare_reuslt[i]);
 			}
 		}
 		else
@@ -406,9 +515,9 @@ Ctxt Comparator::gen_ctxt_one()
 	int plain_one = 0;
 	for (int i = 0; i < expansion_len; i++)
 		plain_one += int(pow(digit_base, i));
-	cout<<"plain one is "<<plain_one<<endl;
+	// cout<<"plain one is "<<plain_one<<endl;
 
-	Ctxt CTXT_ONE = encrypt_vector(vector<int>{plain_one})[0];
+	Ctxt CTXT_ONE = encrypt_vector(vector<long int>{plain_one})[0];
 
 	return CTXT_ONE;
 }
@@ -421,9 +530,7 @@ long int Comparator::dec_compare_res(Ctxt ctxt)
 	vector<helib::BGV::SlotType> res = ptxt.getSlotRepr();
 
 	for(int i = 0; i < m_expansionLen; ++i){
-		long tmp = 0;
-		conv(tmp, res[i].getData()[0]);
-		if(tmp == 1)
+		if(res[i].getData().rep.length())
 			return 1l;
 	}
 

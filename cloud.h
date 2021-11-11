@@ -34,7 +34,7 @@ public:
     vector<kd_node> kd_tree;         // store data division info
 
     vector<vector<int>> clu_cen;     // size = k × dimension, no need to initialize
-    vector<int>clu_point_num;        // len = k, update during iteration
+    vector<int>clu_point_num;        // len = k, update during iteration, 每次在算完α后，重置为0
     vector<int>mul_point_num;        // multiply the number of points in clusters
 
     cloud(vector<point> point_list, int data_num, int dimension, Comparator *comparator, int k);
