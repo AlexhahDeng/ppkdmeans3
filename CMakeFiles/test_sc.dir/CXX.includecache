@@ -6,6 +6,10 @@
 
 #IncludeRegexTransform: 
 
+/home/dd/Ubu20/ppkdmeans3/cloud.cpp
+cloud.h
+/home/dd/Ubu20/ppkdmeans3/cloud.h
+
 /home/dd/Ubu20/ppkdmeans3/cloud.h
 iostream
 -
@@ -27,34 +31,6 @@ helib/norms.h
 -
 NTL/mat_ZZ.h
 -
-
-/home/dd/Ubu20/ppkdmeans3/func.h
-iostream
--
-ctime
--
-vector
--
-random
--
-map
--
-cmath
--
-fstream
--
-sstream
--
-cloud.h
-/home/dd/Ubu20/ppkdmeans3/cloud.h
-
-/home/dd/Ubu20/ppkdmeans3/my_tools.cpp
-my_tools.h
-/home/dd/Ubu20/ppkdmeans3/my_tools.h
-
-/home/dd/Ubu20/ppkdmeans3/my_tools.h
-func.h
-/home/dd/Ubu20/ppkdmeans3/func.h
 
 /home/dd/Ubu20/ppkdmeans3/tools.h
 iostream

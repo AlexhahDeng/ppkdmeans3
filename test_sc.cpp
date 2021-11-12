@@ -11,20 +11,26 @@ int main(){
 	Comparator *comparator = generate_comparator(false);
 
 	int runs = 1;
+
+	vector<Ctxt>test();
 	vector<long int>tmp{5,4,8,2,5};
 	Ctxt ctxt_one = comparator->gen_ctxt_one();
 
 	vector<Ctxt>ctxt_vec = comparator->encrypt_vector(tmp);
 	// comparator->compare(ctxt_vec[2], ctxt_vec[1], ctxt_vec[0]);
+	ctxt_vec[1] -= ctxt_vec[2];
+	ctxt_vec[3] *= 0l;
 
-	vector<Ctxt>result = comparator->min_dist(ctxt_vec, ctxt_one);
-	// cout<<comparator.decrypt_index(index);
+	comparator->compare(ctxt_vec[2], ctxt_vec[3], ctxt_vec[1]);
+	comparator->print_decrypted(ctxt_vec[2]);
+
+	// vector<Ctxt>result = comparator->min_dist(ctxt_vec, ctxt_one);
+	// // cout<<comparator.decrypt_index(index);
 
 
-	for(int i=0; i<result.size(); i++)
-		cout<<comparator->decrypt_index(result[i])<<endl;
-
-
+	// for(int i=0; i<result.size(); i++)
+	// 	cout<<comparator->decrypt_index(result[i])<<endl;
+	// 负数的比较是可行的
 	return 0;
 
 }

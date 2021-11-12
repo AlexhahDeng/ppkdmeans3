@@ -171,7 +171,7 @@ void generate_kd_tree(cloud_one &c1, cloud_two &c2)
 void filtering(cloud_one &c1, cloud_two &c2)
 {
 
-    ini_clu_cen(c1, c2);     // 初始化簇中心，存放在cloud中
+    ini_clu_cen(c1, c2);     // 初始化簇中心（同时加密存放在c1中），存放在cloud中
     ini_candidate_k(c1, c2); // 初始化候选集和簇中点数，存放在kd_node中
 
     while (true)
@@ -179,69 +179,124 @@ void filtering(cloud_one &c1, cloud_two &c2)
 
         mul_clu_point_num(c1, c2);
         // 预计算簇中心连乘的结果，每一轮迭代只计算一次
-        //clu_point_num已经重置为0
+        //* clu_point_num已经重置为0
 
-        vector<vector<int>> new_clu_cen(k, vector<int>(c1.dimension, 0));
+        vector<vector<int>> new_clu_cen(c1.k, vector<int>(c1.dimension, 0));
         // 这里可以把密文结果累加，存储到一起，迭代完再进行ss划分成两份
         //? 存在的问题是-->中间累加的结果可能会超过加密的范围，所以我们简化问题
         // 直接存储明文结果把！
 
-        vector<int> new_clu_point_num(k);
+        vector<int> new_clu_point_num(c1.k);
         // 包含的点数同理，存储明文
 
-        
-        for (int i = 0; i < c1.kd_tree.size(); i++)// 遍历kd tree 所有节点
+        for (int i = 0; i < c1.kd_tree.size(); i++) // 遍历kd tree 所有节点
         {
+            if(c1.kd_tree[i].isClustered)// 如果已经被划分了则不再继续划分
+                continue;
             vector<vector<int>> dist = cal_dist(c1, c2, i);
             // 计算中心到每个簇中心的距离, size = 2 x k -->其实也可以直接合并后加密啦……emmm也不太影响嘛
 
-            for (int j = 0; j < c1.k; j++)// 先直接合并，存到维度0中
+            for (int j = 0; j < c1.k; j++) // 先直接合并，存到维度0中
             {
-                int n = c1.kd_tree[i].candidate_k[j] + c2.kd_tree[i].candidate_k[j]; 
+                int n = c1.kd_tree[i].candidate_k[j] + c2.kd_tree[i].candidate_k[j];
                 // 合并n，候选为1，非候选为0
                 dist[0][j] = (dist[0][j] + dist[1][j]) * n;
                 // 本来应该是要用ss乘法的，懒得实现了，麻了
             }
 
-            
             vector<Ctxt> ctxt_dist = c1.comparator->encrypt_vector(dist[0]);
             // 加密距离-->可能面临超过范围的问题
 
-            Ctxt ctxt_one = c1.comparator->gen_ctxt_one();//目前没什么用，但是懒得改函数了
+            Ctxt ctxt_one = c1.comparator->gen_ctxt_one(); //目前没什么用，但是懒得改函数了
             vector<Ctxt> min_dist_index = c1.comparator->min_dist(ctxt_dist, ctxt_one);
             // 处理0影响的方法
             // 对每个距离密文增加一个近似最大值，0就变成了最大值，但是其他的会被模，相对大小不改变
 
             // 根据是否为叶子节点分不同情况处理
-            if (c1.kd_tree[i].node_point_num > 2)// 非叶子节点
+            if (c1.kd_tree[i].node_point_num > 2) // 非叶子节点
             {
-
-            } 
-            else// 叶子节点
-            {
-                vector<long>node_cen(c1.dimension);
-                // 合并点集中心结果
-                for(int j =0;j<c1.dimension;j++)
-                    node_cen[j] = c1.kd_tree[i].node_sum_x[j] + c2.kd_tree[i].node_sum_x[j];
+                // 计算z*-->距离最近的簇
+                // 构造密文0
+                Ctxt ctxt_zero = ctxt_one;
+                ctxt_zero *= 0l;
+                Ctxt less_than = ctxt_one;
+                vector<Ctxt> k_closest(c1.dimension, ctxt_zero);
                 
+                for(int j=0;j<c1.dimension;j++){
+                    for(int k=0;k<c1.k;k++){
+                        Ctxt ctxt_value = min_dist_index[k];
+                        ctxt_value *= long(c1.clu_cen[k][j]+c2.clu_cen[k][j]);
+                        k_closest[j] += ctxt_value; //-->可能会超过范围哦！-->不会吧，本来就在范围内啊
+                    }
+                }
+
+                // 遍历所有的簇中心
+                vector<Ctxt>v(c1.dimension, ctxt_one);
+                for(int j=0;j<c1.k;j++){
+                    
+                    // 首先计算当前簇对应的u
+                    for(int k=0;k<c1.dimension;k++){
+                        Ctxt u = c1.ctxt_clu_cen[j][k];
+                        u -= k_closest[k]; // u[k] = z[k] - z*[k]
+                        c1.comparator->compare(less_than, u, ctxt_zero);    // u[i] < 0?
+                        
+                        // 解密结果tmd
+                        long int com_res = c1.comparator->dec_compare_res(less_than);
+                        Ctxt mid_res = c1.kd_tree[i].node_min[k];
+                        mid_res *= com_res; // LT(u[i],0)*(c_min)
+                        v[k] = mid_res;
+
+                        mid_res = c1.kd_tree[i].node_max[k];
+                        mid_res *= (1-com_res); //(1-LT(u[i],0))*(c_max)
+                        v[k] += mid_res;
+                    }
+
+                    //TODO 计算dist(v,z*), dist(v,z)
+                    // 冲tmd
+
+                }
+
+                // 判断候选candidate是否只包含一个簇
+            }
+            else // 叶子节点
+            {
+                vector<long> node_cen(c1.dimension);
+                // 合并点集中心结果
+                for (int j = 0; j < c1.dimension; j++)
+                    node_cen[j] = (c1.kd_tree[i].node_sum_x[j] + c2.kd_tree[i].node_sum_x[j])/c1.kd_tree[i].node_point_num;
+                    // 这里需要做除法，因为在算距离的地方做的是除法
+
                 vector<Ctxt> ctxt_node_cen = c1.comparator->encrypt_vector(node_cen);
                 // 加密点集中心
 
-                for(int j =0;j<c1.k;j++){
-                    
-                    for(int k=0;k<c1.dimension;k++){
-                        Ctxt curr = ctxt_node_cen[k];
-                        curr *= min_dist_index[j];
-                        int value = c2.comparator->decrypt_index(curr); 
-                        int ran = rand() % 10;
-                        
-                        new_clu_cen1[j][k] = value;
-                        new_clu_cen2[j][k] = value - curr;
-                    }
-                    int curr_node_sum = (c1.kd_tree[i].node_sum_x + c2.kd_tree[i].node_sum_x)
-                }// 将集合中的点拆分，分别存入c1，c2
+                for (int j = 0; j < c1.k; j++)
+                {
+                    for (int k = 0; k < c1.dimension; k++)
+                    {
+                        Ctxt curr = ctxt_node_cen[k] ;
+                        curr *= min_dist_index[j];          
+                        //node每一个维度与对应k的min_dist结果相乘, be like {c1...cd}*0/1
 
-            } 
+                        int value = c2.comparator->decrypt_index(curr);
+                        // 按理来说，这里应该先做分割再decrypt，蒜了，nevermind
+                        // int ran = rand() % value;
+
+                        // new_clu_cen1[j][k] += ran;
+                        // new_clu_cen2[j][k] += value - ran;
+                        new_clu_cen[j][k] += value;
+                    }
+                    // 首先将node中包含的点个数与min_dist结果相乘
+                    Ctxt ctxt_point_num = min_dist_index[j];
+                    ctxt_point_num *= c1.kd_tree[i].node_point_num;
+
+                    // 秘密 共享 拆分-->那么直接解密把！
+                    int res = c2.comparator->decrypt_index(ctxt_point_num);
+                    int ran = rand() % 100;
+
+                    c1.clu_point_num[j] += ran;
+                    c2.clu_point_num[j] += res - ran;
+                } // 将集合中的点拆分，分别存入c1，c2
+            }
         }
         break;
     }

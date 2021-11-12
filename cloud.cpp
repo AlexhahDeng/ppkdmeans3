@@ -313,7 +313,7 @@ void cloud_two::divide_data_set(Ctxt enc_index, cloud_one &c1, vector<int> &N, i
 
     // TODO decrypt and decode ciphertext index
     int max_var_index = comparator->decrypt_index(enc_index);   //-->解密的函数有现成的，但是怎么decode需要自己写
-    vector<vector<int>> node_min_max1(dimension, vector<int>(2)), node_min_max2(node_min_max1);
+    vector<int> n_min(dimension), n_max(n_min);
     int count = 0;
     vector<int> count_mm(dimension, 0);
     vector<int> Nl(N), Nr(N);
@@ -329,13 +329,11 @@ void cloud_two::divide_data_set(Ctxt enc_index, cloud_one &c1, vector<int> &N, i
                 count_mm[j]++;
                 if (count_mm[j] == 1)
                 {
-                    node_min_max1[j][0] = rand() % dimension;
-                    node_min_max2[j][0] = index - node_min_max1[j][0];
+                    n_min[j] = c1.point_list[index].data[j] + this->point_list[index].data[j];
                 }
                 if (count_mm[j] == curr_data_num)
                 {
-                    node_min_max1[j][1] = rand() % dimension;
-                    node_min_max2[j][1] = index - node_min_max1[j][1];
+                    n_max[j] = c1.point_list[index].data[j] + this->point_list[index].data[j];
                 }
             }
         } // checked统计node中每个维度数据的最小、最大值
@@ -349,8 +347,11 @@ void cloud_two::divide_data_set(Ctxt enc_index, cloud_one &c1, vector<int> &N, i
         }
     }
     // add min_max to node info
-    c1.kd_tree[N_index].node_min_max = node_min_max1;
-    this->kd_tree[N_index].node_min_max = node_min_max2;
+    c1.kd_tree[N_index].node_min = comparator->encrypt_vector(n_min);
+    c1.kd_tree[N_index].node_max = comparator->encrypt_vector(n_max);
+    // c1,kd_node[N_index].node_min_max = comparator->encrypt_vector(node_mm);
+    // c1.kd_tree[N_index].node_min_max = node_min_max1;
+    // this->kd_tree[N_index].node_min_max = node_min_max2;
 
     // add new node to kd_tree
     add_new_node(Nl, curr_data_num / 2, c1.kd_tree, this->kd_tree);
@@ -373,8 +374,8 @@ void cloud_two::add_new_node(vector<int> N, int point_num, vector<kd_node> &c1_k
         // UPDATE: 只能做加减法，不然后续乘法部分会出错哦！
     }
 
-    c1_kdtree.push_back({point_num, N1, vector<int>(dimension), vector<vector<int>>(dimension, vector<int>(2)), vector<int>(k)});
-    c2_kdtree.push_back({point_num, N2, vector<int>(dimension), vector<vector<int>>(dimension, vector<int>(2)), vector<int>(k)});
+    c1_kdtree.push_back({point_num, N1, vector<int>(dimension), vector<Ctxt>(), vector<Ctxt>(), vector<int>(k)});
+    c2_kdtree.push_back({point_num, N2, vector<int>(dimension), vector<Ctxt>(), vector<Ctxt>(), vector<int>(k)});
 }
 
 vector<int> cloud_two::calculate_mul_final(vector<vector<int>> &ef)

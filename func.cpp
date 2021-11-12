@@ -162,8 +162,8 @@ void tmp_data(vector<point> &point_list)
 void ini_clu_cen(cloud_one &c1, cloud_two &c2)
 {
 	srand(time(NULL));
-	// FIXME: 如果由cloud来随机选择初始簇中心，那不就暴露最初的中心了？虽然没有暴露值
-	// 俺明白了，没关系！可以视为由用户初始化的啦！
+	// 如果由cloud来随机选择初始簇中心，那不就暴露最初的中心了？虽然没有暴露值
+	// SOLUTION: 俺明白了，没关系！可以视为由用户初始化的啦！
 	vector<int> ran_index(c1.k);
 	int count = 0;
 
@@ -179,18 +179,24 @@ void ini_clu_cen(cloud_one &c1, cloud_two &c2)
 				break;
 			} // 随机下标已经取过了，不能要
 			i++;
-		}
+		}// 检测随机选择的簇中心是否已经被选择过
 		if (isExist)
 			continue;
-		ran_index[count++] = 0; // FIXME 暂且将所有初始簇中心定为第一个点
+		ran_index[count++] = k_index;
 	}
 
 	for (auto k_index : ran_index)
 	{
 		c1.clu_cen.push_back(c1.point_list[k_index].data);
 		c2.clu_cen.push_back(c2.point_list[k_index].data);
-	}
 
+		vector<int> k_cen(c1.dimension);
+		for (int i = 0; i < c1.dimension; i++)
+			k_cen[i] = c1.point_list[k_index].data[i] + c2.point_list[k_index].data[i];
+
+		c1.ctxt_clu_cen.push_back(c1.comparator->encrypt_vector(k_cen));
+		// 这里把簇中心加密，存入c1，方便聚类过程中的计算
+	}
 	return;
 }
 
@@ -293,7 +299,7 @@ void mul_clu_point_num(cloud_one &c1, cloud_two &c2)
 
 vector<vector<int>> cal_dist(cloud_one &c1, cloud_two &c2, int node_index)
 {
-	vector<vector<int>>result(2, vector<int>(c1.k));
+	vector<vector<int>> result(2, vector<int>(c1.k));
 
 	for (int i = 0; i < c1.k; ++i)
 	{
@@ -307,7 +313,7 @@ vector<vector<int>> cal_dist(cloud_one &c1, cloud_two &c2, int node_index)
 		} // 合并e，f，暂存到ef1中
 
 		// 获取中间参数的乘法结果  Σc^2, Σk^2, ci*ki, α^2, αj^2, ααj
-		vector<int> para1 = c1.calculate_dist_para(ef1);	
+		vector<int> para1 = c1.calculate_dist_para(ef1);
 		vector<int> para2 = c2.calculate_dist_para(ef1); // 我好像找到bug了！！！
 
 		// 计算distance中间结果ef
@@ -315,7 +321,7 @@ vector<vector<int>> cal_dist(cloud_one &c1, cloud_two &c2, int node_index)
 		ef2 = c2.calculate_dist_res_ef(para2);
 
 		// 合并e和f
-		for(int j = 0; j < ef1.size(); j++)
+		for (int j = 0; j < ef1.size(); j++)
 		{
 			ef1[j][0] += ef2[j][0];
 			ef1[j][1] += ef2[j][1];
@@ -326,6 +332,6 @@ vector<vector<int>> cal_dist(cloud_one &c1, cloud_two &c2, int node_index)
 		result[1][i] = c2.calculate_dist_res(ef1);
 
 	} // 计算中心到第i个簇的距离
-	
+
 	return result;
 }

@@ -48,13 +48,15 @@ sstream
 cloud.h
 /home/dd/Ubu20/ppkdmeans3/cloud.h
 
-/home/dd/Ubu20/ppkdmeans3/my_tools.cpp
-my_tools.h
-/home/dd/Ubu20/ppkdmeans3/my_tools.h
-
 /home/dd/Ubu20/ppkdmeans3/my_tools.h
 func.h
 /home/dd/Ubu20/ppkdmeans3/func.h
+
+/home/dd/Ubu20/ppkdmeans3/pp3.cpp
+iostream
+-
+my_tools.h
+/home/dd/Ubu20/ppkdmeans3/my_tools.h
 
 /home/dd/Ubu20/ppkdmeans3/tools.h
 iostream

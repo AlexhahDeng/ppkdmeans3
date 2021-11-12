@@ -14,14 +14,17 @@ struct point
 
 struct kd_node
 {
-    int node_point_num;               // number of points in current node
+    long int node_point_num;               // number of points in current node
     vector<int> N;                    // secret share of division info, size = data_num
     vector<int> node_sum_x;           // Σxi*Ni, size = dimension
-    vector<vector<int>> node_min_max; // store max and min value of every dimension in curr node, size = dimension * 2
+    vector<Ctxt> node_min;            // store min value of every dimension in curr node, size = dimension 
+    vector<Ctxt> node_max;
     vector<int> candidate_k;          // possible cluster belonging to
+
+    bool isClustered = false;         // 判断是否已经属于某个簇，true--则不进行任何操作，将child的属性设置为true；false则继续计算
 };
 
-class cloud
+class cloud 
 {
 public:
     int k;                           // number of clusters
@@ -67,6 +70,8 @@ public:
 class cloud_one : public cloud
 {
 public:
+    vector<vector<Ctxt>> ctxt_clu_cen;  // 密文的簇中心数据，方便在非叶节点部分，计算距离，进行prune操作
+
     //! 按道理来说有个shuffling rules，这里先不写（问题可能有点大，但我不想写
 
     cloud_one(vector<point> point_list, int data_num, int dimension, Comparator *comparator, int k);
