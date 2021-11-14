@@ -206,7 +206,7 @@ void ini_candidate_k(cloud_one &c1, cloud_two &c2)
 	// 初始每个簇中包含的点数为1，这样不影响公式的正常计算！
 	// 刚好vector的长度和candidate set一样，那就一家人不说两家话，弄成一样的呗
 	vector<int> candidate1(c1.k);
-	vector<int> candidate2(c2.k);
+	vector<int> candidate2 (c2.k);
 
 	srand(time(NULL));
 	for (int i = 0; i < c1.k; i++)
@@ -217,6 +217,12 @@ void ini_candidate_k(cloud_one &c1, cloud_two &c2)
 
 	c1.kd_tree[0].candidate_k = candidate1;
 	c2.kd_tree[0].candidate_k = candidate2;
+
+	c1.kd_tree[1].candidate_k = candidate1;
+	c2.kd_tree[1].candidate_k = candidate2;
+
+	c1.kd_tree[2].candidate_k = candidate1;
+	c2.kd_tree[2].candidate_k = candidate2;
 
 	c1.clu_point_num = candidate1;
 	c2.clu_point_num = candidate2;
