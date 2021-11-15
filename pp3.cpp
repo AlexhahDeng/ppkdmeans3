@@ -384,24 +384,24 @@ int main()
     // random(point_list, data_num, dimension);
     vector<vector<int>> sorted_index = sort_data(point_list);
 
-    // 划分原始数据，用于秘密共享
-    divide_data(point_list, 10000, c1_data, c2_data);
+    // // 划分原始数据，用于秘密共享
+    // divide_data(point_list, 10000, c1_data, c2_data);
 
-    // 构造比较器
-    Comparator *comparator = generate_comparator(false);
+    // // 构造比较器
+    // Comparator *comparator = generate_comparator(false);
 
-    // 初始化云
-    cloud_one c1(c1_data, data_num, dimension, comparator, 5);
-    cloud_two c2(c2_data, data_num, dimension, comparator, sorted_index, 5);
+    // // 初始化云
+    // cloud_one c1(c1_data, data_num, dimension, comparator, 5);
+    // cloud_two c2(c2_data, data_num, dimension, comparator, sorted_index, 5);
 
-    // 构造乘法所需beaver三元组
-    generate_beaver_set(data_num, 100, c1.beaver_list, c2.beaver_list);
+    // // 构造乘法所需beaver三元组
+    // generate_beaver_set(data_num, 100, c1.beaver_list, c2.beaver_list);
 
-    // 构造kd tree
-    generate_kd_tree(c1, c2);
+    // // 构造kd tree
+    // generate_kd_tree(c1, c2);
 
-    // 聚类过程
-    // filtering(c1, c2);
+    // // 聚类过程
+    // // filtering(c1, c2);
 
     return 0;
 }

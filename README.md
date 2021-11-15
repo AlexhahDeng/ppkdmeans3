@@ -189,3 +189,14 @@ $\sum_{i=1}^{d}\left(\alpha c_{i}-\alpha_{j} k_{j i}\right)^{2}=\alpha^{2} \sum 
 ## 1107
 ![思路1](/img/1.jpg)
 ![思路2](/img/2.jpg)
+
+## 1115
+咱就是对 对比论文的实验部分做一下记录
+* [使用的数据集](https://archive.ics.uci.edu/ml/datasets/KEGG+Metabolic+Reaction+Network+(Undirected))
+    * 所有的数据都被正则化并且缩放到[0,1000]的范围内
+
+* 数据范围
+    * n = 8192
+    * m = 5
+    * k = 3
+    * 那么问题来了，这样随便取8192个点，能收敛得到聚类结果么

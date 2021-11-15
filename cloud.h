@@ -18,8 +18,8 @@ struct kd_node
     vector<int> N;                    // secret share of division info, size = data_num
     vector<int> node_sum_x;           // Σxi*Ni, size = dimension
     vector<Ctxt> node_min;            // store min value of every dimension in curr node, size = dimension 
-    vector<Ctxt> node_max;
-    vector<Ctxt> ctxt_candi_k;
+    vector<Ctxt> node_max;            // store max value of every dimension in curr node, size = dimension 
+    vector<Ctxt> ctxt_candi_k;        
     vector<int> candidate_k;          // possible cluster belonging to
 
     bool isClustered = false;         // 判断是否已经属于某个簇，true--则不进行任何操作，将child的属性设置为true；false则继续计算
