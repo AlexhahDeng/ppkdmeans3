@@ -21,8 +21,7 @@ void quick_sort(vector<point>& s, int dimension, int l, int r);
 void random(vector<point>& point_list, int n, int m);
 
 // 读取需要聚类的数据
-void read_data();
-
+vector<point> read_data(int data_num, int dimension);
 // 拆分数据
 void divide_data(vector<point>point_list, int data_range, vector<point>&c1, vector<point>&c2);
 

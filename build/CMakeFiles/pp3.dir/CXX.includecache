@@ -18,26 +18,6 @@ ctime
 random
 -
 
-/home/dd/Ubu20/ppkdmeans3/comparator.cpp
-comparator.h
-/home/dd/Ubu20/ppkdmeans3/comparator.h
-tools.h
-/home/dd/Ubu20/ppkdmeans3/tools.h
-helib/debugging.h
--
-helib/polyEval.h
--
-random
--
-map
--
-NTL/ZZ_pE.h
--
-NTL/mat_ZZ_pE.h
--
-helib/Ptxt.h
--
-
 /home/dd/Ubu20/ppkdmeans3/comparator.h
 helib/helib.h
 -
@@ -47,10 +27,6 @@ helib/norms.h
 -
 NTL/mat_ZZ.h
 -
-
-/home/dd/Ubu20/ppkdmeans3/func.cpp
-func.h
-/home/dd/Ubu20/ppkdmeans3/func.h
 
 /home/dd/Ubu20/ppkdmeans3/func.h
 iostream
@@ -71,10 +47,6 @@ sstream
 -
 cloud.h
 /home/dd/Ubu20/ppkdmeans3/cloud.h
-
-/home/dd/Ubu20/ppkdmeans3/my_tools.cpp
-my_tools.h
-/home/dd/Ubu20/ppkdmeans3/my_tools.h
 
 /home/dd/Ubu20/ppkdmeans3/my_tools.h
 func.h

@@ -38,6 +38,18 @@ void read_data(int data_num, int dimension){
 	}
 }
 
+void normalization(vector<point>point_list, int range){
+	// 首先聚合point中的data
+	vector<vector<int>>data_list(point_list.size());
+	for(int i=0;i<point_list.size();i++){
+		data_list[i]=point_list[i].data;
+	}
+
+	// 计算每个维度的最大值和最小值
+	vector<vector<int>>max_min(data_list[0].size(), vector<int>(2));
+	
+}
+
 int main(){
 	read_data(8192, 5);
 	return 0;

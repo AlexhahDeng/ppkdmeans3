@@ -375,30 +375,39 @@ void filtering(cloud_one &c1, cloud_two &c2)
     return;
 }
 
+vector<point> point_list, c1_data, c2_data;
+
 int main()
 {
     // 初始化数据信息
-    int data_num = 5, dimension = 2;
-    vector<point> point_list, c1_data, c2_data;
-    tmp_data(point_list);
+    int data_num = 8192, dimension = 5;
+    // vector<point> point_list, c1_data, c2_data;
+    // tmp_data(point_list);
     // random(point_list, data_num, dimension);
+    point_list = read_data(data_num, dimension);
+    // for (int i=8191; i>=8182; i--) {
+    //     for (int j=0; j<5; j++) {
+    //         cout<<point_list[i].data[j]<<" ";
+    //     }
+    //     cout<<endl;
+    // }
     vector<vector<int>> sorted_index = sort_data(point_list);
 
-    // // 划分原始数据，用于秘密共享
-    // divide_data(point_list, 10000, c1_data, c2_data);
+    // 划分原始数据，用于秘密共享
+    divide_data(point_list, 10000, c1_data, c2_data);
 
-    // // 构造比较器
-    // Comparator *comparator = generate_comparator(false);
+    // 构造比较器
+    Comparator *comparator = generate_comparator(false);
 
-    // // 初始化云
-    // cloud_one c1(c1_data, data_num, dimension, comparator, 5);
-    // cloud_two c2(c2_data, data_num, dimension, comparator, sorted_index, 5);
+    // 初始化云
+    cloud_one c1(c1_data, data_num, dimension, comparator, 3);
+    cloud_two c2(c2_data, data_num, dimension, comparator, sorted_index, 3);
 
     // // 构造乘法所需beaver三元组
-    // generate_beaver_set(data_num, 100, c1.beaver_list, c2.beaver_list);
+    generate_beaver_set(data_num, 100, c1.beaver_list, c2.beaver_list);
 
     // // 构造kd tree
-    // generate_kd_tree(c1, c2);
+    generate_kd_tree(c1, c2);
 
     // // 聚类过程
     // // filtering(c1, c2);

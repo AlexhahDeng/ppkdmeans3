@@ -1,33 +1,37 @@
 #include "func.h"
 
-void read_data()
+vector<point> read_data(int data_num, int dimension)
 {
-	// 29 attributes, 65554 data
-	ifstream inFile("../../data/Reaction Network (Undirected).data", ios::in);
-	string lineStr;
-	vector<vector<string>> strArray;
-	// float array[65554][29] = { 0 };
-	vector<vector<float>> array;
+	vector<point> result(data_num);
+	ifstream fp("data.csv");
+	string line;
 
-	if (inFile.fail())
-		cout << "read failure!" << endl;
+	getline(fp, line); // 跳过列名
+	for (int i = 0; i < data_num; i++)
+	{ // 循环读取每行数据
 
-	while (getline(inFile, lineStr))
-	{
-		stringstream ss(lineStr);
-		string str;
-		vector<float> data;
+		getline(fp, line);
+		vector<int> line_data(5);
+		string number;
 
-		getline(ss, str, ','); // leave out the first one
-		while (getline(ss, str, ','))
+		istringstream readstr(line); // string数据流化
+		// 将每一行按照 "," 分割
+		getline(readstr, number, ','); // 跳过行名
+
+		for (int j = 0; j < dimension; j++)
 		{
-			data.push_back(atof(str.c_str()));
+			getline(readstr, number, ',');
+			line_data[j] = atoi(number.c_str());
 		}
-		array.push_back(data);
+
+		// for(auto n:line_data){
+		// 	cout<<n<<"  ";
+		// }
+		// cout<<endl;
+		result[i] = {i, line_data};
 	}
-	cout << array[0][0] << endl;
-	cout << "number of instances: " << array.size() << endl;
-	cout << "number of attributes: " << array[0].size() << endl;
+	fp.close();
+	return result;
 }
 
 void quick_sort(vector<point> &s, int dimension, int l, int r)
@@ -111,9 +115,16 @@ void divide_data(vector<point> point_list, int data_range, vector<point> &c1, ve
 	{
 		for (int j = 0; j < point_list[0].data.size(); ++j)
 		{
-			int num = rand() % point_list[i].data[j]; //! FIXME 这里没有模数据范围，而是模原始数据，保证秘密共享拆分结果都是整数，不知道会不会有问题
-			c1[i].data[j] = num;
-			c2[i].data[j] -= num;
+			if (point_list[i].data[j] == 0)
+			{
+				c2[i].data[j] = 0;
+			}
+			else
+			{
+				int num = rand() % point_list[i].data[j]; //! FIXME 这里没有模数据范围，而是模原始数据，保证秘密共享拆分结果都是整数，不知道会不会有问题
+				c1[i].data[j] = num;
+				c2[i].data[j] -= num;
+			}
 		}
 	}
 }
@@ -128,8 +139,8 @@ void generate_beaver_set(int n, int data_range, vector<vector<int>> &c1_list, ve
 	srand(time(NULL));
 	for (int i = 0; i < n; ++i)
 	{
-		int a = rand() % data_range;
-		int b = rand() % data_range;
+		int a = rand() % data_range + 1;
+		int b = rand() % data_range + 1;
 		int c = a * b;
 
 		int c1_a = rand() % a;
@@ -179,7 +190,7 @@ void ini_clu_cen(cloud_one &c1, cloud_two &c2)
 				break;
 			} // 随机下标已经取过了，不能要
 			i++;
-		}// 检测随机选择的簇中心是否已经被选择过
+		} // 检测随机选择的簇中心是否已经被选择过
 		if (isExist)
 			continue;
 		ran_index[count++] = k_index;
@@ -206,7 +217,7 @@ void ini_candidate_k(cloud_one &c1, cloud_two &c2)
 	// 初始每个簇中包含的点数为1，这样不影响公式的正常计算！
 	// 刚好vector的长度和candidate set一样，那就一家人不说两家话，弄成一样的呗
 	vector<int> candidate1(c1.k);
-	vector<int> candidate2 (c2.k);
+	vector<int> candidate2(c2.k);
 
 	srand(time(NULL));
 	for (int i = 0; i < c1.k; i++)
