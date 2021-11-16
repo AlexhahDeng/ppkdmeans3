@@ -46,15 +46,9 @@ void generate_kd_tree(cloud_one &c1, cloud_two &c2)
 
     while (true)
     {
-        // 计算当前tree node中包含点个数，组合N
-        int num_point = 0;
-        for (int i = 0; i < c1.data_num; ++i)
-        {
-            N[i] = c1.kd_tree[N_index].N[i] + c2.kd_tree[N_index].N[i]; // 还原秘密共享分解值
-            if (N[i])
-                num_point++;
-        }
-        if (num_point == 1)
+        // 判断是否为叶子节点，若是，则不继续构造
+        int num_point = c1.kd_tree[N_index].node_point_num;
+        if (num_point == 1 || num_point == 2)
             break;
 
         // 计算xi*Ni
@@ -101,7 +95,7 @@ void generate_kd_tree(cloud_one &c1, cloud_two &c2)
         vector<vector<int>> xN1_sq = c1.calculate_xi_Ni_square(e1, f1); //* checked
         vector<vector<int>> xN2_sq = c2.calculate_xi_Ni_square(e1, f1);
 
-        //* 计算方差了，uu们
+        //* 计算方差了，uu们，s=Σ(xi*Ni)^2 - (Σxi*Ni)^2/n
         // 1. 首先计算(Σxi*Ni)^2， Σ(xi*Ni)^2
         vector<int> sum_xN1(c1.dimension, 0), sum_xN2(sum_xN1), sum_xN1_sq(sum_xN1), sum_xN2_sq(sum_xN1);
 
@@ -114,32 +108,29 @@ void generate_kd_tree(cloud_one &c1, cloud_two &c2)
                 sum_xN1_sq[i] += xN1_sq[j][i];
                 sum_xN2_sq[i] += xN2_sq[j][i];
             }
-            // nΣ(xi*Ni)^2 get， 改了改了
-            // sum_xN1_sq[i] *= c1.data_num;
-            // sum_xN2_sq[i] *= c2.data_num;
         }
 
-        //! 将(Σxi*Ni)补充到kd_node中
+        //* 将(Σxi*Ni)补充到kd_node中
         c1.kd_tree[N_index].node_sum_x = sum_xN1;
         c2.kd_tree[N_index].node_sum_x = sum_xN2;
 
-        // 2. 再用一个beaver 三元组，算(Σxi*Ni)^2
+        // 2. 再用一个beaver 三元组，算(Σxi*Ni)^2.
         vector<vector<int>> ef1(c1.dimension, vector<int>(2)), ef2(ef1); // u1s1，我刚刚怎么没想到用一个二维数组存放ef，反正都在同一边！
         c1.calculate_ef_vari(sum_xN1, ef1);
         c2.calculate_ef_vari(sum_xN2, ef2);
 
         for (int i = 0; i < c1.dimension; ++i)
-        { // ef1 = ef1 + ef2
+        { 
             ef1[i][0] += ef2[i][0];
             ef1[i][1] += ef2[i][1];
-        }
+        }// ef1 = ef1 + ef2
 
+        //* 这里第二部分除法！
         vector<int> sec_part1 = c1.calculate_sec_part(ef1, num_point);
         vector<int> sec_part2 = c2.calculate_sec_part(ef1, num_point);
 
         // 3. 最后一步，组合起来！
         // 先在本地做减法，再加密组合成方差值
-        vector<int> index(c1.dimension); // 因为后面获取最大方差，还需要index的密文
         for (int i = 0; i < c1.dimension; i++)
         {
             sum_xN1_sq[i] -= sec_part1[i];
@@ -151,16 +142,16 @@ void generate_kd_tree(cloud_one &c1, cloud_two &c2)
         /* above has been checked */
 
         //! 目前先直接合并秘密共享的方差，然后加密-->就不用解决负数的问题了
-        vector<Ctxt> enc_value = c1.comparator->encrypt_vector(sum_xN1_sq);
+        // vector<Ctxt> enc_value = c1.comparator->encrypt_vector(sum_xN1_sq);
 
-        // 2. c1 对密文{s1...sd}进行比较，求出最大值index，发给c2
-        Ctxt ctxt_one = c1.comparator->gen_ctxt_one();
-        Ctxt max_index = c1.comparator->max_variance(enc_value, ctxt_one); //! 没实现，就先默认第一个维度最大把
-        c1.comparator->decrypt_index(max_index);
+        // // 2. c1 对密文{s1...sd}进行比较，求出最大值index，发给c2
+        // Ctxt ctxt_one = c1.comparator->gen_ctxt_one();
+        // Ctxt max_index = c1.comparator->max_variance(enc_value, ctxt_one); //! 没实现，就先默认第一个维度最大把
+        // c1.comparator->decrypt_index(max_index);
 
-        // 3. c2 解密index，取 N 和 对应index的排序结果，划分，划分完了以后，秘密共享N_l N_r
-        c2.divide_data_set(max_index, c1, N, num_point, N_index);
-        N_index++;
+        // // 3. c2 解密index，取 N 和 对应index的排序结果，划分，划分完了以后，秘密共享N_l N_r
+        // c2.divide_data_set(max_index, c1, N, num_point, N_index);
+        // N_index++;
         break;
     }
 
@@ -378,7 +369,7 @@ void filtering(cloud_one &c1, cloud_two &c2)
 int main()
 {
     // 初始化数据信息
-    int data_num = 100, dimension = 5;
+    int data_num = 20, dimension = 5;
     vector<point> point_list, c1_data, c2_data;
     // vector<point> point_list, c1_data, c2_data;
     // tmp_data(point_list);
@@ -391,17 +382,17 @@ int main()
     divide_data(point_list, 10000, c1_data, c2_data);
 
     // 构造比较器
-    // Comparator *comparator = generate_comparator(false);
+    Comparator *comparator = generate_comparator(false);
 
-    // // 初始化云
-    // cloud_one c1(c1_data, data_num, dimension, comparator, 3);
-    // cloud_two c2(c2_data, data_num, dimension, comparator, sorted_index, 3);
+     // 初始化云
+    cloud_one c1(c1_data, data_num, dimension, comparator, 3);
+    cloud_two c2(c2_data, data_num, dimension, comparator, sorted_index, 3);
 
-    // // // 构造乘法所需beaver三元组
-    // generate_beaver_set(data_num, 100, c1.beaver_list, c2.beaver_list);
+    // 构造乘法所需beaver三元组
+    generate_beaver_set(data_num, 100, c1.beaver_list, c2.beaver_list);
 
-    // // // 构造kd tree
-    // generate_kd_tree(c1, c2);
+    // 构造kd tree
+    generate_kd_tree(c1, c2);
 
     // // 聚类过程
     // // filtering(c1, c2);

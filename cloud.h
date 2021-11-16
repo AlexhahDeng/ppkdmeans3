@@ -126,6 +126,14 @@ public:
     void divide_data_set(Ctxt enc_index, cloud_one &c1, vector<int> &N, int curr_data_num, int N_index);
 
     // 生成秘密共享位置信息
+    /**
+     * @brief 添加新的节点
+     * 
+     * @param N 需要秘密拆分的位置信息数组，可以为负数，相加为01
+     * @param point_num tree node包含的节点个数
+     * @param c1_kdtree c1 维护的kd tree信息
+     * @param c2_kdtree c2 维护的kd tree信息
+     */
     void add_new_node(vector<int> N, int point_num, vector<kd_node> &c1_kdtree, vector<kd_node> &c2_kdtree);
 
     // 解密最大参数的下标

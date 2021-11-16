@@ -28,7 +28,14 @@ void divide_data(vector<point>point_list, int data_range, vector<point>&c1, vect
 // 对数据排序
 vector<vector<int>> sort_data(vector<point>point_list);
 
-// 生成beaver三元组
+/**
+ * @brief 生成beaver三元组
+ * 
+ * @param n beaver 三元组的个数 
+ * @param data_range beaver 生成随机数模的范围
+ * @param c1_list 赋给c1
+ * @param c2_list 赋给c2
+ */
 void generate_beaver_set(int n, int data_range, vector<vector<int>>&c1_list, vector<vector<int>>&c2_list);
 
 // 固定化测试数据
