@@ -34,6 +34,10 @@ vector<point> read_data(int data_num, int dimension)
 	return result;
 }
 
+// void write_file(vector<point>p_list, vector<point>c1, vector<point>c2){
+
+// }
+
 void quick_sort(vector<point> &s, int dimension, int l, int r)
 {
 	/**
@@ -115,13 +119,11 @@ void divide_data(vector<point> point_list, int data_range, vector<point> &c1, ve
 	{
 		for (int j = 0; j < point_list[0].data.size(); ++j)
 		{
-			if (point_list[i].data[j] == 0)
-			{
-				c2[i].data[j] = 0;
-			}
+			if (point_list[i].data[j] == 0)	// 如果数据为0， 那就都为0
+				continue;
 			else
 			{
-				int num = rand() % point_list[i].data[j]; //! FIXME 这里没有模数据范围，而是模原始数据，保证秘密共享拆分结果都是整数，不知道会不会有问题
+				int num = rand() % point_list[i].data[j]; // 模的是原始数据哦，保证秘密共享拆分都是正整数
 				c1[i].data[j] = num;
 				c2[i].data[j] -= num;
 			}
