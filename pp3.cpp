@@ -120,10 +120,10 @@ void generate_kd_tree(cloud_one &c1, cloud_two &c2)
         c2.calculate_ef_vari(sum_xN2, ef2);
 
         for (int i = 0; i < c1.dimension; ++i)
-        { 
+        {
             ef1[i][0] += ef2[i][0];
             ef1[i][1] += ef2[i][1];
-        }// ef1 = ef1 + ef2
+        } // ef1 = ef1 + ef2
 
         //* 这里第二部分除法！
         vector<int> sec_part1 = c1.calculate_sec_part(ef1, num_point);
@@ -146,7 +146,7 @@ void generate_kd_tree(cloud_one &c1, cloud_two &c2)
 
         // // 2. c1 对密文{s1...sd}进行比较，求出最大值index，发给c2
         // Ctxt ctxt_one = c1.comparator->gen_ctxt_one();
-        // Ctxt max_index = c1.comparator->max_variance(enc_value, ctxt_one); //! 没实现，就先默认第一个维度最大把
+        // Ctxt max_index = c1.comparator->max_variance(enc_value, ctxt_one); 
         // c1.comparator->decrypt_index(max_index);
 
         // // 3. c2 解密index，取 N 和 对应index的排序结果，划分，划分完了以后，秘密共享N_l N_r
@@ -177,19 +177,20 @@ void filtering(cloud_one &c1, cloud_two &c2)
         //? 存在的问题是-->中间累加的结果可能会超过加密的范围，所以我们简化问题
         // 直接存储明文结果把！
 
-        vector<int> new_clu_point_num(c1.k);// 包含的点数同理，存储明文
+        vector<int> new_clu_point_num(c1.k); // 包含的点数同理，存储明文
 
         for (int i = 0; i < c1.kd_tree.size(); i++) // 遍历kd tree 所有节点
         {
-            if (c1.kd_tree[i].isClustered){
-                c1.kd_tree[2*i+1].isClustered = true;
-                c1.kd_tree[2*i+2].isClustered = true;
+            if (c1.kd_tree[i].isClustered)
+            {
+                c1.kd_tree[2 * i + 1].isClustered = true;
+                c1.kd_tree[2 * i + 2].isClustered = true;
                 continue;
             } // 如果已经被划分了则不再继续划分,并且标识子节点不再划分
 
             vector<vector<int>> dist = cal_dist(c1, c2, i);
             // 计算中心到每个簇中心的距离, size = 2 x k -->其实也可以直接合并后加密啦……emmm也不太影响嘛
-            
+
             int tot_candidate_k = 0;
             // 记录当前node包含多少个候选中心
             for (int j = 0; j < c1.k; j++) // 先直接合并，存到维度0中
@@ -198,8 +199,7 @@ void filtering(cloud_one &c1, cloud_two &c2)
                 // 合并n，候选为1，非候选为0
 
                 tot_candidate_k += n;
-                
-                
+
                 dist[0][j] = (dist[0][j] + dist[1][j]) * n;
                 // 本来应该是要用ss乘法的，懒得实现了，麻了
             }
@@ -251,7 +251,7 @@ void filtering(cloud_one &c1, cloud_two &c2)
                         mid_res = c1.kd_tree[i].node_max[k];
                         mid_res *= (1 - com_res); //(1-LT(u[i],0))*(c_max)
                         v[k] += mid_res;
-                    }// 首先计算当前簇对应的u
+                    } // 首先计算当前簇对应的u
 
                     Ctxt ctxt_d1 = ctxt_zero, ctxt_d2 = ctxt_zero;
                     for (int k = 0; k < c1.dimension; k++)
@@ -265,7 +265,7 @@ void filtering(cloud_one &c1, cloud_two &c2)
                         curr -= v[k]; // (ki - vi)
                         curr *= curr; // (ki - vi)**2
                         ctxt_d2 += curr;
-                    }// 计算dist(v,z*), dist(v,z)
+                    } // 计算dist(v,z*), dist(v,z)
 
                     c1.comparator->compare(less_than, ctxt_d1, ctxt_d2); // dist(v,z*)<dist(v,z)?
                     long res = c1.comparator->dec_compare_res(less_than);
@@ -279,13 +279,14 @@ void filtering(cloud_one &c1, cloud_two &c2)
 
                         c1.kd_tree[2 * i + 2].candidate_k[j] = res;
                         c2.kd_tree[2 * i + 2].candidate_k[j] = 0; // 心中随机即可
-                    }// 修改当前node和子node的候选中心
+                    }                                             // 修改当前node和子node的候选中心
 
                     tot_candidate_k -= res;
                     // 如果簇被prune，候选中心数目减少,当然论文里面咱们不能这么做
                 }
                 // 判断候选candidate是否只包含一个簇
-                if(tot_candidate_k == 1){
+                if (tot_candidate_k == 1)
+                {
                     //* 这里的步骤基本上和下面叶子节点的步骤一致
                     vector<long> node_cen(c1.dimension);
                     // 合并点集中心结果
@@ -320,12 +321,10 @@ void filtering(cloud_one &c1, cloud_two &c2)
 
                     // 标记当前和子节点信息
                     c1.kd_tree[i].isClustered = true;
-                    c1.kd_tree[2*i+1].isClustered = true;
-                    c1.kd_tree[2*i+2].isClustered = true;
+                    c1.kd_tree[2 * i + 1].isClustered = true;
+                    c1.kd_tree[2 * i + 2].isClustered = true;
 
-                }// 更新簇信息，并且标识当前node和子node都不再进行聚类
-
-
+                } // 更新簇信息，并且标识当前node和子node都不再进行聚类
             }
             else // 叶子节点
             {
@@ -366,10 +365,119 @@ void filtering(cloud_one &c1, cloud_two &c2)
     return;
 }
 
+void generate_kd_tree2(cloud_one &c1, cloud_two &c2)
+{
+
+    c2.add_new_node(vector<int>(c2.data_num, 1), c1.data_num, c1.kd_tree, c2.kd_tree);
+    int node_index = 0;
+
+    while (true)
+    {
+        int point_num = c1.kd_tree[node_index].node_point_num; // 获取当前tree node包含的点个数
+        if (point_num == 1 || point_num == 2)                  // 叶子节点不继续遍历
+            break;
+
+        //* 计算xi*Ni--> 不好说中间结果会不会超出范围，c++报错机制太烂了
+        // 1. 初始化e1，e2 和 f1，f2，二维数组，data_num*dimension
+        vector<vector<int>> e1(c1.data_num, vector<int>(c1.dimension, 0)), e2(e1);
+        vector<vector<int>> f1(e1), f2(e1);
+
+        // 2. 计算xi*Ni的中间结果 e1,f1 and e2, f2
+        c1.calculate_ef_xN(node_index, e1, f1);
+        c2.calculate_ef_xN(node_index, e2, f2);
+
+        // 3. 计算合并结果 e=e1+e2, f=f1+f2,那么就用e1和f1暂存中间结果e，f吧！
+        for (int i = 0; i < c1.data_num; ++i)
+        {
+            for (int j = 0; j < c1.dimension; ++j)
+            {
+                e1[i][j] += e2[i][j];
+                f1[i][j] += f2[i][j];
+            }
+        }
+
+        // 4. xN1 = f1*a1+e1*b1+c1  xN2=e2*f2+f2*a2+e2*b2+c2 --> checked
+        cout << "计算xi*Ni..." << endl;
+        vector<vector<int>> xN1 = c1.calculate_xi_Ni(e1, f1); //* checked
+        vector<vector<int>> xN2 = c2.calculate_xi_Ni(e1, f1);
+
+        // 计算ΣxN1/n ΣxN2/n
+        vector<int> avg_xN1(c1.dimension), avg_xN2(c1.dimension);
+        for(int i=0;i<c1.dimension;i++){
+            for(int j=0;j<c1.data_num;j++){
+                avg_xN1[i] += xN1[j][i];
+                avg_xN2[i] += xN2[j][i];
+            }// 也可以边累加，边做除法，误差比较大，但是中间结果不会溢出
+            avg_xN1[i] /= point_num;
+            avg_xN2[i] /= point_num;
+        }// 果然最后做除法，误差比下面的方法小到了小数级别
+
+//        for (int i = 0; i < xN2.size(); i++)
+//        {
+//            for (int j = 0; j < c1.dimension; j++)
+//            {
+//                avg_xN1[j] += (xN1[i][j] / point_num);
+//                avg_xN2[j] += (xN2[i][j] / point_num);
+//            }// 也可以累加完了之后再做除法，缺点是可能中间结果会溢出，但是误差小
+//        }// 误差在个位数级别
+
+        // 计算xNi - avg_xNi --> 暂存到前者中
+        for (int i = 0; i < c1.data_num; i++)
+        {
+            for (int j = 0; j < c1.dimension; j++)
+            {
+                xN1[i][j] -= avg_xN1[j];
+                xN2[i][j] -= avg_xN2[j];
+            }
+        }
+
+        // 计算 (xNi - avg_xNi)^2
+        //--> 计算中间结果ef(借用现有函数)
+        c1.calculate_ef_xN_square(xN1, e1, f1);
+        c2.calculate_ef_xN_square(xN2, e2, f2);
+
+        //--> 合并中间结果ef，暂存到e1,f1中
+        for (int i = 0; i < c1.data_num; i++)
+        {
+            for (int j = 0; j < c1.dimension; j++)
+            {
+                e1[i][j] += e2[i][j];
+                f1[i][j] += f2[i][j];
+            }
+        }
+
+        // 计算最终结果--> checked
+        vector<vector<int>> xN_sub_avg1 = c1.calculate_xi_Ni_square(e1, f1);
+        vector<vector<int>> xN_sub_avg2 = c2.calculate_xi_Ni_square(e1, f1);
+
+        vector<int> var(c1.dimension, 0);
+        for (int i = 0; i < c1.dimension; i++)
+        {
+            float curr = 0;
+            for (int j = 0; j < c1.data_num; j++)
+                curr += float(xN_sub_avg1[j][i] + xN_sub_avg2[j][i])/point_num; // 直接合并秘密共享的中间值了（原本应当分开加密再合并的
+            var[i] = curr;
+        }// 看了下，如果合并再除法，中间结果快上亿了，估计会有运算错误，因此一边除法一边合并
+
+        // 加密，比较大小
+        vector<Ctxt> enc_var = c1.comparator->encrypt_vector(var);  // 加密方差
+        Ctxt ctxt_one = c1.comparator->gen_ctxt_one();              // 生成密文全1
+        Ctxt max_var_index = c1.comparator->max_variance(enc_var, ctxt_one);    // 比较获取最大方差的维度
+        c1.comparator->decrypt_index(max_var_index);                            // 解密最大方差维度的下标
+
+        vector<int>N(c1.data_num);
+        for(int i=0;i<c1.data_num;i++){
+            N[i] = c1.kd_tree[node_index].N[i] + c2.kd_tree[node_index].N[i];
+        }
+        c2.divide_data(max_var_index, c1, N, point_num, node_index);    // 根据最大方差的维度划分数据
+
+    }
+    return;
+}
 int main()
 {
     // 初始化数据信息
-    int data_num = 20, dimension = 5;
+    int data_num = 8192, dimension = 5;
     vector<point> point_list, c1_data, c2_data;
     // vector<point> point_list, c1_data, c2_data;
     // tmp_data(point_list);
@@ -384,7 +492,7 @@ int main()
     // 构造比较器
     Comparator *comparator = generate_comparator(false);
 
-     // 初始化云
+    // 初始化云
     cloud_one c1(c1_data, data_num, dimension, comparator, 3);
     cloud_two c2(c2_data, data_num, dimension, comparator, sorted_index, 3);
 
@@ -392,7 +500,7 @@ int main()
     generate_beaver_set(data_num, 50, c1.beaver_list, c2.beaver_list);
 
     // 构造kd tree
-    generate_kd_tree(c1, c2);
+    generate_kd_tree2(c1, c2);
 
     // // 聚类过程
     // // filtering(c1, c2);

@@ -66,6 +66,8 @@ public:
 
     // 计算Ni*Ki
     void exclude_clusters(int node_index);
+
+    
 };
 
 class cloud_one : public cloud
