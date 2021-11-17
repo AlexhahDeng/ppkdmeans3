@@ -6,7 +6,7 @@ vector<point> read_data(int data_num, int dimension)
 	ifstream fp("data.csv");
 	string line;
 
-	getline(fp, line); // 跳过列名
+	// getline(fp, line); // 跳过列名-->新数据没有列名
 	for (int i = 0; i < data_num; i++)
 	{ // 循环读取每行数据
 
@@ -16,7 +16,7 @@ vector<point> read_data(int data_num, int dimension)
 
 		istringstream readstr(line); // string数据流化
 		// 将每一行按照 "," 分割
-		getline(readstr, number, ','); // 跳过行名
+		// getline(readstr, number, ','); // 跳过行名-->新数据没有行名
 
 		for (int j = 0; j < dimension; j++)
 		{
@@ -24,10 +24,10 @@ vector<point> read_data(int data_num, int dimension)
 			line_data[j] = atoi(number.c_str());
 		}
 
-		// for(auto n:line_data){
-		// 	cout<<n<<"  ";
-		// }
-		// cout<<endl;
+		for(auto n:line_data){
+			cout<<n<<"  ";
+		}
+		cout<<endl;
 		result[i] = {i, line_data};
 	}
 	fp.close();

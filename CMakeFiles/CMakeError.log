@@ -1,21 +1,21 @@
 Performing C++ SOURCE FILE Test CMAKE_HAVE_LIBC_PTHREAD failed with the following output:
-Change Dir: /home/dd/ubu20/ppkdmeans3/CMakeFiles/CMakeTmp
+Change Dir: /home/dd/Ubu20/ppkdmeans3/CMakeFiles/CMakeTmp
 
-Run Build Command(s):/usr/bin/make cmTC_bf255/fast && /usr/bin/make -f CMakeFiles/cmTC_bf255.dir/build.make CMakeFiles/cmTC_bf255.dir/build
-make[1]: Entering directory '/home/dd/ubu20/ppkdmeans3/CMakeFiles/CMakeTmp'
-Building CXX object CMakeFiles/cmTC_bf255.dir/src.cxx.o
-/usr/bin/c++    -DCMAKE_HAVE_LIBC_PTHREAD   -std=c++17 -o CMakeFiles/cmTC_bf255.dir/src.cxx.o -c /home/dd/ubu20/ppkdmeans3/CMakeFiles/CMakeTmp/src.cxx
-Linking CXX executable cmTC_bf255
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_bf255.dir/link.txt --verbose=1
-/usr/bin/c++   -DCMAKE_HAVE_LIBC_PTHREAD    CMakeFiles/cmTC_bf255.dir/src.cxx.o  -o cmTC_bf255 
-/usr/bin/ld: CMakeFiles/cmTC_bf255.dir/src.cxx.o: in function `main':
+Run Build Command(s):/usr/bin/make cmTC_fba19/fast && /usr/bin/make -f CMakeFiles/cmTC_fba19.dir/build.make CMakeFiles/cmTC_fba19.dir/build
+make[1]: Entering directory '/home/dd/Ubu20/ppkdmeans3/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_fba19.dir/src.cxx.o
+/usr/bin/c++    -DCMAKE_HAVE_LIBC_PTHREAD   -std=c++17 -o CMakeFiles/cmTC_fba19.dir/src.cxx.o -c /home/dd/Ubu20/ppkdmeans3/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_fba19
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_fba19.dir/link.txt --verbose=1
+/usr/bin/c++   -DCMAKE_HAVE_LIBC_PTHREAD    CMakeFiles/cmTC_fba19.dir/src.cxx.o  -o cmTC_fba19 
+/usr/bin/ld: CMakeFiles/cmTC_fba19.dir/src.cxx.o: in function `main':
 src.cxx:(.text+0x46): undefined reference to `pthread_create'
 /usr/bin/ld: src.cxx:(.text+0x52): undefined reference to `pthread_detach'
 /usr/bin/ld: src.cxx:(.text+0x63): undefined reference to `pthread_join'
 collect2: error: ld returned 1 exit status
-make[1]: *** [CMakeFiles/cmTC_bf255.dir/build.make:87: cmTC_bf255] Error 1
-make[1]: Leaving directory '/home/dd/ubu20/ppkdmeans3/CMakeFiles/CMakeTmp'
-make: *** [Makefile:121: cmTC_bf255/fast] Error 2
+make[1]: *** [CMakeFiles/cmTC_fba19.dir/build.make:87: cmTC_fba19] Error 1
+make[1]: Leaving directory '/home/dd/Ubu20/ppkdmeans3/CMakeFiles/CMakeTmp'
+make: *** [Makefile:121: cmTC_fba19/fast] Error 2
 
 
 Source file was:
@@ -39,20 +39,20 @@ int main(void)
 }
 
 Determining if the function pthread_create exists in the pthreads failed with the following output:
-Change Dir: /home/dd/ubu20/ppkdmeans3/CMakeFiles/CMakeTmp
+Change Dir: /home/dd/Ubu20/ppkdmeans3/CMakeFiles/CMakeTmp
 
-Run Build Command(s):/usr/bin/make cmTC_75998/fast && /usr/bin/make -f CMakeFiles/cmTC_75998.dir/build.make CMakeFiles/cmTC_75998.dir/build
-make[1]: Entering directory '/home/dd/ubu20/ppkdmeans3/CMakeFiles/CMakeTmp'
-Building CXX object CMakeFiles/cmTC_75998.dir/CheckFunctionExists.cxx.o
-/usr/bin/c++    -DCHECK_FUNCTION_EXISTS=pthread_create   -std=c++17 -o CMakeFiles/cmTC_75998.dir/CheckFunctionExists.cxx.o -c /home/dd/ubu20/ppkdmeans3/CMakeFiles/CheckLibraryExists/CheckFunctionExists.cxx
-Linking CXX executable cmTC_75998
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_75998.dir/link.txt --verbose=1
-/usr/bin/c++   -DCHECK_FUNCTION_EXISTS=pthread_create    CMakeFiles/cmTC_75998.dir/CheckFunctionExists.cxx.o  -o cmTC_75998  -lpthreads 
+Run Build Command(s):/usr/bin/make cmTC_c94ef/fast && /usr/bin/make -f CMakeFiles/cmTC_c94ef.dir/build.make CMakeFiles/cmTC_c94ef.dir/build
+make[1]: Entering directory '/home/dd/Ubu20/ppkdmeans3/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_c94ef.dir/CheckFunctionExists.cxx.o
+/usr/bin/c++    -DCHECK_FUNCTION_EXISTS=pthread_create   -std=c++17 -o CMakeFiles/cmTC_c94ef.dir/CheckFunctionExists.cxx.o -c /home/dd/Ubu20/ppkdmeans3/CMakeFiles/CheckLibraryExists/CheckFunctionExists.cxx
+Linking CXX executable cmTC_c94ef
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_c94ef.dir/link.txt --verbose=1
+/usr/bin/c++   -DCHECK_FUNCTION_EXISTS=pthread_create    CMakeFiles/cmTC_c94ef.dir/CheckFunctionExists.cxx.o  -o cmTC_c94ef  -lpthreads 
 /usr/bin/ld: cannot find -lpthreads
 collect2: error: ld returned 1 exit status
-make[1]: *** [CMakeFiles/cmTC_75998.dir/build.make:87: cmTC_75998] Error 1
-make[1]: Leaving directory '/home/dd/ubu20/ppkdmeans3/CMakeFiles/CMakeTmp'
-make: *** [Makefile:121: cmTC_75998/fast] Error 2
+make[1]: *** [CMakeFiles/cmTC_c94ef.dir/build.make:87: cmTC_c94ef] Error 1
+make[1]: Leaving directory '/home/dd/Ubu20/ppkdmeans3/CMakeFiles/CMakeTmp'
+make: *** [Makefile:121: cmTC_c94ef/fast] Error 2
 
 
 

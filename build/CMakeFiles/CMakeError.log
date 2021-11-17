@@ -1,21 +1,16 @@
 Performing C++ SOURCE FILE Test CMAKE_HAVE_LIBC_PTHREAD failed with the following output:
-Change Dir: /home/dd/ubu20/ppkdmeans3/build/CMakeFiles/CMakeTmp
+Change Dir: /home/dd/Ubu20/ppkdmeans3/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):/usr/bin/make cmTC_e5f66/fast && /usr/bin/make -f CMakeFiles/cmTC_e5f66.dir/build.make CMakeFiles/cmTC_e5f66.dir/build
-make[1]: Entering directory '/home/dd/ubu20/ppkdmeans3/build/CMakeFiles/CMakeTmp'
-Building CXX object CMakeFiles/cmTC_e5f66.dir/src.cxx.o
-/bin/x86_64-linux-gnu-g++-10    -DCMAKE_HAVE_LIBC_PTHREAD   -std=c++17 -o CMakeFiles/cmTC_e5f66.dir/src.cxx.o -c /home/dd/ubu20/ppkdmeans3/build/CMakeFiles/CMakeTmp/src.cxx
-Linking CXX executable cmTC_e5f66
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_e5f66.dir/link.txt --verbose=1
-/bin/x86_64-linux-gnu-g++-10   -DCMAKE_HAVE_LIBC_PTHREAD    CMakeFiles/cmTC_e5f66.dir/src.cxx.o  -o cmTC_e5f66 
-/usr/bin/ld: CMakeFiles/cmTC_e5f66.dir/src.cxx.o: in function `main':
+Run Build Command(s):/usr/bin/ninja cmTC_d6ef1 && [1/2] Building CXX object CMakeFiles/cmTC_d6ef1.dir/src.cxx.o
+[2/2] Linking CXX executable cmTC_d6ef1
+FAILED: cmTC_d6ef1 
+: && /bin/x86_64-linux-gnu-g++-9  -DCMAKE_HAVE_LIBC_PTHREAD   CMakeFiles/cmTC_d6ef1.dir/src.cxx.o  -o cmTC_d6ef1   && :
+/usr/bin/ld: CMakeFiles/cmTC_d6ef1.dir/src.cxx.o: in function `main':
 src.cxx:(.text+0x46): undefined reference to `pthread_create'
 /usr/bin/ld: src.cxx:(.text+0x52): undefined reference to `pthread_detach'
 /usr/bin/ld: src.cxx:(.text+0x63): undefined reference to `pthread_join'
 collect2: error: ld returned 1 exit status
-make[1]: *** [CMakeFiles/cmTC_e5f66.dir/build.make:87: cmTC_e5f66] Error 1
-make[1]: Leaving directory '/home/dd/ubu20/ppkdmeans3/build/CMakeFiles/CMakeTmp'
-make: *** [Makefile:121: cmTC_e5f66/fast] Error 2
+ninja: build stopped: subcommand failed.
 
 
 Source file was:
@@ -39,20 +34,15 @@ int main(void)
 }
 
 Determining if the function pthread_create exists in the pthreads failed with the following output:
-Change Dir: /home/dd/ubu20/ppkdmeans3/build/CMakeFiles/CMakeTmp
+Change Dir: /home/dd/Ubu20/ppkdmeans3/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):/usr/bin/make cmTC_d3e29/fast && /usr/bin/make -f CMakeFiles/cmTC_d3e29.dir/build.make CMakeFiles/cmTC_d3e29.dir/build
-make[1]: Entering directory '/home/dd/ubu20/ppkdmeans3/build/CMakeFiles/CMakeTmp'
-Building CXX object CMakeFiles/cmTC_d3e29.dir/CheckFunctionExists.cxx.o
-/bin/x86_64-linux-gnu-g++-10    -DCHECK_FUNCTION_EXISTS=pthread_create   -std=c++17 -o CMakeFiles/cmTC_d3e29.dir/CheckFunctionExists.cxx.o -c /home/dd/ubu20/ppkdmeans3/build/CMakeFiles/CheckLibraryExists/CheckFunctionExists.cxx
-Linking CXX executable cmTC_d3e29
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_d3e29.dir/link.txt --verbose=1
-/bin/x86_64-linux-gnu-g++-10   -DCHECK_FUNCTION_EXISTS=pthread_create    CMakeFiles/cmTC_d3e29.dir/CheckFunctionExists.cxx.o  -o cmTC_d3e29  -lpthreads 
+Run Build Command(s):/usr/bin/ninja cmTC_7b248 && [1/2] Building CXX object CMakeFiles/cmTC_7b248.dir/CheckFunctionExists.cxx.o
+[2/2] Linking CXX executable cmTC_7b248
+FAILED: cmTC_7b248 
+: && /bin/x86_64-linux-gnu-g++-9  -DCHECK_FUNCTION_EXISTS=pthread_create   CMakeFiles/cmTC_7b248.dir/CheckFunctionExists.cxx.o  -o cmTC_7b248  -lpthreads && :
 /usr/bin/ld: cannot find -lpthreads
 collect2: error: ld returned 1 exit status
-make[1]: *** [CMakeFiles/cmTC_d3e29.dir/build.make:87: cmTC_d3e29] Error 1
-make[1]: Leaving directory '/home/dd/ubu20/ppkdmeans3/build/CMakeFiles/CMakeTmp'
-make: *** [Makefile:121: cmTC_d3e29/fast] Error 2
+ninja: build stopped: subcommand failed.
 
 
 
