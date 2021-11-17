@@ -389,7 +389,7 @@ int main()
     cloud_two c2(c2_data, data_num, dimension, comparator, sorted_index, 3);
 
     // 构造乘法所需beaver三元组
-    generate_beaver_set(data_num, 100, c1.beaver_list, c2.beaver_list);
+    generate_beaver_set(data_num, 50, c1.beaver_list, c2.beaver_list);
 
     // 构造kd tree
     generate_kd_tree(c1, c2);

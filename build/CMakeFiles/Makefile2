@@ -44,10 +44,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/dd/Ubu20/ppkdmeans3
+CMAKE_SOURCE_DIR = /home/dd/ubu20/ppkdmeans3
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/dd/Ubu20/ppkdmeans3/build
+CMAKE_BINARY_DIR = /home/dd/ubu20/ppkdmeans3/build
 
 #=============================================================================
 # Directory level rules for the build root directory
@@ -74,14 +74,14 @@ clean: CMakeFiles/pp3.dir/clean
 CMakeFiles/pp3.dir/all:
 	$(MAKE) -f CMakeFiles/pp3.dir/build.make CMakeFiles/pp3.dir/depend
 	$(MAKE) -f CMakeFiles/pp3.dir/build.make CMakeFiles/pp3.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dd/Ubu20/ppkdmeans3/build/CMakeFiles --progress-num=1,2,3,4,5,6,7 "Built target pp3"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dd/ubu20/ppkdmeans3/build/CMakeFiles --progress-num=1,2,3,4,5,6,7 "Built target pp3"
 .PHONY : CMakeFiles/pp3.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/pp3.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/dd/Ubu20/ppkdmeans3/build/CMakeFiles 7
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/dd/ubu20/ppkdmeans3/build/CMakeFiles 7
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/pp3.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/dd/Ubu20/ppkdmeans3/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/dd/ubu20/ppkdmeans3/build/CMakeFiles 0
 .PHONY : CMakeFiles/pp3.dir/rule
 
 # Convenience name for target.
