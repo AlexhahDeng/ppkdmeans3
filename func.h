@@ -41,14 +41,35 @@ void generate_beaver_set(int n, int data_range, vector<vector<int>>&c1_list, vec
 // 固定化测试数据
 void tmp_data(vector<point> &point_list);
 
-// func: 用户初始化簇中心，确保点不重复--checked
+// func: 
+/**
+ * @brief 用户初始化簇中心，确保点不重复--checked
+ * 
+ * @param c1 存放了密文的初始簇中心以及秘密共享值
+ * @param c2 仅存放秘密共享值
+ */
 void ini_clu_cen(cloud_one &c1, cloud_two &c2);
 
-// func: 用户初始化候选中心和初始簇中心给root--checked
+// func: 
+/**
+ * @brief 用户初始化候选中心和初始簇中心标识给root--checked
+ * 
+ * @param c1 初始每个簇都是候选{1,1,...}
+ * @param c2 初始每个簇仅包含一个点-->不影响计算
+ */
 void ini_candidate_k(cloud_one &c1, cloud_two &c2);
 
-// func: 预计算簇中心连乘的结果，最后get{α1...αk,α}存入c1 and c2 *checked
+/**
+ * @brief 预计算簇中心连乘的结果，最后get{α1...αk,α}存入c1 and c2 *checked
+ */
 void mul_clu_point_num(cloud_one& c1, cloud_two& c2);
 
-// func: 向量内互不相同元素按顺序两两相乘，返回数组的size=2xk
+/**
+ * @brief 向量内互不相同元素按顺序两两相乘，返回数组的size=2xk
+ * 
+ * @param c1 
+ * @param c2 
+ * @param node_index 该节点到簇的距离
+ * @return vector<vector<int>> (2*k)到每个簇的距离，两行为不同秘密共享值
+ */
 vector<vector<int>> cal_dist(cloud_one &c1, cloud_two &c2, int node_index);

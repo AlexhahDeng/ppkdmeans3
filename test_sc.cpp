@@ -13,16 +13,19 @@ int main(){
 	int runs = 1;
 
 	vector<Ctxt>test();
-	vector<long int>tmp{5,4,8,2,5};
+	vector<long int>tmp{5,4,8,255,5};
 	Ctxt ctxt_one = comparator->gen_ctxt_one();
 
 	vector<Ctxt>ctxt_vec = comparator->encrypt_vector(tmp);
 	// comparator->compare(ctxt_vec[2], ctxt_vec[1], ctxt_vec[0]);
 	ctxt_vec[1] -= ctxt_vec[2];
-	ctxt_vec[3] *= 0l;
+	comparator->print_decrypted(ctxt_vec[3]);
+	ctxt_vec[3] *= 1l;
+	cout<<"mul 1"<<endl;
+	comparator->print_decrypted(ctxt_vec[3]);
 
-	comparator->compare(ctxt_vec[2], ctxt_vec[3], ctxt_vec[1]);
-	comparator->print_decrypted(ctxt_vec[2]);
+	// comparator->compare(ctxt_vec[2], ctxt_vec[3], ctxt_vec[1]);
+	// comparator->print_decrypted(ctxt_vec[2]);
 
 	// vector<Ctxt>result = comparator->min_dist(ctxt_vec, ctxt_one);
 	// // cout<<comparator.decrypt_index(index);

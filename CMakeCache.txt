@@ -192,6 +192,12 @@ pp3_BINARY_DIR:STATIC=/home/dd/Ubu20/ppkdmeans3
 //Value Computed by CMake
 pp3_SOURCE_DIR:STATIC=/home/dd/Ubu20/ppkdmeans3
 
+//Value Computed by CMake
+test_sc_BINARY_DIR:STATIC=/home/dd/Ubu20/ppkdmeans3
+
+//Value Computed by CMake
+test_sc_SOURCE_DIR:STATIC=/home/dd/Ubu20/ppkdmeans3
+
 
 ########################
 # INTERNAL cache entries

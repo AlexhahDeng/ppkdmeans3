@@ -414,10 +414,10 @@ int Comparator::decrypt_index(Ctxt ctxt)
 
 vector<Ctxt> Comparator::min_dist(vector<Ctxt> dist, Ctxt ctxt_one)
 {
-	if (dist.size() != 5)
+	if (dist.size() != 3)
 		cout << "numbers of dist out of range" << endl;
 
-	// 默认dist的个数是5个，先写死把！
+	// TODO 默认dist的个数是3个，先写死把！
 	Ctxt min_value(m_pk);
 	Ctxt less_than(m_pk);
 	Ctxt mid_res(m_pk);
@@ -432,7 +432,7 @@ vector<Ctxt> Comparator::min_dist(vector<Ctxt> dist, Ctxt ctxt_one)
 	while (value.size() != 1)
 	{
 		vector<Ctxt> new_value(value.size() / 2, ctxt_one);		 // 存放一轮比较后的较小值，数量砍半
-		vector<long> compare_reuslt(value.size() / 2, 1l); // 存放比较的结果(只能暂且弄成明文了)
+		vector<long> compare_reuslt(value.size() / 2, 1l);  // 存放比较的结果(只能暂且弄成明文了)
 
 		Ctxt min_value(m_pk);
 
@@ -476,7 +476,7 @@ vector<Ctxt> Comparator::min_dist(vector<Ctxt> dist, Ctxt ctxt_one)
 				result[i + 1] *= compare_reuslt[i];
 
 				result[i + 2] *= (1l - compare_reuslt[i]);
-				result[i + 3] *= (1l - compare_reuslt[i]);
+				// result[i + 3] *= (1l - compare_reuslt[i]);
 			}
 		}
 		else if (count == 3)
@@ -498,7 +498,9 @@ vector<Ctxt> Comparator::min_dist(vector<Ctxt> dist, Ctxt ctxt_one)
 
 		count++;
 	}
-
+//    for(auto r : result){
+//        cout<<decrypt_index(r)<<endl;
+//    }//没问题
 	return result;
 }
 
@@ -533,8 +535,5 @@ long int Comparator::dec_compare_res(Ctxt ctxt)
 		if(res[i].getData().rep.length())
 			return 1l;
 	}
-
 	return 0l;
-
-
 }

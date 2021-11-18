@@ -177,7 +177,8 @@ void filtering(cloud_one &c1, cloud_two &c2)
         //? 存在的问题是-->中间累加的结果可能会超过加密的范围，所以我们简化问题
         // 直接存储明文结果把！
 
-        vector<int> new_clu_point_num(c1.k); // 包含的点数同理，存储明文
+        vector<int> new_clu_point_num(c1.k);
+        // 包含的点数同理，存储明文
 
         for (int i = 0; i < c1.kd_tree.size(); i++) // 遍历kd tree 所有节点
         {
@@ -222,15 +223,25 @@ void filtering(cloud_one &c1, cloud_two &c2)
                 Ctxt less_than = ctxt_one;
                 vector<Ctxt> k_closest(c1.dimension, ctxt_zero);
 
-                for (int j = 0; j < c1.dimension; j++)
-                {
-                    for (int k = 0; k < c1.k; k++)
-                    {
-                        Ctxt ctxt_value = min_dist_index[k];
-                        ctxt_value *= long(c1.clu_cen[k][j] + c2.clu_cen[k][j]);
-                        k_closest[j] += ctxt_value; //-->可能会超过范围哦！-->不会吧，本来就在范围内啊
+//                for (int j = 0; j < c1.dimension; j++)
+//                {
+//                    for (int k = 0; k < c1.k; k++)
+//                    {
+//                        Ctxt ctxt_value = min_dist_index[k];
+//                        long clu_value = c1.clu_cen[k][j] + c2.clu_cen[k][j];
+//                        ctxt_value *= clu_value;
+//                        k_closest[j] += ctxt_value; //-->可能会超过范围哦！-->不会吧，本来就在范围内啊
+//                    }
+//                }
+                for(int j=0;j<c1.k;j++){
+                    Ctxt ctxt_value = min_dist_index[j];    // 取当前k对应的min dist计算结果
+                    for(int k=0;k<c1.dimension;k++){
+                        Ctxt ctxt_value = min_dist_index[j];    // 取当前k对应的min dist计算结果
+                        ctxt_value.multiplyBy(c1.ctxt_clu_cen[j][k]);
+                        k_closest[k]+=ctxt_value;
                     }
                 }
+//                int tmp = c1.comparator->decrypt_index(k_closest[1]);//-->验证了没啥问题
 
                 // 遍历所有的簇中心，prune掉距离更远的
                 vector<Ctxt> v(c1.dimension, ctxt_one);
@@ -407,9 +418,14 @@ void generate_kd_tree2(cloud_one &c1, cloud_two &c2)
         vector<int> avg_xN1(c1.dimension), avg_xN2(c1.dimension);
         for(int i=0;i<c1.dimension;i++){
             for(int j=0;j<c1.data_num;j++){
-                avg_xN1[i] += xN1[j][i];
+                avg_xN1[i] += xN1[j][i]; 
                 avg_xN2[i] += xN2[j][i];
             }// 也可以边累加，边做除法，误差比较大，但是中间结果不会溢出
+
+            //* 将(Σxi*Ni)补充到kd_node中
+            c1.kd_tree[node_index].node_sum_x[i] = avg_xN1[i];
+            c2.kd_tree[node_index].node_sum_x[i] = avg_xN2[i];
+            
             avg_xN1[i] /= point_num;
             avg_xN2[i] /= point_num;
         }// 果然最后做除法，误差比下面的方法小到了小数级别
@@ -488,7 +504,7 @@ void generate_kd_tree2(cloud_one &c1, cloud_two &c2)
         for(int i=0;i<c1.data_num;i++){
             N[i] = c1.kd_tree[node_index].N[i] + c2.kd_tree[node_index].N[i];
         }
-        
+
         c2.divide_data_set(max_var_index, c1, N, point_num, node_index);    // 根据最大方差的维度划分数据
 
         node_index++;
@@ -499,7 +515,7 @@ void generate_kd_tree2(cloud_one &c1, cloud_two &c2)
 int main()
 {
     // 初始化数据信息
-    int data_num = 8192, dimension = 5;
+    int data_num = 20, dimension = 5;
     vector<point> point_list, c1_data, c2_data;
     // vector<point> point_list, c1_data, c2_data;
     // tmp_data(point_list);
@@ -524,8 +540,8 @@ int main()
     // 构造kd tree
     generate_kd_tree2(c1, c2);
 
-    // // 聚类过程
-    // // filtering(c1, c2);
+    // 聚类过程
+    filtering(c1, c2);
 
     return 0;
 }

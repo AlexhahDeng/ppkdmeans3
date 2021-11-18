@@ -177,26 +177,27 @@ void ini_clu_cen(cloud_one &c1, cloud_two &c2)
 	srand(time(NULL));
 	// 如果由cloud来随机选择初始簇中心，那不就暴露最初的中心了？虽然没有暴露值
 	// SOLUTION: 俺明白了，没关系！可以视为由用户初始化的啦！
-	vector<int> ran_index(c1.k);
-	int count = 0;
-
-	while (count < c1.k)
-	{
-		int k_index = rand() % c1.data_num, isExist = 0;
-		int i = 0;
-		while (i < count)
-		{
-			if (ran_index[i] == k_index)
-			{
-				isExist = 1;
-				break;
-			} // 随机下标已经取过了，不能要
-			i++;
-		} // 检测随机选择的簇中心是否已经被选择过
-		if (isExist)
-			continue;
-		ran_index[count++] = k_index;
-	}
+//	vector<int> ran_index(c1.k);
+//	int count = 0;
+//
+//	while (count < c1.k)
+//	{
+//		int k_index = rand() % c1.data_num, isExist = 0;
+//		int i = 0;
+//		while (i < count)
+//		{
+//			if (ran_index[i] == k_index)
+//			{
+//				isExist = 1;
+//				break;
+//			} // 随机下标已经取过了，不能要
+//			i++;
+//		} // 检测随机选择的簇中心是否已经被选择过
+//		if (isExist)
+//			continue;
+//		ran_index[count++] = k_index;
+//	}
+    vector<int>ran_index{1,2,3};
 
 	for (auto k_index : ran_index)
 	{
@@ -210,6 +211,7 @@ void ini_clu_cen(cloud_one &c1, cloud_two &c2)
 		c1.ctxt_clu_cen.push_back(c1.comparator->encrypt_vector(k_cen));
 		// 这里把簇中心加密，存入c1，方便聚类过程中的计算
 	}
+	
 	return;
 }
 
