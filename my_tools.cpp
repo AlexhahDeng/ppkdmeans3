@@ -9,7 +9,7 @@ unsigned long m = 300;
 unsigned long nb_primes = 600; // 噪声溢出修改这里
 unsigned long c = 3;
 
-unsigned long expansion_len = 2;
+unsigned long expansion_len = 3;
 
 auto context = ContextBuilder<BGV>() // 初始化上下文
 				   .m(m)			 // 分圆环的规模
@@ -40,7 +40,7 @@ Comparator *generate_comparator(bool output)
 	bool verbose = output; // 是否输出错误信息
 	unsigned long d = 2;   //! field extension degree 域扩展次数
 
-	unsigned long expansion_len = 2;		  //!! maximal number of digits in a number
+	// unsigned long expansion_len = 2;		  //!! maximal number of digits in a number
 	SecKey *secret_key = new SecKey(context); // Create a secret key associated with the context
 	secret_key->GenSecKey();				  // 生成加密所需私钥
 

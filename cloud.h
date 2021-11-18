@@ -67,6 +67,9 @@ public:
     // 计算Ni*Ki
     void exclude_clusters(int node_index);
 
+    // 计算avg*Ni --> size= data_num*dimension
+    void calculate_avg_N(vector<vector<int>>&e, vector<vector<int>>&f, vector<int>avg, int node_index);
+
     
 };
 

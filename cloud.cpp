@@ -152,6 +152,17 @@ void cloud::exclude_clusters(int node_index){
 
 }
 
+
+void cloud::calculate_avg_N(vector<vector<int>>&e, vector<vector<int>>&f, vector<int>avg, int node_index)
+{
+    for(int i=0;i<data_num;i++){
+        for(int j=0;j<dimension;j++){
+            e[i][j] = kd_tree[node_index].N[i] - beaver_list[i][0]; // N[i]-a
+            f[i][j] = avg[j] - beaver_list[i][1];                   // avg[j]-b
+        }
+    }
+}
+
 // cloud_one
 cloud_one::cloud_one(vector<point> point_list, int data_num, int dimension, Comparator *comparator, int k) : cloud(point_list, data_num, dimension, comparator, k)
 {
@@ -312,8 +323,8 @@ void cloud_two::divide_data_set(Ctxt enc_index, cloud_one &c1, vector<int> &N, i
      */
 
     // TODO decrypt and decode ciphertext index
-    int max_var_index = comparator->decrypt_index(enc_index);   //-->解密的函数有现成的，但是怎么decode需要自己写
-    vector<int> n_min(dimension), n_max(n_min);
+    int max_var_index = comparator->decrypt_index(enc_index); // 解密下标值
+    vector<int> n_min(dimension), n_max(n_min);                    // 记录每个维度的最大最小值
     int count = 0;
     vector<int> count_mm(dimension, 0);
     vector<int> Nl(N), Nr(N);

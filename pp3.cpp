@@ -71,7 +71,7 @@ void generate_kd_tree(cloud_one &c1, cloud_two &c2)
         }
 
         // 4. xN1 = f1*a1+e1*b1+c1  xN2=e2*f2+f2*a2+e2*b2+c2
-        cout << "计算xi*Ni..." << endl;
+        // cout << "计算xi*Ni..." << endl;
         vector<vector<int>> xN1 = c1.calculate_xi_Ni(e1, f1); //* checked
         vector<vector<int>> xN2 = c2.calculate_xi_Ni(e1, f1);
 
@@ -373,6 +373,8 @@ void generate_kd_tree2(cloud_one &c1, cloud_two &c2)
 
     while (true)
     {
+        cout<<"node index is "<<node_index<<endl;
+
         int point_num = c1.kd_tree[node_index].node_point_num; // 获取当前tree node包含的点个数
         if (point_num == 1 || point_num == 2)                  // 叶子节点不继续遍历
             break;
@@ -397,7 +399,7 @@ void generate_kd_tree2(cloud_one &c1, cloud_two &c2)
         }
 
         // 4. xN1 = f1*a1+e1*b1+c1  xN2=e2*f2+f2*a2+e2*b2+c2 --> checked
-        cout << "计算xi*Ni..." << endl;
+        // cout << "计算xi*Ni..." << endl;
         vector<vector<int>> xN1 = c1.calculate_xi_Ni(e1, f1); //* checked
         vector<vector<int>> xN2 = c2.calculate_xi_Ni(e1, f1);
 
@@ -421,13 +423,29 @@ void generate_kd_tree2(cloud_one &c1, cloud_two &c2)
 //            }// 也可以累加完了之后再做除法，缺点是可能中间结果会溢出，但是误差小
 //        }// 误差在个位数级别
 
-        // 计算xNi - avg_xNi --> 暂存到前者中
+        // 计算avg*Ni--> avg(data_num*dimension)
+        c1.calculate_avg_N(e1, f1, avg_xN1, node_index);
+        c2.calculate_avg_N(e2, f2, avg_xN2, node_index);
+
+        // 合并中间结果
+        for(int i=0;i<c1.data_num;i++){
+            for(int j=0;j<c1.dimension;j++){
+                e1[i][j] += e2[i][j];
+                f1[i][j] += f2[i][j];
+            }
+        }
+
+        // 计算最终结果
+        vector<vector<int>> avg_mul_N1 = c1.calculate_xi_Ni(e1, f1);
+        vector<vector<int>> avg_mul_N2 = c2.calculate_xi_Ni(e1, f1);
+
+        // 计算xNi - avg_mul_Ni --> 暂存到前者中
         for (int i = 0; i < c1.data_num; i++)
         {
             for (int j = 0; j < c1.dimension; j++)
             {
-                xN1[i][j] -= avg_xN1[j];
-                xN2[i][j] -= avg_xN2[j];
+                xN1[i][j] -= avg_mul_N1[i][j];
+                xN2[i][j] -= avg_mul_N2[i][j];
             }
         }
 
@@ -462,16 +480,20 @@ void generate_kd_tree2(cloud_one &c1, cloud_two &c2)
         // 加密，比较大小
         vector<Ctxt> enc_var = c1.comparator->encrypt_vector(var);  // 加密方差
         Ctxt ctxt_one = c1.comparator->gen_ctxt_one();              // 生成密文全1
-        Ctxt max_var_index = c1.comparator->max_variance(enc_var, ctxt_one);    // 比较获取最大方差的维度
-        c1.comparator->decrypt_index(max_var_index);                            // 解密最大方差维度的下标
+        
+        Ctxt max_var_index = c1.comparator->max_variance(enc_var, ctxt_one);          // 比较获取最大方差的维度
+        // cout<<c1.comparator->decrypt_index(max_var_index);                            // 解密最大方差维度的下标
 
         vector<int>N(c1.data_num);
         for(int i=0;i<c1.data_num;i++){
             N[i] = c1.kd_tree[node_index].N[i] + c2.kd_tree[node_index].N[i];
         }
-        c2.divide_data(max_var_index, c1, N, point_num, node_index);    // 根据最大方差的维度划分数据
+        
+        c2.divide_data_set(max_var_index, c1, N, point_num, node_index);    // 根据最大方差的维度划分数据
 
+        node_index++;
     }
+
     return;
 }
 int main()
