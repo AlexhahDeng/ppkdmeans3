@@ -537,3 +537,11 @@ long int Comparator::dec_compare_res(Ctxt ctxt)
 	}
 	return 0l;
 }
+
+void Comparator::print_ctxt_info(string msg, vector<Ctxt>ctxt){
+	cout<<msg<<endl;
+	for(auto cipher:ctxt){
+		cout<<decrypt_index(cipher)<<" ";
+	}
+	cout<<endl;
+}

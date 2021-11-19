@@ -211,6 +211,9 @@ public:
 
   long int dec_compare_res(Ctxt ctxt);
 
+  void print_ctxt_info(string msg, vector<Ctxt>ctxt);
+
+
 };
 }
 
