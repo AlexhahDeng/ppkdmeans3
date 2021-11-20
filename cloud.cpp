@@ -360,9 +360,7 @@ void cloud_two::divide_data_set(Ctxt enc_index, cloud_one &c1, vector<int> &N, i
     // add min_max to node info
     c1.kd_tree[N_index].node_min = comparator->encrypt_vector(n_min);
     c1.kd_tree[N_index].node_max = comparator->encrypt_vector(n_max);
-    // c1,kd_node[N_index].node_min_max = comparator->encrypt_vector(node_mm);
-    // c1.kd_tree[N_index].node_min_max = node_min_max1;
-    // this->kd_tree[N_index].node_min_max = node_min_max2;
+
 
     // add new node to kd_tree
     add_new_node(Nl, curr_data_num / 2, c1.kd_tree, this->kd_tree);
