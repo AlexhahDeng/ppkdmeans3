@@ -147,7 +147,7 @@ void generate_kd_tree(cloud_one &c1, cloud_two &c2)
 
         // // 2. c1 对密文{s1...sd}进行比较，求出最大值index，发给c2
         // Ctxt ctxt_one = c1.comparator->gen_ctxt_one();
-        // Ctxt max_index = c1.comparator->max_variance(enc_value, ctxt_one); 
+        // Ctxt max_index = c1.comparator->max_variance(enc_value, ctxt_one);
         // c1.comparator->decrypt_index(max_index);
 
         // // 3. c2 解密index，取 N 和 对应index的排序结果，划分，划分完了以后，秘密共享N_l N_r
@@ -169,7 +169,7 @@ void filtering(cloud_one &c1, cloud_two &c2)
     while (true)
     { // 一轮迭代
         clock_t start, end;
-        
+
         mul_clu_point_num(c1, c2);
         // 预计算簇中心连乘的结果，每一轮迭代只计算一次
         //* clu_point_num已经重置为0
@@ -181,7 +181,7 @@ void filtering(cloud_one &c1, cloud_two &c2)
 
         vector<int> new_clu_point_num(c1.k);
         // 包含的点数同理，存储明文
-start = clock();
+        start = clock();
         for (int i = 0; i < c1.kd_tree.size(); i++) // 遍历kd tree 所有节点
         {
             // cout<<endl<<"this is node "<<i<<endl;
@@ -204,9 +204,9 @@ start = clock();
 
                 tot_candidate_k += n;
 
-                dist[0][j] = (dist[0][j] + dist[1][j]) * n;// 本来应该是要用ss乘法的，懒得实现了，麻了
+                dist[0][j] = (dist[0][j] + dist[1][j]) * n; // 本来应该是要用ss乘法的，懒得实现了，麻了
 
-            }// 记录当前node包含多少个候选中心
+            } // 记录当前node包含多少个候选中心
 
             vector<Ctxt> ctxt_dist = c1.comparator->encrypt_vector(dist[0]);
             // 加密距离-->可能面临超过范围的问题
@@ -219,28 +219,29 @@ start = clock();
             if (c1.kd_tree[i].node_point_num > 3) // 非叶子节点
             {
 
-                Ctxt ctxt_zero = ctxt_one;// 构造密文0
+                Ctxt ctxt_zero = ctxt_one; // 构造密文0
                 ctxt_zero *= 0l;
                 Ctxt less_than = ctxt_one;
                 vector<Ctxt> k_closest(c1.dimension, ctxt_zero);
 
-                for(int j=0;j<c1.k;j++){
-                    for(int k=0;k<c1.dimension;k++){
-                        Ctxt ctxt_value = min_dist_index[j];    // 取当前k对应的min dist计算结果
+                for (int j = 0; j < c1.k; j++)
+                {
+                    for (int k = 0; k < c1.dimension; k++)
+                    {
+                        Ctxt ctxt_value = min_dist_index[j]; // 取当前k对应的min dist计算结果
                         ctxt_value.multiplyBy(c1.ctxt_clu_cen[j][k]);
-                        k_closest[k]+=ctxt_value;
+                        k_closest[k] += ctxt_value;
                     }
-                }// 计算z*-->距离最近的簇
+                } // 计算z*-->距离最近的簇
 
-                
                 vector<Ctxt> v(c1.dimension, ctxt_one);
-                for (int j = 0; j < c1.k; j++)// 遍历所有的簇中心，prune掉距离更远的
+                for (int j = 0; j < c1.k; j++) // 遍历所有的簇中心，prune掉距离更远的
                 {
                     // c1.comparator->print_ctxt_info("当前簇", c1.ctxt_clu_cen[j]);
                     for (int k = 0; k < c1.dimension; k++)
                     {
                         Ctxt u = c1.ctxt_clu_cen[j][k];
-                        u -= k_closest[k];                                   // u[k] = z[k] - z*[k]
+                        u -= k_closest[k];                               // u[k] = z[k] - z*[k]
                         c1.comparator->compare(less_than, u, ctxt_zero); // u[i] < 0?
 
                         // 解密结果tmd
@@ -255,7 +256,6 @@ start = clock();
                     } // 首先计算当前簇对应的u
 
                     // c1.comparator->print_ctxt_info("value of v", v);
-
 
                     Ctxt ctxt_d1 = ctxt_zero, ctxt_d2 = ctxt_zero;
                     for (int k = 0; k < c1.dimension; k++)
@@ -272,9 +272,9 @@ start = clock();
                     } // 计算dist(v,z*), dist(v,z)
 
                     // c1.comparator->print_ctxt_info("计算距离(v,z*),(v,z)",vector<Ctxt>{ctxt_d1,ctxt_d2});
-                    
-                    c1.comparator->compare(less_than, ctxt_d1, ctxt_d2); // dist(v,z*)<dist(v,z)?
-                    long res = c1.comparator->dec_compare_res(less_than);// 1-prune 0-not prune
+
+                    c1.comparator->compare(less_than, ctxt_d1, ctxt_d2);  // dist(v,z*)<dist(v,z)?
+                    long res = c1.comparator->dec_compare_res(less_than); // 1-prune 0-not prune
                     for (int k = 0; k < c1.dimension; k++)
                     {
                         c1.kd_tree[i].candidate_k[j] = 1 - res;
@@ -285,7 +285,7 @@ start = clock();
 
                         c1.kd_tree[2 * i + 2].candidate_k[j] = 1 - res;
                         c2.kd_tree[2 * i + 2].candidate_k[j] = 0; // 心中随机即可
-                    }// 修改当前node和子node的候选中心
+                    }                                             // 修改当前node和子node的候选中心
 
                     tot_candidate_k -= res;
                     // 如果簇被prune，候选中心数目减少,当然论文里面咱们不能这么做
@@ -368,7 +368,7 @@ start = clock();
             }
         }
         end = clock();
-        cout<<"time is"<<(double)(end-start)/CLOCKS_PER_SEC<<endl;
+        cout << "time is" << (double)(end - start) / CLOCKS_PER_SEC << endl;
         break;
     }
     return;
@@ -382,7 +382,7 @@ void generate_kd_tree2(cloud_one &c1, cloud_two &c2)
 
     while (node_index < c1.kd_tree.size())
     {
-        cout<<"node index is "<<node_index<<endl;
+        cout << "node index is " << node_index << endl;
 
         int point_num = c1.kd_tree[node_index].node_point_num; // 获取当前tree node包含的点个数
 
@@ -406,39 +406,42 @@ void generate_kd_tree2(cloud_one &c1, cloud_two &c2)
         }
 
         // 4. xN1 = f1*a1+e1*b1+c1  xN2=e2*f2+f2*a2+e2*b2+c2 --> checked
-        // cout << "计算xi*Ni..." << endl;
         vector<vector<int>> xN1 = c1.calculate_xi_Ni(e1, f1); //* checked
         vector<vector<int>> xN2 = c2.calculate_xi_Ni(e1, f1);
 
-        // 计算ΣxN1/n ΣxN2/n
-        vector<int> avg_xN1(c1.dimension,0), avg_xN2(c1.dimension,0);
-        for(int i=0;i<c1.dimension;i++){
-            for(int j=0;j<c1.data_num;j++){
-                avg_xN1[i] += xN1[j][i]; 
+        //* 计算平均值ΣxN1/n ΣxN2/n
+        vector<int> avg_xN1(c1.dimension, 0), avg_xN2(c1.dimension, 0);
+        for (int i = 0; i < c1.dimension; i++)
+        {
+            for (int j = 0; j < c1.data_num; j++)
+            {
+                avg_xN1[i] += xN1[j][i];
                 avg_xN2[i] += xN2[j][i];
-            }// 也可以边累加，边做除法，误差比较大，但是中间结果不会溢出
+            } // 也可以边累加，边做除法，误差比较大，但是中间结果不会溢出
 
-            //* 将(Σxi*Ni)补充到kd_node中
+            //! 将(Σxi*Ni)补充到kd_node中
             c1.kd_tree[node_index].node_sum_x[i] = avg_xN1[i];
             c2.kd_tree[node_index].node_sum_x[i] = avg_xN2[i];
-            
+
             avg_xN1[i] /= point_num;
             avg_xN2[i] /= point_num;
-        }// 果然最后做除法，误差比下面的方法小到了小数级别
+        } // 果然最后做除法，误差比下面的方法小到了小数级别
 
-        if (point_num <= 3){
-            // cout<<"leaf node"<<endl;
+        if (point_num <= 3)
+        {
             node_index++;
             continue;
-        }                  // 叶子节点不继续遍历
+        } // 叶子节点不继续遍历
 
         // 计算avg*Ni--> avg(data_num*dimension)
         c1.calculate_avg_N(e1, f1, avg_xN1, node_index);
         c2.calculate_avg_N(e2, f2, avg_xN2, node_index);
 
         // 合并中间结果
-        for(int i=0;i<c1.data_num;i++){
-            for(int j=0;j<c1.dimension;j++){
+        for (int i = 0; i < c1.data_num; i++)
+        {
+            for (int j = 0; j < c1.dimension; j++)
+            {
                 e1[i][j] += e2[i][j];
                 f1[i][j] += f2[i][j];
             }
@@ -482,23 +485,24 @@ void generate_kd_tree2(cloud_one &c1, cloud_two &c2)
         {
             float curr = 0;
             for (int j = 0; j < c1.data_num; j++)
-                curr += float(xN_sub_avg1[j][i] + xN_sub_avg2[j][i])/point_num; // 直接合并秘密共享的中间值了（原本应当分开加密再合并的
+                curr += float(xN_sub_avg1[j][i] + xN_sub_avg2[j][i]) / point_num; // 直接合并秘密共享的中间值了（原本应当分开加密再合并的
             var[i] = curr;
-        }// 看了下，如果合并再除法，中间结果快上亿了，估计会有运算错误，因此一边除法一边合并
+        } // 看了下，如果合并再除法，中间结果快上亿了，估计会有运算错误，因此一边除法一边合并
 
         // 加密，比较大小
-        vector<Ctxt> enc_var = c1.comparator->encrypt_vector(var);  // 加密方差
-        Ctxt ctxt_one = c1.comparator->gen_ctxt_one();              // 生成密文全1
-        
-        Ctxt max_var_index = c1.comparator->max_variance(enc_var, ctxt_one);          // 比较获取最大方差的维度
+        vector<Ctxt> enc_var = c1.comparator->encrypt_vector(var); // 加密方差
+        Ctxt ctxt_one = c1.comparator->gen_ctxt_one();             // 生成密文全1
+
+        Ctxt max_var_index = c1.comparator->max_variance(enc_var, ctxt_one); // 比较获取最大方差的维度
         // cout<<c1.comparator->decrypt_index(max_var_index);                            // 解密最大方差维度的下标
 
-        vector<int>N(c1.data_num);
-        for(int i=0;i<c1.data_num;i++){
+        vector<int> N(c1.data_num);
+        for (int i = 0; i < c1.data_num; i++)
+        {
             N[i] = c1.kd_tree[node_index].N[i] + c2.kd_tree[node_index].N[i];
         }
 
-        c2.divide_data_set(max_var_index, c1, N, point_num, node_index);    // 根据最大方差的维度划分数据
+        c2.divide_data_set(max_var_index, c1, N, point_num, node_index); // 根据最大方差的维度划分数据
 
         node_index++;
     }
@@ -509,7 +513,7 @@ int main()
 {
     setbuf(stdout, 0);
     // 初始化数据信息
-    int data_num = 10, dimension = 5;
+    int data_num = 20, dimension = 5;
     vector<point> point_list, c1_data, c2_data;
     // vector<point> point_list, c1_data, c2_data;
     // tmp_data(point_list);
@@ -535,7 +539,7 @@ int main()
     generate_kd_tree2(c1, c2);
 
     // 聚类过程
-//    filtering(c1, c2);
+    //    filtering(c1, c2);
 
     return 0;
 }

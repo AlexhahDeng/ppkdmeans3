@@ -28,10 +28,6 @@ helib/norms.h
 NTL/mat_ZZ.h
 -
 
-/home/dd/Ubu20/ppkdmeans3/func.cpp
-func.h
-/home/dd/Ubu20/ppkdmeans3/func.h
-
 /home/dd/Ubu20/ppkdmeans3/func.h
 iostream
 -
@@ -51,6 +47,18 @@ sstream
 -
 cloud.h
 /home/dd/Ubu20/ppkdmeans3/cloud.h
+
+/home/dd/Ubu20/ppkdmeans3/my_tools.h
+func.h
+/home/dd/Ubu20/ppkdmeans3/func.h
+
+/home/dd/Ubu20/ppkdmeans3/pp3.cpp
+iostream
+-
+time.h
+-
+my_tools.h
+/home/dd/Ubu20/ppkdmeans3/my_tools.h
 
 /home/dd/Ubu20/ppkdmeans3/tools.h
 iostream
