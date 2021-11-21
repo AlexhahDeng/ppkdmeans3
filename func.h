@@ -8,6 +8,7 @@
 #include <cmath>
 #include <fstream>
 #include <sstream>
+#include <time.h>
 #include "cloud.h"
 
 using namespace std;
@@ -65,11 +66,11 @@ void ini_candidate_k(cloud_one &c1, cloud_two &c2);
 void mul_clu_point_num(cloud_one& c1, cloud_two& c2);
 
 /**
- * @brief 向量内互不相同元素按顺序两两相乘，返回数组的size=2xk
+ * @brief 向量内互不相同元素按顺序两两相乘，返回数组的size=k
  * 
  * @param c1 
  * @param c2 
  * @param node_index 该节点到簇的距离
- * @return vector<vector<int>> (2*k)到每个簇的距离，两行为不同秘密共享值
+ * @return vector<int> 到每个簇的距离, 除去不在候选中心的距离-->设置为0
  */
-vector<vector<int>> cal_dist(cloud_one &c1, cloud_two &c2, int node_index);
+vector<int> cal_dist(cloud_one &c1, cloud_two &c2, int node_index, int& tot_can_num);

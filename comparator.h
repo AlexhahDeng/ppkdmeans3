@@ -9,7 +9,8 @@ Comparator class: creates all auxiliary information necessary to compare integer
 #include <helib/Ptxt.h>
 #include <helib/norms.h>
 #include <NTL/mat_ZZ.h>
-
+#include <time.h>
+#include <iomanip>
 using namespace std;
 using namespace NTL;
 using namespace helib;

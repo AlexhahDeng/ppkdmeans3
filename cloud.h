@@ -17,6 +17,7 @@ struct kd_node
     long int node_point_num;          // number of points in current node
     vector<int> N;                    // secret share of division info, size = data_num
     vector<int> node_sum_x;           // Σxi*Ni, size = dimension
+    vector<Ctxt> ctxt_node_sum;       // 记录密文和
     vector<Ctxt> node_min;            // store min value of every dimension in curr node, size = dimension 
     vector<Ctxt> node_max;            // store max value of every dimension in curr node, size = dimension 
     vector<Ctxt> ctxt_candi_k;        

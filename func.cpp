@@ -5,6 +5,7 @@ vector<point> read_data(int data_num, int dimension)
 	vector<point> result(data_num);
 	ifstream fp("data.csv");
 	string line;
+	
 
 	// getline(fp, line); // 跳过列名-->新数据没有列名
 	for (int i = 0; i < data_num; i++)
@@ -24,10 +25,10 @@ vector<point> read_data(int data_num, int dimension)
 			line_data[j] = atoi(number.c_str());
 		}
 
-		for(auto n:line_data){
-			cout<<n<<"  ";
-		}
-		cout<<endl;
+		// for(auto n:line_data){
+		// 	cout<<n<<"  ";
+		// }
+		// cout<<endl;
 		result[i] = {i, line_data};
 	}
 	fp.close();
@@ -318,10 +319,13 @@ void mul_clu_point_num(cloud_one &c1, cloud_two &c2)
 	return;
 }
 
-vector<vector<int>> cal_dist(cloud_one &c1, cloud_two &c2, int node_index)
+// 直接返回合并秘密共享的结果，以及和n乘的结果
+vector<int> cal_dist(cloud_one &c1, cloud_two &c2, int node_index, int& tot_can_num)
 {
-	vector<vector<int>> result(2, vector<int>(c1.k));
-
+	
+	vector<int> result(c1.k, 0);
+//	clock_t start, end;
+//	start = clock();
 	for (int i = 0; i < c1.k; ++i)
 	{
 		vector<vector<int>> ef1 = c1.calculate_dist_para_ef(node_index, i);
@@ -349,10 +353,13 @@ vector<vector<int>> cal_dist(cloud_one &c1, cloud_two &c2, int node_index)
 		}
 
 		// 计算到簇k距离最终结果
-		result[0][i] = c1.calculate_dist_res(ef1);
-		result[1][i] = c2.calculate_dist_res(ef1);
+		int n = c1.kd_tree[node_index].candidate_k[i] + c1.kd_tree[node_index].candidate_k[i];	// 是否已被prune
+		tot_can_num += n;
+		result[i] = (c1.calculate_dist_res(ef1) + c2.calculate_dist_res(ef1)) * n;
 
 	} // 计算中心到第i个簇的距离
+//	end = clock();
+//	cout<<std::fixed<<"计算距离的时间："<<(double)(end - start) / CLOCKS_PER_SEC << endl;
 
 	return result;
 }

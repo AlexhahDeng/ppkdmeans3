@@ -30,10 +30,10 @@ void read_data(int data_num, int dimension){
 			line_data[j]=atoi(number.c_str());
 		}
 
-		for(auto n:line_data){
-			cout<<n<<"  ";
-		}
-		cout<<endl;
+//		for(auto n:line_data){
+//			cout<<n<<"  ";
+//		}
+//		cout<<endl;
 		result[i]={i, line_data};
 	}
 }

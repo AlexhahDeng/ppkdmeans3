@@ -1,7 +1,7 @@
 #include <iostream>
-
+#include <time.h>
 #include "my_tools.h"
-
+#include <iomanip>
 // some parameters for quick testing
 // B 7 1 75 90 1 10 y
 // B 7 1 300 90 1 10 y
@@ -13,16 +13,32 @@ int main(){
 	int runs = 1;
 
 	vector<Ctxt>test();
-	vector<long int>tmp{5,4,8,255,5};
+	vector<long int>tmp{2,4,8,255,5};
 	Ctxt ctxt_one = comparator->gen_ctxt_one();
 
 	vector<Ctxt>ctxt_vec = comparator->encrypt_vector(tmp);
+
+	clock_t start, end;
+	start = clock();
+	// ctxt_vec[0].multiplyBy(ctxt_vec[1]);
+	ctxt_vec[0] *= ctxt_vec[1];
+	ctxt_vec[0] *= ctxt_vec[1];
+	ctxt_vec[0] *= ctxt_vec[1];
+	ctxt_vec[0] *= ctxt_vec[1];
+	ctxt_vec[0] *= ctxt_vec[1];
+	ctxt_vec[0] *= ctxt_vec[1];
+	ctxt_vec[0] *= ctxt_vec[1];
+
+	end = clock();
+	cout<<comparator->decrypt_index(ctxt_vec[0])<<endl;
+
+	cout<<std::fixed<<(double)(end - start)/CLOCKS_PER_SEC<<"s"<<endl;
 	// comparator->compare(ctxt_vec[2], ctxt_vec[1], ctxt_vec[0]);
-	ctxt_vec[1] -= ctxt_vec[2];
-	comparator->print_decrypted(ctxt_vec[3]);
-	ctxt_vec[3] *= 1l;
-	cout<<"mul 1"<<endl;
-	comparator->print_decrypted(ctxt_vec[3]);
+	// ctxt_vec[1] -= ctxt_vec[2];
+	// comparator->print_decrypted(ctxt_vec[3]);
+	// ctxt_vec[3] *= 1l;
+	// cout<<"mul 1"<<endl;
+	// comparator->print_decrypted(ctxt_vec[3]);
 
 	// comparator->compare(ctxt_vec[2], ctxt_vec[3], ctxt_vec[1]);
 	// comparator->print_decrypted(ctxt_vec[2]);

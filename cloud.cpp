@@ -383,8 +383,8 @@ void cloud_two::add_new_node(vector<int> N, int point_num, vector<kd_node> &c1_k
         // UPDATE: 只能做加减法，不然后续乘法部分会出错哦！
     }
 
-    c1_kdtree.push_back({point_num, N1, vector<int>(dimension), vector<Ctxt>(), vector<Ctxt>(), vector<Ctxt>(), vector<int>(k)});
-    c2_kdtree.push_back({point_num, N2, vector<int>(dimension), vector<Ctxt>(), vector<Ctxt>(), vector<Ctxt>(), vector<int>(k)});
+    c1_kdtree.push_back({point_num, N1, vector<int>(dimension), vector<Ctxt>(), vector<Ctxt>(), vector<Ctxt>(), vector<Ctxt>(), vector<int>(k)});
+    c2_kdtree.push_back({point_num, N2, vector<int>(dimension), vector<Ctxt>(), vector<Ctxt>(), vector<Ctxt>(), vector<Ctxt>(), vector<int>(k)});
 }
 
 vector<int> cloud_two::calculate_mul_final(vector<vector<int>> &ef)
