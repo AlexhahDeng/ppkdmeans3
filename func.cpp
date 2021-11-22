@@ -224,12 +224,11 @@ void ini_candidate_k(cloud_one &c1, cloud_two &c2)
 	vector<int> candidate1(c1.k);
 	vector<int> candidate2(c2.k);
 
-	srand(time(NULL));
 	for (int i = 0; i < c1.k; i++)
 	{
-		candidate1[i] = rand() % 2;
-		candidate2[i] = 1 - candidate1[i];
-	} //一开始候选集全部成立
+		candidate1[i] = 1;
+		candidate2[i] = 0;
+	} //一开始候选集全部成立-->心中随机
 
 	c1.kd_tree[0].candidate_k = candidate1;
 	c2.kd_tree[0].candidate_k = candidate2;
@@ -353,7 +352,7 @@ vector<int> cal_dist(cloud_one &c1, cloud_two &c2, int node_index, int& tot_can_
 		}
 
 		// 计算到簇k距离最终结果
-		int n = c1.kd_tree[node_index].candidate_k[i] + c1.kd_tree[node_index].candidate_k[i];	// 是否已被prune
+		int n = c1.kd_tree[node_index].candidate_k[i] + c2.kd_tree[node_index].candidate_k[i];	// 是否已被prune
 		tot_can_num += n;
 		result[i] = (c1.calculate_dist_res(ef1) + c2.calculate_dist_res(ef1)) * n;
 

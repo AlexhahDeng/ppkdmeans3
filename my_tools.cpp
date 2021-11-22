@@ -265,8 +265,7 @@ vector<Ctxt> Comparator::encrypt_vector(vector<int> x)
 		if (input_x > input_range)
 		{
 			cout << input_x << " 数据超过加密范围..." << endl;
-			input_x = x[i] % input_range; // FIXME 超过范围还没想到很好的办法，现在就简单粗暴，直接mod范围，肯定是有问题的
-										  // exit(0);
+			input_x = input_range - 1; // FIXME 超过范围就直接设置成最大值，对于比较基本没啥影响
 		}
 
 		if (m_verbose)

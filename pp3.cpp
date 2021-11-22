@@ -170,6 +170,7 @@ void filtering(cloud_one &c1, cloud_two &c2)
     Ctxt ctxt_zero = ctxt_one;                     // 构造密文0
     ctxt_zero *= 0l;
     Ctxt less_than = ctxt_one;
+
     while (true)
     { // 一轮迭代
         clock_t start, end;
@@ -188,12 +189,14 @@ void filtering(cloud_one &c1, cloud_two &c2)
         start = clock();
         for (int i = 0; i < c1.kd_tree.size(); i++) // 遍历kd tree 所有节点
         {
-            // cout<<endl<<"this is node "<<i<<endl;
+//             cout<<endl<<"正在聚类节点 "<<i<<endl;
             if (c1.kd_tree[i].isClustered)
             {
-                c1.kd_tree[2 * i + 1].isClustered = true;
-                c1.kd_tree[2 * i + 2].isClustered = true;
-                cout << "已经划分好，跳过！" << endl;
+                if(2 * i + 1 < c1.kd_tree.size())
+                    c1.kd_tree[2 * i + 1].isClustered = true;
+                if(2 * i + 2 < c2.kd_tree.size())
+                    c1.kd_tree[2 * i + 2].isClustered = true;
+//                cout << "已经划分好，跳过！" << endl;
                 continue;
             } // 如果已经被划分了则不再继续划分,并且标识子节点不再划分
 
@@ -202,10 +205,11 @@ void filtering(cloud_one &c1, cloud_two &c2)
             // 计算中心到每个簇中心的距离, size = k -->其实也可以直接合并后加密啦……emmm也不太影响嘛
 
             vector<Ctxt> ctxt_dist = c1.comparator->encrypt_vector(dist);
-            // 加密距离-->可能面临超过范围的问题-->真费时间，差不多平均0.005s了
+            // 加密距离-->可能面临超过范围的问题-->真费时间，差不多平均0.005s了-->但是没办法，必须要加密距离然后比较哇！
 
             vector<Ctxt> min_dist_index = c1.comparator->min_dist(ctxt_dist, ctxt_one); // TODO 太慢了需要优化时间
             // 处理0影响的方法-->对每个距离密文增加一个近似最大值，0就变成了最大值，但是其他的会被模，相对大小不改变
+//            c1.comparator->print_ctxt_info("最近簇中心", min_dist_index);
 
             // 根据是否为叶子节点分不同情况处理
             if (c1.kd_tree[i].node_point_num > 3) // 非叶子节点
@@ -227,12 +231,13 @@ void filtering(cloud_one &c1, cloud_two &c2)
                 vector<Ctxt> v(c1.dimension, ctxt_one);
 
                 //* 遍历所有的簇中心，prune掉距离更远的-->uu们，这波感觉可以并行啊
+//                cout<<endl<<"prune result "<<endl;
                 for (int j = 0; j < c1.k; j++)
                 {
                     for (int k = 0; k < c1.dimension; k++)
                     {
                         Ctxt u = c1.ctxt_clu_cen[j][k];
-                        u -= k_closest[k];                               // u[k] = z[k] - z*[k]
+                        u -= k_closest[k];                                  // u[k] = z[k] - z*[k]
                         c1.comparator->compare(less_than, u, ctxt_zero); // u[i] < 0?
 
                         long com_res = c1.comparator->dec_compare_res(less_than); // 解密结果tmd
@@ -263,22 +268,24 @@ void filtering(cloud_one &c1, cloud_two &c2)
 
                     c1.comparator->compare(less_than, ctxt_d1, ctxt_d2);  // dist(v,z*)<dist(v,z)?
                     long res = c1.comparator->dec_compare_res(less_than); // 1-prune 0-not prune
+//                    cout<<res<<" ";
 
                     for (int k = 0; k < c1.dimension; k++)
                     {
-                        c1.kd_tree[i].candidate_k[j] = 1 - res;
-                        c2.kd_tree[i].candidate_k[j] = 0;
+                        c1.kd_tree[i].candidate_k[j] *= (1 - res);
+                        c2.kd_tree[i].candidate_k[j] *= 0;
 
-                        c1.kd_tree[2 * i + 1].candidate_k[j] = 1 - res;
-                        c2.kd_tree[2 * i + 1].candidate_k[j] = 0; // 心中随机即可
+                        c1.kd_tree[2 * i + 1].candidate_k[j] = c1.kd_tree[i].candidate_k[j];
+                        c2.kd_tree[2 * i + 1].candidate_k[j] = c2.kd_tree[i].candidate_k[j]; // 心中随机即可
 
-                        c1.kd_tree[2 * i + 2].candidate_k[j] = 1 - res;
-                        c2.kd_tree[2 * i + 2].candidate_k[j] = 0; // 心中随机即可
-                    }                                             //* 修改当前node和子node的候选中心
+                        c1.kd_tree[2 * i + 2].candidate_k[j] = c1.kd_tree[i].candidate_k[j];
+                        c2.kd_tree[2 * i + 2].candidate_k[j] = c2.kd_tree[i].candidate_k[j]; // 心中随机即可
+                    }//* 修改当前node和子node的候选中心
 
                     tot_candidate_k -= res;
                     // 如果簇被prune，候选中心数目减少,当然论文里面咱们不能这么做
                 }
+//                cout<<endl;
 
                 // 判断候选candidate是否只包含一个簇
                 if (tot_candidate_k <= 1)
@@ -303,8 +310,10 @@ void filtering(cloud_one &c1, cloud_two &c2)
 
                     // 标记当前和子节点信息
                     c1.kd_tree[i].isClustered = true;
-                    c1.kd_tree[2 * i + 1].isClustered = true;
-                    c1.kd_tree[2 * i + 2].isClustered = true;
+                    if(2 * i + 1 < c1.kd_tree.size())
+                        c1.kd_tree[2 * i + 1].isClustered = true;
+                    if(2 * i + 2 < c2.kd_tree.size())
+                        c1.kd_tree[2 * i + 2].isClustered = true;
 
                 } // 更新簇信息，并且标识当前node和子node都不再进行聚类
                 // e1 = clock();
@@ -346,7 +355,7 @@ void generate_kd_tree2(cloud_one &c1, cloud_two &c2)
 
     while (node_index < c1.kd_tree.size())
     {
-        cout << "node index is " << node_index << endl;
+        cout << "生成kd tree 节点 " << node_index << endl;
 
         int point_num = c1.kd_tree[node_index].node_point_num; // 获取当前tree node包含的点个数
 
@@ -388,10 +397,11 @@ void generate_kd_tree2(cloud_one &c1, cloud_two &c2)
             c1.kd_tree[node_index].node_sum_x[i] = avg_xN1[i];
             c2.kd_tree[node_index].node_sum_x[i] = avg_xN2[i];
 
+            ptxt_xN[i] = avg_xN1[i] + avg_xN2[i]; // 记录明文Σxi*Ni，不可以是均值！
+
             avg_xN1[i] /= point_num;
             avg_xN2[i] /= point_num;
 
-            ptxt_xN[i] = avg_xN1[i] + avg_xN2[i]; // 记录明文Σxi*Ni
 
         } // 果然最后做除法，误差比下面的方法小到了小数级别
 
@@ -484,7 +494,7 @@ int main()
 {
     setbuf(stdout, 0);
     // 初始化数据信息
-    int data_num = 500, dimension = 5;
+    int data_num =8192,  dimension = 5;
     vector<point> point_list, c1_data, c2_data;
     // vector<point> point_list, c1_data, c2_data;
     // tmp_data(point_list);
