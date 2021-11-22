@@ -382,9 +382,10 @@ void cloud_two::add_new_node(vector<int> N, int point_num, vector<kd_node> &c1_k
         // 不是做的加减法，是做的异或！
         // UPDATE: 只能做加减法，不然后续乘法部分会出错哦！
     }
+    vector<Ctxt>ctxt_node_point=comparator->encrypt_vector(vector<int>{point_num});
 
-    c1_kdtree.push_back({point_num, N1, vector<int>(dimension), vector<Ctxt>(), vector<Ctxt>(), vector<Ctxt>(), vector<Ctxt>(), vector<int>(k)});
-    c2_kdtree.push_back({point_num, N2, vector<int>(dimension), vector<Ctxt>(), vector<Ctxt>(), vector<Ctxt>(), vector<Ctxt>(), vector<int>(k)});
+    c1_kdtree.push_back({point_num, ctxt_node_point, N1, vector<int>(dimension), vector<Ctxt>(), vector<Ctxt>(), vector<Ctxt>(), vector<Ctxt>(), vector<int>(k)});
+    c2_kdtree.push_back({point_num, ctxt_node_point, N2, vector<int>(dimension), vector<Ctxt>(), vector<Ctxt>(), vector<Ctxt>(), vector<Ctxt>(), vector<int>(k)});
 }
 
 vector<int> cloud_two::calculate_mul_final(vector<vector<int>> &ef)

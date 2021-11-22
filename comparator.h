@@ -179,7 +179,7 @@ public:
   // test compare function 'runs' times
   void test_compare(long runs) const;
 
-  // test min/max function 'runs' times
+  // test min/max function 'pruns' times
   void test_min_max(long runs) const;
 
   // test compare function 'runs' times
@@ -213,6 +213,8 @@ public:
   long int dec_compare_res(Ctxt ctxt);
 
   void print_ctxt_info(string msg, vector<Ctxt>ctxt);
+
+  vector<Ctxt> encrypt_dist(vector<int> x);
 
 
 };

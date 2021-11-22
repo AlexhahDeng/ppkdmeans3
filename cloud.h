@@ -15,6 +15,7 @@ struct point
 struct kd_node
 {
     long int node_point_num;          // number of points in current node
+    vector<Ctxt>ctxt_node_point_num;
     vector<int> N;                    // secret share of division info, size = data_num
     vector<int> node_sum_x;           // Σxi*Ni, size = dimension
     vector<Ctxt> ctxt_node_sum;       // 记录密文和

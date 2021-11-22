@@ -319,7 +319,7 @@ void mul_clu_point_num(cloud_one &c1, cloud_two &c2)
 }
 
 // 直接返回合并秘密共享的结果，以及和n乘的结果
-vector<int> cal_dist(cloud_one &c1, cloud_two &c2, int node_index, int& tot_can_num)
+vector<int> cal_dist(cloud_one &c1, cloud_two &c2, int node_index, int tot_can_num)
 {
 	
 	vector<int> result(c1.k, 0);
