@@ -240,7 +240,7 @@ void filtering(cloud_one &c1, cloud_two &c2)
                         c1.comparator->compare(less_than, u, ctxt_zero); // u[i] < 0?
 
                         long com_res = c1.comparator->dec_compare_res(less_than); // 解密结果tmd
-
+                        cout<<com_res<<" ";
                         Ctxt mid_res = c1.kd_tree[i].node_min[k];
                         mid_res *= com_res; // LT(u[i],0)*(c_min)
                         v[k] = mid_res;
@@ -248,7 +248,8 @@ void filtering(cloud_one &c1, cloud_two &c2)
                         mid_res = c1.kd_tree[i].node_max[k];
                         mid_res *= (1l - com_res); //(1-LT(u[i],0))*(c_max)
                         v[k] += mid_res;
-                    } //* 首先计算当前簇对应的u
+                    } //* 首先计算当前簇对应的v
+                    c1.comparator->print_ctxt_info("v is", v);
 
                     Ctxt ctxt_d1 = ctxt_zero, ctxt_d2 = ctxt_zero;
 
@@ -265,10 +266,10 @@ void filtering(cloud_one &c1, cloud_two &c2)
                         ctxt_d2 += curr;
                     } //* 计算dist(v,z*), dist(v,z)
 
+                    c1.comparator->print_ctxt_info("距离结果: ", vector<Ctxt>{ctxt_d1, ctxt_d2});
                     c1.comparator->compare(less_than, ctxt_d1, ctxt_d2);  // dist(v,z*)<dist(v,z)?
                     long res = c1.comparator->dec_compare_res(less_than); // 1-prune 0-not prune
-                    cout<<res<<" ";
-
+                    cout<<res<<endl;
                     for (int k = 0; k < c1.dimension; k++)
                     {
                         c1.kd_tree[i].candidate_k[j] *= (1 - res);
@@ -499,7 +500,7 @@ int main()
     setbuf(stdout, 0);
 
     // 初始化数据信息
-    int data_num = 30, dimension = 5;
+    int data_num = 20, dimension = 5;
     vector<point> point_list, c1_data, c2_data;
     // vector<point> point_list, c1_data, c2_data;
     // tmp_data(point_list);
