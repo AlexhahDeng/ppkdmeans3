@@ -99,7 +99,7 @@ void generate_kd_tree(cloud_one &c1, cloud_two &c2)
         // 1. 首先计算(Σxi*Ni)^2， Σ(xi*Ni)^2
         vector<int> sum_xN1(c1.dimension, 0), sum_xN2(sum_xN1), sum_xN1_sq(sum_xN1), sum_xN2_sq(sum_xN1);
 
-        vector<int>ptxt_xN(sum_xN1);
+        vector<int> ptxt_xN(sum_xN1);
         for (int i = 0; i < c1.dimension; ++i)
         {
             for (int j = 0; j < c1.data_num; ++j)
@@ -109,14 +109,12 @@ void generate_kd_tree(cloud_one &c1, cloud_two &c2)
                 sum_xN1_sq[i] += xN1_sq[j][i];
                 sum_xN2_sq[i] += xN2_sq[j][i];
             }
-            ptxt_xN[i] = sum_xN1[i]+sum_xN2[i];//记录明文ΣxN
+            ptxt_xN[i] = sum_xN1[i] + sum_xN2[i]; //记录明文ΣxN
         }
 
         //* 将(Σxi*Ni)补充到kd_node中
         c1.kd_tree[N_index].node_sum_x = sum_xN1;
         c2.kd_tree[N_index].node_sum_x = sum_xN2;
-
-
 
         // 2. 再用一个beaver 三元组，算(Σxi*Ni)^2.
         vector<vector<int>> ef1(c1.dimension, vector<int>(2)), ef2(ef1); // u1s1，我刚刚怎么没想到用一个二维数组存放ef，反正都在同一边！
@@ -166,10 +164,10 @@ void generate_kd_tree(cloud_one &c1, cloud_two &c2)
 void filtering(cloud_one &c1, cloud_two &c2)
 {
 
-    ini_clu_cen(c1, c2);     // 初始化簇中心（同时加密存放在c1中），存放在cloud中
-    ini_candidate_k(c1, c2); // 初始化候选集和簇中点数，存放在kd_node中
+    ini_clu_cen(c1, c2);                           // 初始化簇中心（同时加密存放在c1中），存放在cloud中
+    ini_candidate_k(c1, c2);                       // 初始化候选集和簇中点数，存放在kd_node中
     Ctxt ctxt_one = c1.comparator->gen_ctxt_one(); //目前没什么用，但是懒得改函数了-->用时将近0.001s
-    Ctxt ctxt_zero = ctxt_one; // 构造密文0
+    Ctxt ctxt_zero = ctxt_one;                     // 构造密文0
     ctxt_zero *= 0l;
     Ctxt less_than = ctxt_one;
     while (true)
@@ -187,7 +185,6 @@ void filtering(cloud_one &c1, cloud_two &c2)
         //? 存在的问题是-->中间累加的结果可能会超过加密的范围，所以我们简化问题
         // 直接存储明文结果把！
 
-
         start = clock();
         for (int i = 0; i < c1.kd_tree.size(); i++) // 遍历kd tree 所有节点
         {
@@ -196,7 +193,7 @@ void filtering(cloud_one &c1, cloud_two &c2)
             {
                 c1.kd_tree[2 * i + 1].isClustered = true;
                 c1.kd_tree[2 * i + 2].isClustered = true;
-                cout<<"已经划分好，跳过！"<<endl;
+                cout << "已经划分好，跳过！" << endl;
                 continue;
             } // 如果已经被划分了则不再继续划分,并且标识子节点不再划分
 
@@ -207,7 +204,7 @@ void filtering(cloud_one &c1, cloud_two &c2)
             vector<Ctxt> ctxt_dist = c1.comparator->encrypt_vector(dist);
             // 加密距离-->可能面临超过范围的问题-->真费时间，差不多平均0.005s了
 
-            vector<Ctxt> min_dist_index = c1.comparator->min_dist(ctxt_dist, ctxt_one);//TODO 太慢了需要优化时间
+            vector<Ctxt> min_dist_index = c1.comparator->min_dist(ctxt_dist, ctxt_one); // TODO 太慢了需要优化时间
             // 处理0影响的方法-->对每个距离密文增加一个近似最大值，0就变成了最大值，但是其他的会被模，相对大小不改变
 
             // 根据是否为叶子节点分不同情况处理
@@ -230,7 +227,7 @@ void filtering(cloud_one &c1, cloud_two &c2)
                 vector<Ctxt> v(c1.dimension, ctxt_one);
 
                 //* 遍历所有的簇中心，prune掉距离更远的-->uu们，这波感觉可以并行啊
-                for (int j = 0; j < c1.k; j++) 
+                for (int j = 0; j < c1.k; j++)
                 {
                     for (int k = 0; k < c1.dimension; k++)
                     {
@@ -238,8 +235,7 @@ void filtering(cloud_one &c1, cloud_two &c2)
                         u -= k_closest[k];                               // u[k] = z[k] - z*[k]
                         c1.comparator->compare(less_than, u, ctxt_zero); // u[i] < 0?
 
-                        
-                        long com_res = c1.comparator->dec_compare_res(less_than);// 解密结果tmd
+                        long com_res = c1.comparator->dec_compare_res(less_than); // 解密结果tmd
 
                         Ctxt mid_res = c1.kd_tree[i].node_min[k];
                         mid_res *= com_res; // LT(u[i],0)*(c_min)
@@ -267,7 +263,7 @@ void filtering(cloud_one &c1, cloud_two &c2)
 
                     c1.comparator->compare(less_than, ctxt_d1, ctxt_d2);  // dist(v,z*)<dist(v,z)?
                     long res = c1.comparator->dec_compare_res(less_than); // 1-prune 0-not prune
-                    
+
                     for (int k = 0; k < c1.dimension; k++)
                     {
                         c1.kd_tree[i].candidate_k[j] = 1 - res;
@@ -278,7 +274,7 @@ void filtering(cloud_one &c1, cloud_two &c2)
 
                         c1.kd_tree[2 * i + 2].candidate_k[j] = 1 - res;
                         c2.kd_tree[2 * i + 2].candidate_k[j] = 0; // 心中随机即可
-                    }//* 修改当前node和子node的候选中心
+                    }                                             //* 修改当前node和子node的候选中心
 
                     tot_candidate_k -= res;
                     // 如果簇被prune，候选中心数目减少,当然论文里面咱们不能这么做
@@ -294,7 +290,7 @@ void filtering(cloud_one &c1, cloud_two &c2)
                         for (int k = 0; k < c1.dimension; k++)
                         {
                             Ctxt curr = ctxt_node_cen[k];
-                            curr *= min_dist_index[j];// node每一个维度与对应k的min_dist结果相乘, be like {c1...cd}*0/1
+                            curr *= min_dist_index[j]; // node每一个维度与对应k的min_dist结果相乘, be like {c1...cd}*0/1
 
                             new_clu_cen[j][k] += curr;
                         }
@@ -323,7 +319,7 @@ void filtering(cloud_one &c1, cloud_two &c2)
                     for (int k = 0; k < c1.dimension; k++)
                     {
                         Ctxt curr = ctxt_node_cen[k];
-                        curr *= min_dist_index[j];// node每一个维度与对应k的min_dist结果相乘, be like {c1...cd}*0/1
+                        curr *= min_dist_index[j]; // node每一个维度与对应k的min_dist结果相乘, be like {c1...cd}*0/1
 
                         new_clu_cen[j][k] += curr;
                     }
@@ -379,7 +375,7 @@ void generate_kd_tree2(cloud_one &c1, cloud_two &c2)
 
         //* 计算平均值ΣxN1/n ΣxN2/n
         vector<int> avg_xN1(c1.dimension, 0), avg_xN2(c1.dimension, 0);
-        vector<int>ptxt_xN(avg_xN1);
+        vector<int> ptxt_xN(avg_xN1);
         for (int i = 0; i < c1.dimension; i++)
         {
             for (int j = 0; j < c1.data_num; j++)
@@ -395,7 +391,7 @@ void generate_kd_tree2(cloud_one &c1, cloud_two &c2)
             avg_xN1[i] /= point_num;
             avg_xN2[i] /= point_num;
 
-            ptxt_xN[i]=avg_xN1[i]+avg_xN2[i];// 记录明文Σxi*Ni 
+            ptxt_xN[i] = avg_xN1[i] + avg_xN2[i]; // 记录明文Σxi*Ni
 
         } // 果然最后做除法，误差比下面的方法小到了小数级别
 
@@ -488,7 +484,7 @@ int main()
 {
     setbuf(stdout, 0);
     // 初始化数据信息
-    int data_num = 25, dimension = 5;
+    int data_num = 500, dimension = 5;
     vector<point> point_list, c1_data, c2_data;
     // vector<point> point_list, c1_data, c2_data;
     // tmp_data(point_list);
@@ -496,7 +492,7 @@ int main()
     point_list = read_data(data_num, dimension);
 
     vector<vector<int>> sorted_index = sort_data(point_list);
-    
+
     // 划分原始数据，用于秘密共享
     divide_data(point_list, 10000, c1_data, c2_data);
 
@@ -512,7 +508,15 @@ int main()
 
     // 构造kd tree
     generate_kd_tree2(c1, c2);
-
+//    int node_sum=0, ran_index = 400;
+//    for (int i = 0; i < data_num; i++)
+//    {
+//        if(c1.kd_tree[ran_index].N[i] + c2.kd_tree[ran_index].N[i]==1)
+//            node_sum +=point_list[i].data[0];
+//        cout<<c1.kd_tree[ran_index].N[i] + c2.kd_tree[ran_index].N[i];
+//    }
+//    cout<<endl<<"true node sum "<<node_sum<<endl;
+//    cout<<"cal node sum "<< c1.kd_tree[ran_index].node_sum_x[0]+c2.kd_tree[ran_index].node_sum_x[0];
     // 聚类过程
     filtering(c1, c2);
 

@@ -209,3 +209,7 @@ $\sum_{i=1}^{d}\left(\alpha c_{i}-\alpha_{j} k_{j i}\right)^{2}=\alpha^{2} \sum 
 分析用时长的原因中……
 * 计算距离的caldist 总体耗时在0.0000xx秒这个量级，影响较小--排除
 * SOS密文乘法真的好慢！multiplyBy乘法一次需要，0.003s大概，但是*=就快很多，大概0.0000x秒
+
+
+waterbottle
+waterbottlewaterbottle
