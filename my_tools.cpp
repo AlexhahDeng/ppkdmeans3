@@ -377,11 +377,15 @@ vector<Ctxt> Comparator::encrypt_dist(vector<int> x)
 			exit(0);
 		}
 
-		if (input_x > input_range || input_x == 0)
+		if (input_x > input_range )
 		{
 			cout << input_x << " 距离超过加密范围..." << endl;
 			input_x = input_range - 1; // FIXME 超过范围就直接设置成最大值
-		}// 特别处理，如果距离为0，就设为max
+		}
+
+		if(input_x == 0){
+			input_x = input_range - 1; 
+		}//SOLUTION 特别处理，如果距离为0，就设为max
 
 		if (m_verbose)
 		{

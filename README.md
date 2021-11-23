@@ -213,3 +213,4 @@ $\sum_{i=1}^{d}\left(\alpha c_{i}-\alpha_{j} k_{j i}\right)^{2}=\alpha^{2} \sum 
 
 waterbottle
 waterbottlewaterbottle
+

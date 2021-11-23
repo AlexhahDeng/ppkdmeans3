@@ -209,6 +209,7 @@ void filtering(cloud_one &c1, cloud_two &c2)
 
             vector<Ctxt> min_dist_index = c1.comparator->min_dist(ctxt_dist, ctxt_one); // TODO 太慢了需要优化时间
             // 处理0影响的方法-->对每个距离密文增加一个近似最大值，0就变成了最大值，但是其他的会被模，相对大小不改变
+
             c1.comparator->print_ctxt_info("最近簇中心", min_dist_index);
 
 
@@ -230,17 +231,16 @@ void filtering(cloud_one &c1, cloud_two &c2)
                 vector<Ctxt> v(c1.dimension, ctxt_one);
 
                 //* 遍历所有的簇中心，prune掉距离更远的-->uu们，这波感觉可以并行啊
-                cout<<endl<<"prune result "<<endl;
+//                cout<<endl<<"prune result "<<endl;
                 for (int j = 0; j < c1.k; j++)
                 {
+                    cout<<endl<<"cluster "<<j<<" prune result "<<endl;
+
                     for (int k = 0; k < c1.dimension; k++)
                     {
-                        Ctxt u = c1.ctxt_clu_cen[j][k];
-                        u -= k_closest[k];                               // u[k] = z[k] - z*[k]
-                        c1.comparator->compare(less_than, u, ctxt_zero); // u[i] < 0?
-
+                        c1.comparator->compare(less_than, c1.ctxt_clu_cen[j][k], k_closest[k]); // z[k] < z*[k]?
                         long com_res = c1.comparator->dec_compare_res(less_than); // 解密结果tmd
-                        cout<<com_res<<" ";
+
                         Ctxt mid_res = c1.kd_tree[i].node_min[k];
                         mid_res *= com_res; // LT(u[i],0)*(c_min)
                         v[k] = mid_res;
@@ -249,7 +249,7 @@ void filtering(cloud_one &c1, cloud_two &c2)
                         mid_res *= (1l - com_res); //(1-LT(u[i],0))*(c_max)
                         v[k] += mid_res;
                     } //* 首先计算当前簇对应的v
-                    c1.comparator->print_ctxt_info("v is", v);
+//                    c1.comparator->print_ctxt_info("\n v is", v);
 
                     Ctxt ctxt_d1 = ctxt_zero, ctxt_d2 = ctxt_zero;
 
@@ -257,19 +257,22 @@ void filtering(cloud_one &c1, cloud_two &c2)
                     {
                         Ctxt curr = k_closest[k];
                         curr -= v[k]; // (cloest_ki - vi)
-                        curr *= curr; // (cloest_ki - vi)^2
+                        curr.multiplyBy(curr); // (cloest_ki - vi)^2
                         ctxt_d1 += curr;
 
                         curr = c1.ctxt_clu_cen[j][k];
                         curr -= v[k]; // (ki - vi)
-                        curr *= curr; // (ki - vi)**2
+                        curr.multiplyBy(curr); // (ki - vi)**2
                         ctxt_d2 += curr;
                     } //* 计算dist(v,z*), dist(v,z)
 
                     c1.comparator->print_ctxt_info("距离结果: ", vector<Ctxt>{ctxt_d1, ctxt_d2});
+
                     c1.comparator->compare(less_than, ctxt_d1, ctxt_d2);  // dist(v,z*)<dist(v,z)?
                     long res = c1.comparator->dec_compare_res(less_than); // 1-prune 0-not prune
-                    cout<<res<<endl;
+                    c1.comparator->print_decrypted(ctxt_d1);
+                    c1.comparator->print_decrypted(ctxt_d2);
+                    cout<<res<<" ";
                     for (int k = 0; k < c1.dimension; k++)
                     {
                         c1.kd_tree[i].candidate_k[j] *= (1 - res);
