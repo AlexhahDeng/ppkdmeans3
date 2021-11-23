@@ -74,3 +74,8 @@ void mul_clu_point_num(cloud_one& c1, cloud_two& c2);
  * @return vector<int> 到每个簇的距离, 除去不在候选中心的距离-->设置为0
  */
 vector<int> cal_dist(cloud_one &c1, cloud_two &c2, int node_index, int tot_can_num);
+
+
+vector<vector<int>> cal_v_znum(cloud_one &c1, cloud_two &c2, vector<int> v1, vector<int> v2, int k_index);
+
+vector<int> cal_vz_sqaure(cloud_one &c1, cloud_two &c2, vector<vector<int>>vz, int k_index);

@@ -18,6 +18,8 @@ struct kd_node
     vector<Ctxt>ctxt_node_point_num;
     vector<int> N;                    // secret share of division info, size = data_num
     vector<int> node_sum_x;           // Σxi*Ni, size = dimension
+    vector<int> ptxt_node_min;        // 记录明文node中的最大最小值-->麻了，不ss了
+    vector<int> ptxt_node_max;
     vector<Ctxt> ctxt_node_sum;       // 记录密文和
     vector<Ctxt> node_min;            // store min value of every dimension in curr node, size = dimension 
     vector<Ctxt> node_max;            // store max value of every dimension in curr node, size = dimension 
@@ -40,7 +42,7 @@ public:
     vector<kd_node> kd_tree;         // store data division info
 
     vector<vector<int>> clu_cen;     // size = k × dimension, no need to initialize
-    vector<int>clu_point_num;        // len = k, update during iteration, 每次在算完α后，重置为0
+    vector<int>clu_point_num;        // len = k, update during iteration
     vector<int>mul_point_num;        // multiply the number of points in clusters
 
     cloud(vector<point> point_list, int data_num, int dimension, Comparator *comparator, int k);
@@ -72,7 +74,11 @@ public:
     // 计算avg*Ni --> size= data_num*dimension
     void calculate_avg_N(vector<vector<int>>&e, vector<vector<int>>&f, vector<int>avg, int node_index);
 
-    
+    // 计算v*|z|的中间结果
+    vector<vector<int>> cal_vznum_ef(vector<int>v, int k_index);
+
+    // 计算自己的平方！
+    vector<vector<int>> cal_vec_square(vector<int>arr);
 };
 
 class cloud_one : public cloud
@@ -105,6 +111,11 @@ public:
     // cloud one calculate final distance result
     int calculate_dist_res(vector<vector<int>>ef);
 
+    // cal v*|z| final res
+    vector<int> cal_vznum_final(vector<vector<int>>ef);
+
+    //cal square final
+    vector<int> cal_square_final(vector<vector<int>>ef);
 };
 
 class cloud_two : public cloud
@@ -156,6 +167,8 @@ public:
     int calculate_dist_res(vector<vector<int>>ef);
 
     //
+    vector<int> cal_vznum_final(vector<vector<int>>ef);
 
-
+    vector<int> cal_square_final(vector<vector<int>>ef);
+    
 };

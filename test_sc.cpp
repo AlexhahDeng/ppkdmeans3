@@ -12,21 +12,22 @@ int main(){
 
 	int runs = 1;
 
-	vector<long int>tmp{9,10,9,255,5,117648};
-	Ctxt ctxt_one = comparator->gen_ctxt_one();
-	Ctxt ctxt_zero = ctxt_one;
-	ctxt_zero *= 0l;
-	Ctxt lessthan = ctxt_zero;
+	vector<long int>tmp{100,10,9,255,5,117645};
 
 	vector<Ctxt>ctxt_vec = comparator->encrypt_vector(tmp);
+	vector<int>ss1(ctxt_vec.size()), ss2(ss1);
 
-	ctxt_vec[0] -= ctxt_vec[1];
-	ctxt_vec[2] -= ctxt_vec[1];
-	comparator->print_decrypted(ctxt_vec[0]);
-	comparator->print_decrypted(ctxt_vec[2]);
+	// ctxt_vec[0] -= ctxt_vec[1];
+	// ctxt_vec[2] -= ctxt_vec[1];
+	// comparator->print_decrypted(ctxt_vec[0]);
+	// comparator->print_decrypted(ctxt_vec[2]);
 	
-	comparator->compare(lessthan, ctxt_vec[0], ctxt_vec[2]);
-	comparator->print_decrypted(lessthan);
+	// comparator->compare(lessthan, ctxt_vec[0], ctxt_vec[2]);
+	// comparator->print_decrypted(lessthan);
+
+	comparator->he_to_ss(ctxt_vec, ss1, ss2);
+	
+
 	return 0;
 
 }

@@ -87,7 +87,7 @@ Comparator *generate_comparator(bool output)
 	INPUT_VALUE = int(pow(digit_base, expansion_len)) - 1;
 	cout << "input value range == " << INPUT_VALUE << endl;
 
-	MAX_INPUT_VALUE = comparator->encrypt_vector(vector<long>{INPUT_VALUE});//初始化一下密文最大值
+	MAX_INPUT_VALUE = comparator->encrypt_vector(vector<long>{INPUT_VALUE}); //初始化一下密文最大值
 
 	return comparator;
 }
@@ -151,7 +151,7 @@ vector<Ctxt> Comparator::encrypt_vector(vector<long> x)
 		{
 			cout << input_x << " 数据超过加密范围..." << endl;
 			input_x = input_range - 1; // FIXME 超过范围还没想到很好的办法，现在就简单粗暴，直接mod范围，肯定是有问题的
-										  // exit(0);
+									   // exit(0);
 		}
 
 		if (m_verbose)
@@ -209,8 +209,8 @@ vector<Ctxt> Comparator::encrypt_vector(vector<long> x)
 
 vector<Ctxt> Comparator::encrypt_vector(vector<int> x)
 {
-    clock_t start, end;
-    // start = clock();
+	clock_t start, end;
+	// start = clock();
 	Ctxt ctxt_x(m_pk);
 	vector<Ctxt> result(x.size(), ctxt_x);						  // 密文数组结果
 	const EncryptedArray &ea = m_context.getEA();				  // 获取加密数组
@@ -319,14 +319,14 @@ vector<Ctxt> Comparator::encrypt_vector(vector<int> x)
 	// compare(ct_res, result[0],result[1]);
 	// result[0].multiplyBy(result[1]);
 	// print_decrypted(result[0]);
-    // end = clock();
-    // cout<<std::fixed<<"加密数组的时间："<<(double)(end - start)/CLOCKS_PER_SEC<<"s"<<endl;
+	// end = clock();
+	// cout<<std::fixed<<"加密数组的时间："<<(double)(end - start)/CLOCKS_PER_SEC<<"s"<<endl;
 
 	return result;
 }
-vector<Ctxt> Comparator::encrypt_dist(vector<int> x)
+vector<Ctxt> Comparator::encrypt_dist(vector<int> x, int& clo_k_index)
 {
-    clock_t start, end;
+	clock_t start, end;
 	Ctxt ctxt_x(m_pk);
 	vector<Ctxt> result(x.size(), ctxt_x);						  // 密文数组结果
 	const EncryptedArray &ea = m_context.getEA();				  // 获取加密数组
@@ -370,6 +370,7 @@ vector<Ctxt> Comparator::encrypt_dist(vector<int> x)
 	for (int i = 0; i < x.size(); ++i)
 	{
 		input_x = x[i];
+		
 		// input_x = x[i] % input_range; // FIXME 超过范围还没想到很好的办法，现在就简单粗暴，直接mod范围，肯定是有问题的
 		if (input_x < 0)
 		{
@@ -377,15 +378,18 @@ vector<Ctxt> Comparator::encrypt_dist(vector<int> x)
 			exit(0);
 		}
 
-		if (input_x > input_range )
+		if (input_x > input_range)
 		{
 			cout << input_x << " 距离超过加密范围..." << endl;
 			input_x = input_range - 1; // FIXME 超过范围就直接设置成最大值
 		}
 
-		if(input_x == 0){
-			input_x = input_range - 1; 
-		}//SOLUTION 特别处理，如果距离为0，就设为max
+		if (input_x == 0)
+		{
+			input_x = input_range - 1;
+		} // SOLUTION 特别处理，如果距离为0，就设为max
+
+		clo_k_index = x[clo_k_index]<x[i]?clo_k_index:i;
 
 		if (m_verbose)
 		{
@@ -436,8 +440,8 @@ vector<Ctxt> Comparator::encrypt_dist(vector<int> x)
 	// compare(ct_res, result[0],result[1]);
 	// result[0].multiplyBy(result[1]);
 	// print_decrypted(result[0]);
-    // end = clock();
-    // cout<<std::fixed<<"加密数组的时间："<<(double)(end - start)/CLOCKS_PER_SEC<<"s"<<endl;
+	// end = clock();
+	// cout<<std::fixed<<"加密数组的时间："<<(double)(end - start)/CLOCKS_PER_SEC<<"s"<<endl;
 
 	return result;
 }
@@ -467,7 +471,7 @@ Ctxt Comparator::max_variance(vector<Ctxt> variance, Ctxt ctxt_one)
 			mid_res = ctxt_one;
 			mid_res -= less_than;
 			// mid_res.multiplyBy(value[2 * i]);
-			mid_res*=value[2*i];
+			mid_res *= value[2 * i];
 			max_value = mid_res;
 
 			mid_res = less_than;
@@ -533,14 +537,57 @@ int Comparator::decrypt_index(Ctxt ctxt)
 
 	return ptxt_index;
 }
+//大概0.003s
+vector<int> Comparator::decrypt_vec_index(vector<Ctxt> ctxt_vec)
+{
+	clock_t sta,end;
+	sta = clock();
+	// helib::Ptxt<helib::BGV> ptxt(m_context);
+	int p = m_context.getP();
+	int d = m_slotDeg;
+	int slot_p = 1;
+
+	vector<int> ptxt_vec(ctxt_vec.size());
+
+	for (int k = 0; k < ctxt_vec.size(); k++)
+	{
+		// int ptxt_index = 0;	
+		// helib::Ptxt<helib::BGV> ptxt(m_context);
+
+		// m_sk.Decrypt(ptxt, ctxt_vec[k]);
+		// vector<helib::BGV::SlotType> res = ptxt.getSlotRepr();
+
+		// for (int i = 0; i < m_expansionLen; i++)
+		// {
+		// 	int len = res[i].getData().rep.length(); // 当前slot的长度
+		// 	int enc_base = 1, j = 0, curr = 0;
+		// 	while (j < len)
+		// 	{
+		// 		long tmp = 0;
+		// 		conv(tmp, res[i].getData()[j]);
+		// 		curr = curr + tmp * enc_base;
+		// 		enc_base *= p;
+		// 		j++;
+		// 	}
+		// 	ptxt_index += curr * slot_p;
+		// 	slot_p *= int(pow(p, d));
+		// }
+		// cout<<ptxt_index<<endl;
+		// ptxt_vec[k] = ptxt_index;
+		ptxt_vec[k]=decrypt_index(ctxt_vec[k]);
+	}
+	end = clock();
+	cout<<"解密数组用时"<<(double)(end-sta)/CLOCKS_PER_SEC<<"S"<<endl;
+	return ptxt_vec;
+}
 
 vector<Ctxt> Comparator::min_dist(vector<Ctxt> dist, Ctxt ctxt_one)
 {
 	// 嚯，几乎要花0.3s计算一次
 	// 优化的话，可能也就是0.1s了
 
-    clock_t start, end;
-    // start = clock();
+	clock_t start, end;
+	// start = clock();
 	if (dist.size() != 3)
 		cout << "numbers of dist out of range" << endl;
 
@@ -555,20 +602,20 @@ vector<Ctxt> Comparator::min_dist(vector<Ctxt> dist, Ctxt ctxt_one)
 
 	while (value.size() != 1)
 	{
-		vector<Ctxt> new_value(value.size() / 2, ctxt_one);		 // 存放一轮比较后的较小值，数量砍半
-		vector<long> compare_reuslt(value.size() / 2, 1l);  	 // 存放比较的结果(只能暂且弄成明文了)
+		vector<Ctxt> new_value(value.size() / 2, ctxt_one); // 存放一轮比较后的较小值，数量砍半
+		vector<long> compare_reuslt(value.size() / 2, 1l);	// 存放比较的结果(只能暂且弄成明文了)
 
 		Ctxt min_value(m_pk);
 		for (int i = 0; i < value.size() / 2; i++)
 		{
 			compare(less_than, value[2 * i], value[2 * i + 1]); // whether value[2i] is smaller than value[2i+1]
 			long int ptxt_less_than = dec_compare_res(less_than);
-//			cout<<"ptxt res is "<<ptxt_less_than<<endl;
+			//			cout<<"ptxt res is "<<ptxt_less_than<<endl;
 
 			compare_reuslt[i] = ptxt_less_than;
 
 			mid_res = value[2 * i + 1];
-			mid_res *=(1l - ptxt_less_than);
+			mid_res *= (1l - ptxt_less_than);
 			min_value = mid_res;
 
 			mid_res = value[2 * i];
@@ -621,9 +668,9 @@ vector<Ctxt> Comparator::min_dist(vector<Ctxt> dist, Ctxt ctxt_one)
 
 		count++;
 	}
-//    for(auto r : result){
-//        cout<<decrypt_index(r)<<endl;
-//    }//没问题
+	//    for(auto r : result){
+	//        cout<<decrypt_index(r)<<endl;
+	//    }//没问题
 
 	// end = clock();
 
@@ -635,8 +682,8 @@ vector<Ctxt> Comparator::min_dist(vector<Ctxt> dist, Ctxt ctxt_one)
 Ctxt Comparator::gen_ctxt_one()
 {
 	// 这里构建ctxt_one的密文
-    clock_t start, end;
-    start = clock();
+	clock_t start, end;
+	start = clock();
 	unsigned long p = m_context.getP();	   // p的值
 	unsigned long enc_base = (p + 1) >> 1; // 俺懂了，p=7，那么(p+1)>>1 = 4， 所以二次编码的时候，就是以4为底
 
@@ -651,8 +698,8 @@ Ctxt Comparator::gen_ctxt_one()
 
 	Ctxt CTXT_ONE = encrypt_vector(vector<long int>{plain_one})[0];
 
-    // end=clock();
-    // cout<<std::fixed<<"构造密文1所需时间: "<<(double)(end-start)/CLOCKS_PER_SEC<<"s"<<endl;
+	// end=clock();
+	// cout<<std::fixed<<"构造密文1所需时间: "<<(double)(end-start)/CLOCKS_PER_SEC<<"s"<<endl;
 
 	return CTXT_ONE;
 }
@@ -666,19 +713,33 @@ long int Comparator::dec_compare_res(Ctxt ctxt)
 
 	vector<helib::BGV::SlotType> res = ptxt.getSlotRepr();
 
-	for(int i = 0; i < m_expansionLen; ++i){
-		if(res[i].getData().rep.length())
+	for (int i = 0; i < m_expansionLen; ++i)
+	{
+		if (res[i].getData().rep.length())
 			return 1l;
 	}
 	// end=clock();
 	// cout<<std::fixed<<"解密比较结果耗时："<<(double)(end - start)/CLOCKS_PER_SEC<<"s"<<endl;
 	return 0l;
-}// 还行 大概0.0007s
+} // 还行 大概0.0007s
 
-void Comparator::print_ctxt_info(string msg, vector<Ctxt>ctxt){
-	cout<<msg<<endl;
-	for(auto cipher:ctxt){
-		cout<<decrypt_index(cipher)<<" ";
+void Comparator::print_ctxt_info(string msg, vector<Ctxt> ctxt)
+{
+	cout << msg << endl;
+	for (auto cipher : ctxt)
+	{
+		cout << decrypt_index(cipher) << " ";
 	}
-	cout<<endl;
+	cout << endl;
+}
+
+//* checked
+void Comparator::he_to_ss(vector<Ctxt> vec, vector<int> &ss1, vector<int> &ss2)
+{
+	// vector<int>ss = decrypt_vec_index(vec);// 解密所有内容
+	for(int i=0;i<vec.size();i++){
+		int ctxt = decrypt_index(vec[i]);//解密内容
+		ss1[i] = rand()%(ctxt+1);
+		ss2[i] = ctxt - ss1[i];
+	}
 }

@@ -5,7 +5,6 @@ vector<point> read_data(int data_num, int dimension)
 	vector<point> result(data_num);
 	ifstream fp("data.csv");
 	string line;
-	
 
 	// getline(fp, line); // 跳过列名-->新数据没有列名
 	for (int i = 0; i < data_num; i++)
@@ -120,7 +119,7 @@ void divide_data(vector<point> point_list, int data_range, vector<point> &c1, ve
 	{
 		for (int j = 0; j < point_list[0].data.size(); ++j)
 		{
-			if (point_list[i].data[j] == 0)	// 如果数据为0， 那就都为0
+			if (point_list[i].data[j] == 0) // 如果数据为0， 那就都为0
 				continue;
 			else
 			{
@@ -175,30 +174,29 @@ void tmp_data(vector<point> &point_list)
 // func: 用户初始化簇中心，确保点不重复--checked
 void ini_clu_cen(cloud_one &c1, cloud_two &c2)
 {
-	srand(time(NULL));
 	// 如果由cloud来随机选择初始簇中心，那不就暴露最初的中心了？虽然没有暴露值
 	// SOLUTION: 俺明白了，没关系！可以视为由用户初始化的啦！
-//	vector<int> ran_index(c1.k);
-//	int count = 0;
-//
-//	while (count < c1.k)
-//	{
-//		int k_index = rand() % c1.data_num, isExist = 0;
-//		int i = 0;
-//		while (i < count)
-//		{
-//			if (ran_index[i] == k_index)
-//			{
-//				isExist = 1;
-//				break;
-//			} // 随机下标已经取过了，不能要
-//			i++;
-//		} // 检测随机选择的簇中心是否已经被选择过
-//		if (isExist)
-//			continue;
-//		ran_index[count++] = k_index;
-//	}
-    vector<int>ran_index{1,2,3};
+	//	vector<int> ran_index(c1.k);
+	//	int count = 0;
+	//
+	//	while (count < c1.k)
+	//	{
+	//		int k_index = rand() % c1.data_num, isExist = 0;
+	//		int i = 0;
+	//		while (i < count)
+	//		{
+	//			if (ran_index[i] == k_index)
+	//			{
+	//				isExist = 1;
+	//				break;
+	//			} // 随机下标已经取过了，不能要
+	//			i++;
+	//		} // 检测随机选择的簇中心是否已经被选择过
+	//		if (isExist)
+	//			continue;
+	//		ran_index[count++] = k_index;
+	//	}
+	vector<int> ran_index{1, 2, 3};
 
 	for (auto k_index : ran_index)
 	{
@@ -212,7 +210,7 @@ void ini_clu_cen(cloud_one &c1, cloud_two &c2)
 		c1.ctxt_clu_cen.push_back(c1.comparator->encrypt_vector(k_cen));
 		// 这里把簇中心加密，存入c1，方便聚类过程中的计算
 	}
-	
+
 	return;
 }
 
@@ -311,20 +309,16 @@ void mul_clu_point_num(cloud_one &c1, cloud_two &c2)
 
 	c1.mul_point_num = r1;
 	c2.mul_point_num = r2;
-
-	// by the way, clu_point_num 更新完就可以全部设置为0了
-	c1.clu_point_num = vector<int>(c1.k, 0);
-	c2.clu_point_num = vector<int>(c2.k, 0);
 	return;
 }
 
 // 直接返回合并秘密共享的结果，以及和n乘的结果
 vector<int> cal_dist(cloud_one &c1, cloud_two &c2, int node_index, int tot_can_num)
 {
-	
+
 	vector<int> result(c1.k, 0);
-//	clock_t start, end;
-//	start = clock();
+	//	clock_t start, end;
+	//	start = clock();
 	for (int i = 0; i < c1.k; ++i)
 	{
 		vector<vector<int>> ef1 = c1.calculate_dist_para_ef(node_index, i);
@@ -352,13 +346,60 @@ vector<int> cal_dist(cloud_one &c1, cloud_two &c2, int node_index, int tot_can_n
 		}
 
 		// 计算到簇k距离最终结果
-		int n = c1.kd_tree[node_index].candidate_k[i] + c2.kd_tree[node_index].candidate_k[i];	// 是否已被prune
+		int n = c1.kd_tree[node_index].candidate_k[i] + c2.kd_tree[node_index].candidate_k[i]; // 是否已被prune
 		tot_can_num += n;
 		result[i] = (c1.calculate_dist_res(ef1) + c2.calculate_dist_res(ef1)) * n;
 
 	} // 计算中心到第i个簇的距离
-//	end = clock();
-//	cout<<std::fixed<<"计算距离的时间："<<(double)(end - start) / CLOCKS_PER_SEC << endl;
+	  //	end = clock();
+	  //	cout<<std::fixed<<"计算距离的时间："<<(double)(end - start) / CLOCKS_PER_SEC << endl;
 
 	return result;
+}
+
+vector<vector<int>> cal_v_znum(cloud_one &c1, cloud_two &c2, vector<int> v1, vector<int> v2, int k_index)
+{
+	// 计算ef
+	vector<vector<int>> ef1 = c1.cal_vznum_ef(v1, k_index);
+	vector<vector<int>> ef2 = c2.cal_vznum_ef(v2, k_index);
+
+	//合并ef到ef1中
+	for (int i = 0; i < ef1.size(); i++)
+	{
+		ef1[i][0] += ef2[i][0];
+		ef1[i][1] += ef2[i][1];
+	}
+
+	// 获取计算结果
+	vector<int> r1 = c1.cal_vznum_final(ef1);
+	vector<int> r2 = c2.cal_vznum_final(ef1);
+
+	return vector<vector<int>>{r1, r2};
+}
+
+vector<int> cal_vz_sqaure(cloud_one &c1, cloud_two &c2, vector<vector<int>>vz, int k_index)
+{
+	//vz--> 2xdimension
+	vector<int>r1 = c1.clu_cen[k_index];
+	vector<int>r2 = c2.clu_cen[k_index];
+
+	for(int i=0;i<c1.dimension;i++){
+		r1[i] -= vz[0][i];	
+		r2[i] -= vz[1][i];
+	}// z[i] - v*|z|[i]
+
+	// 计算r[i]**2
+	vector<vector<int>>ef1 = c1.cal_vec_square(r1);
+	vector<vector<int>>ef2 = c2.cal_vec_square(r2);
+
+	for(int i=0;i<ef1.size();i++){
+		ef1[i][0] += ef2[i][0];
+		ef1[i][1] += ef2[i][1];
+	}
+
+	// 计算最终结果
+	r1 = c1.cal_square_final(ef1);
+	r2 = c2.cal_square_final(ef1);
+	
+	return vector<int>{accumulate(r1.begin(),r1.end(),0), accumulate(r2.begin(), r2.end(),0)};
 }

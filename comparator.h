@@ -11,6 +11,7 @@ Comparator class: creates all auxiliary information necessary to compare integer
 #include <NTL/mat_ZZ.h>
 #include <time.h>
 #include <iomanip>
+#include <algorithm>
 using namespace std;
 using namespace NTL;
 using namespace helib;
@@ -214,7 +215,11 @@ public:
 
   void print_ctxt_info(string msg, vector<Ctxt>ctxt);
 
-  vector<Ctxt> encrypt_dist(vector<int> x);
+  vector<Ctxt> encrypt_dist(vector<int> x, int& clo_k_index);
+
+  void he_to_ss(vector<Ctxt>vec, vector<int>& ss1, vector<int>&ss2);
+
+  vector<int> decrypt_vec_index(vector<Ctxt> ctxt_vec);
 
 
 };
