@@ -189,7 +189,8 @@ void filtering(cloud_one &c1, cloud_two &c2)
         start = clock();
         for (int i = 0; i < c1.kd_tree.size(); i++) // 遍历kd tree 所有节点
         {
-            cout<<endl<<"正在聚类节点 "<<i<<endl;
+            cout << endl
+                 << "正在聚类节点 " << i << endl;
             if (c1.kd_tree[i].isClustered)
             {
                 if (2 * i + 1 < c1.kd_tree.size())
@@ -202,7 +203,7 @@ void filtering(cloud_one &c1, cloud_two &c2)
 
             vector<int> dist = cal_dist(c1, c2, i, 0);
             // 计算中心到每个簇中心的距离, size = k -->其实也可以直接合并后加密啦……emmm也不太影响嘛-->已经将非候选处理为0
-            int clo_k_index=0;
+            int clo_k_index = 0;
             vector<Ctxt> ctxt_dist = c1.comparator->encrypt_dist(dist, clo_k_index);
             // 加密距离-->可能面临超过范围的问题-->真费时间，差不多平均0.005s了-->但是没办法，必须要加密距离然后比较哇！
 
@@ -210,7 +211,6 @@ void filtering(cloud_one &c1, cloud_two &c2)
             // 处理0影响的方法-->对每个距离密文增加一个近似最大值，0就变成了最大值，但是其他的会被模，相对大小不改变
 
             c1.comparator->print_ctxt_info("最近簇中心", min_dist_index);
-
 
             // 根据是否为叶子节点分不同情况处理
             if (c1.kd_tree[i].node_point_num > 3) // 非叶子节点
@@ -230,15 +230,17 @@ void filtering(cloud_one &c1, cloud_two &c2)
                 vector<Ctxt> v(c1.dimension, ctxt_one);
 
                 //* 遍历所有的簇中心，prune掉距离更远的-->uu们，这波感觉可以并行啊
-               cout<<endl<<"prune result "<<endl;
+                cout << endl
+                     << "prune result " << endl;
                 for (int j = 0; j < c1.k; j++)
                 {
-                    cout<<endl<<"cluster "<<j<<" prune result "<<endl;
+                    cout << endl
+                         << "cluster " << j << " prune result " << endl;
 
                     for (int k = 0; k < c1.dimension; k++)
                     {
                         c1.comparator->compare(less_than, c1.ctxt_clu_cen[j][k], k_closest[k]); // z[k] < z*[k]?
-                        long com_res = c1.comparator->dec_compare_res(less_than); // 解密结果tmd
+                        long com_res = c1.comparator->dec_compare_res(less_than);               // 解密结果tmd
 
                         Ctxt mid_res = c1.kd_tree[i].node_min[k];
                         mid_res *= com_res; // LT(u[i],0)*(c_min)
@@ -254,12 +256,12 @@ void filtering(cloud_one &c1, cloud_two &c2)
                     for (int k = 0; k < c1.dimension; k++)
                     {
                         Ctxt curr = k_closest[k];
-                        curr -= v[k]; // (cloest_ki - vi)
+                        curr -= v[k];          // (cloest_ki - vi)
                         curr.multiplyBy(curr); // (cloest_ki - vi)^2
                         ctxt_d1 += curr;
 
                         curr = c1.ctxt_clu_cen[j][k];
-                        curr -= v[k]; // (ki - vi)
+                        curr -= v[k];          // (ki - vi)
                         curr.multiplyBy(curr); // (ki - vi)**2
                         ctxt_d2 += curr;
                     } //* 计算dist(v,z*), dist(v,z)
@@ -270,7 +272,7 @@ void filtering(cloud_one &c1, cloud_two &c2)
                     long res = c1.comparator->dec_compare_res(less_than); // 1-prune 0-not prune
                     c1.comparator->print_decrypted(ctxt_d1);
                     c1.comparator->print_decrypted(ctxt_d2);
-                    cout<<res<<" ";
+                    cout << res << " ";
                     for (int k = 0; k < c1.dimension; k++)
                     {
                         c1.kd_tree[i].candidate_k[j] *= (1 - res);
@@ -285,12 +287,12 @@ void filtering(cloud_one &c1, cloud_two &c2)
 
                     // 如果簇被prune，候选中心数目减少,当然论文里面咱们不能这么做
                 }
-                 cout<<endl;
+                cout << endl;
 
                 // 判断候选candidate是否只包含一个簇
                 int tot_candidate_k = 0;
-                for(int m =0;m<c1.k;m++)
-                    tot_candidate_k += (c1.kd_tree[i].candidate_k[m]+c2.kd_tree[i].candidate_k[m]);
+                for (int m = 0; m < c1.k; m++)
+                    tot_candidate_k += (c1.kd_tree[i].candidate_k[m] + c2.kd_tree[i].candidate_k[m]);
 
                 if (tot_candidate_k <= 1)
                 {
@@ -365,34 +367,46 @@ void filtering2(cloud_one &c1, cloud_two &c2)
     Ctxt less_than = ctxt_one;
 
     int iter = 0;
-    while(iter<10){
+    while (iter < 10)
+    {
         clock_t sta, end;
-        mul_clu_point_num(c1, c2); //连乘α
-        vector<Ctxt> new_clu_point_num(c1.k, ctxt_zero);
-        vector<vector<Ctxt>> new_clu_cen(c1.k, vector<Ctxt>(c1.dimension, ctxt_zero));
-        //? 这里可以把密文结果累加，存储到一起，迭代完再进行ss划分成两份
+        sta = clock();
 
+        mul_clu_point_num(c1, c2);                                 //连乘α
+        c1.kd_tree[0].candidate_k = vector<int>(c1.k, 1);          //心中随机即可
+        c2.kd_tree[0].candidate_k = vector<int>(c1.k, 0);          // 初始化root候选中心
+
+        vector<vector<int>> knum_square = cal_knum_square(c1, c2); // 计算簇包含点数的平方-->checked
+        
+        vector<int> new_clu_point_num1(c1.k, 0), new_clu_point_num2(new_clu_point_num1);
+        vector<vector<int>> new_clu_cen1(c1.k, vector<int>(c1.dimension, 0)), new_clu_cen2(new_clu_cen1); //? 这里可以把密文结果累加，存储到一起，迭代完再进行ss划分成两份
+        
         // 开始迭代
-        for(int node_index=0;node_index<c1.kd_tree.size();node_index++){
+        
+        for (int node_index = 0; node_index < c1.kd_tree.size(); node_index++)
+        {
+//            cout << "*******************************"<<endl<<"正在聚类node " << node_index << endl;
 
-            cout<<"正在聚类node "<<node_index<<endl;
-
-            if(c1.kd_tree[node_index].isClustered){
+            if (c1.kd_tree[node_index].isClustered)
+            {
                 if (2 * node_index + 1 < c1.kd_tree.size())
                     c1.kd_tree[2 * node_index + 1].isClustered = true;
                 if (2 * node_index + 2 < c2.kd_tree.size())
                     c1.kd_tree[2 * node_index + 2].isClustered = true;
-                continue;               
-            }
-            int clo_k_index=0;
-            vector<int>dist = cal_dist(c1, c2, node_index, 0);//计算node到每个簇的距离，非candidate的簇距离为0
-            vector<Ctxt>ctxt_dist = c1.comparator->encrypt_dist(dist, clo_k_index);//加密距离
-            vector<Ctxt>min_dist_mark = c1.comparator->min_dist(ctxt_dist, ctxt_one);//求最近簇的标识
+                continue;
+            }// 已被划分则不再参与划分
+
+            int clo_k_index = 0;
+            vector<int> dist = cal_dist(c1, c2, node_index, 0);                        //计算node到每个簇的距离，非candidate的簇距离为0
+            vector<Ctxt> ctxt_dist = c1.comparator->encrypt_dist(dist, clo_k_index);   //加密距离
+            vector<Ctxt> min_dist_mark = c1.comparator->min_dist(ctxt_dist, ctxt_one); //求最近簇的标识
+
 
             // c1.comparator->print_ctxt_info("最近簇中心", min_dist_mark);//-->没啥毛病
-
-            if(c1.kd_tree[node_index].node_point_num>3){// not leaf node
-                vector<Ctxt>ctxt_clo_k(c1.dimension, ctxt_zero);
+//            cout<<"cloest cluster is "<<clo_k_index<<endl;
+            if (c1.kd_tree[node_index].node_point_num > 3)
+            { // not leaf node
+                vector<Ctxt> ctxt_clo_k(c1.dimension, ctxt_zero);
                 for (int j = 0; j < c1.k; j++)
                 {
                     for (int k = 0; k < c1.dimension; k++)
@@ -401,47 +415,140 @@ void filtering2(cloud_one &c1, cloud_two &c2)
                         ctxt_value *= c1.ctxt_clu_cen[j][k];
                         ctxt_clo_k[k] += ctxt_value;
                     }
-                } // 计算z*-->距离最近的簇
-                 c1.comparator->print_ctxt_info("最近的簇 ", ctxt_clo_k);//-->meimaobing
+                }                                                        // 计算z*-->距离最近的簇
 
                 // 最近中心转ss
-                vector<int>clo_k1(c1.dimension), clo_k2(clo_k1);
-                c1.comparator->he_to_ss(ctxt_clo_k, clo_k1, clo_k2);
+                // vector<int> clo_k1(c1.dimension), clo_k2(clo_k1);
+                // c1.comparator->he_to_ss(ctxt_clo_k, clo_k1, clo_k2);
 
                 // 开始遍历所有簇
-                for(int k_index=0;k_index<c1.k;k_index++){
-                    cout<<"正在判断簇 "<<k_index<<endl;
+                for (int k_index = 0; k_index < c1.k; k_index++)
+                {
+//                    cout << "正在判断簇 " << k_index << endl;
 
-                    vector<int>v1(c1.dimension), v2(v1);
+                    vector<int> v1(c1.dimension), v2(v1);
 
-                    for(int j=0;j<c1.dimension;j++){
-                        c1.comparator->compare(less_than, c1.ctxt_clu_cen[k_index][j], ctxt_clo_k[j]);//zij < kj ?
+                    for (int j = 0; j < c1.dimension; j++)
+                    {
+                        c1.comparator->compare(less_than, c1.ctxt_clu_cen[k_index][j], ctxt_clo_k[j]); // zij < kj ?
                         long com_res = c1.comparator->dec_compare_res(less_than);
 
-                        int mid_res = com_res*c1.kd_tree[node_index].ptxt_node_min[j]+(1-com_res)*c1.kd_tree[node_index].ptxt_node_max[j];
-                        v1[j] = rand()%(mid_res +1);
+                        int mid_res = com_res * c1.kd_tree[node_index].ptxt_node_min[j] + (1 - com_res) * c1.kd_tree[node_index].ptxt_node_max[j];
+                        v1[j] = rand() % (mid_res + 1);
                         v2[j] = mid_res - v1[j];
-                        // cout<<mid_res<<" ";
                     }
+                    
                     // 计算v*|z|
-                    vector<vector<int>>v_mul_znum = cal_v_znum(c1, c2, v1, v2, k_index); //->checked
-                    vector<vector<int>>v_mul_clok = cal_v_znum(c1, c2, v1, v2, clo_k_index);
+                    vector<vector<int>> v_mul_znum = cal_v_znum(c1, c2, v1, v2, k_index); //->checked
+                    vector<vector<int>> v_mul_clok = cal_v_znum(c1, c2, v1, v2, clo_k_index);
 
-                    vector<int>z_min_znum = cal_vz_sqaure(c1, c2, v_mul_znum, k_index);
-                    cout<<"pause";
+                    // 计算 Σ（z-v|z|)**2-->res=2*dimension
+                    vector<int> k_min_znum = cal_vz_sqaure(c1, c2, v_mul_znum, k_index); //->checked
+                    vector<int> clo_min_znum = cal_vz_sqaure(c1, c2, v_mul_clok, clo_k_index);
+
+                    // 计算距离-->checked
+                    vector<int> distkv = mul_two(c1, c2, k_min_znum, vector<int>{knum_square[0][k_index], knum_square[1][k_index]});
+                    vector<int> distclo_kv = mul_two(c1, c2, clo_min_znum, vector<int>{knum_square[0][clo_k_index], knum_square[1][clo_k_index]});
+
+                    // 加密距离并进行比较
+                    vector<Ctxt> enc_dist = c1.comparator->encrypt_vector(vector<int>{distkv[0] + distkv[1], distclo_kv[0] + distclo_kv[1]});
+                    c1.comparator->compare(less_than, enc_dist[1], enc_dist[0]); // dist[z*,v]<dist[z,v]?
+                    long com_res = c1.comparator->dec_compare_res(less_than);
+
+                    c1.kd_tree[node_index].candidate_k[k_index] *= (1 - com_res);
+                    if (node_index * 2 + 1 < c1. kd_tree.size())
+                        c1.kd_tree[node_index * 2 + 1].candidate_k[k_index] = c1.kd_tree[node_index].candidate_k[k_index];
+                    if (node_index * 2 + 2 < c1.kd_tree.size())
+                        c1.kd_tree[node_index * 2 + 2].candidate_k[k_index] = c1.kd_tree[node_index].candidate_k[k_index];
+
+//                    if(com_res)
+//                        cout<<"prune"<<endl;
+//                    else
+//                        cout<<"not prune"<<endl;
                 }
 
+                int tot_can_k = 0;
+                for(int i=0;i<c1.k;i++)
+                    tot_can_k += c1.kd_tree[node_index].candidate_k[i];
+                
+                if(tot_can_k<=1){
+//                    cout<<"node "<< node_index<<" is clustered"<<endl;
+
+                    vector<int> ptxt_min_mark1(c1.k,0), ptxt_min_mark2(c1.k, 0);   // 秘密共享最近簇标识
+                    c1.comparator->dist_mark_to_ss(min_dist_mark, ptxt_min_mark1, ptxt_min_mark2);
+
+                    vector<vector<int>>e1, f1, e2, f2;
+                    c1.update_clu_cen_ef(node_index, ptxt_min_mark1, e1, f1);
+                    c2.update_clu_cen_ef(node_index, ptxt_min_mark2, e2, f2);
+
+                    for(int i=0;i<e1.size();i++){
+                        for(int j=0;j<e1[0].size();j++){
+                            e1[i][j]+=e2[i][j];
+                            f1[i][j]+=f2[i][j];
+                        }
+                    }
+
+                    vector<vector<int>>r1 = c1.update_clu_cen_final(e1, f1);
+                    vector<vector<int>>r2 = c2.update_clu_cen_final(e1, f1);//size=(dimension+1)*k
+
+                    for(int i=0;i<c1.k;i++){
+                        for(int j=0;j<r1.size()-1;j++){
+                            new_clu_cen1[i][j]=r1[j][i];
+                            new_clu_cen2[i][j]=r2[j][i];
+                        }
+                        new_clu_point_num1[i] += c1.kd_tree[node_index].node_point_num*ptxt_min_mark1[i];
+                        new_clu_point_num2[i] += c2.kd_tree[node_index].node_point_num*ptxt_min_mark2[i];
+                    }// i 对应k，j对应维度数据
+
+                    // 标识节点信息
+                    c1.kd_tree[node_index].isClustered = true;
+                    if (node_index * 2 + 1 < c1.kd_tree.size())
+                        c1.kd_tree[node_index * 2 + 1].isClustered = true;
+                    if (node_index * 2 + 2 < c1.kd_tree.size())
+                        c1.kd_tree[node_index * 2 + 2].isClustered = true;                    
+                    
+                } // FIXME好像也可以切成秘密共享，麻了，再说吧
 
             }
-            else{//leaf node
+            else
+            { // leaf node
+//                cout<<"leaf node "<< node_index<<" is clustered"<<endl;
 
+                vector<int> ptxt_min_mark1(c1.k,0), ptxt_min_mark2(c1.k, 0);   // 秘密共享最近簇标识
+                c1.comparator->dist_mark_to_ss(min_dist_mark, ptxt_min_mark1, ptxt_min_mark2);
+
+                vector<vector<int>>e1, f1, e2, f2;
+                c1.update_clu_cen_ef(node_index, ptxt_min_mark1, e1, f1);
+                c2.update_clu_cen_ef(node_index, ptxt_min_mark2, e2, f2);
+
+                for(int i=0;i<e1.size();i++){
+                    for(int j=0;j<e1[0].size();j++){
+                        e1[i][j]+=e2[i][j];
+                        f1[i][j]+=f2[i][j];
+                    }
+                }
+
+                vector<vector<int>>r1 = c1.update_clu_cen_final(e1, f1);
+                vector<vector<int>>r2 = c2.update_clu_cen_final(e1, f1);//size=(dimension+1)*k
+
+                for(int i=0;i<c1.k;i++){
+                    for(int j=0;j<r1.size()-1;j++){
+                        new_clu_cen1[i][j]+=r1[j][i];
+                        new_clu_cen2[i][j]+=r2[j][i];
+                    }
+                    new_clu_point_num1[i] += c1.kd_tree[node_index].node_point_num*ptxt_min_mark1[i];
+                    new_clu_point_num2[i] += c2.kd_tree[node_index].node_point_num*ptxt_min_mark2[i];
+                }// i 对应k，j对应维度数据
             }
-
-            break;
         }
+        end = clock();
+        cout<<"tot time "<<(double)(end - sta)/CLOCKS_PER_SEC<<"s"<<endl;
 
+        c1.clu_cen=new_clu_cen1;
+        c2.clu_cen=new_clu_cen2;
+        c1.clu_point_num=new_clu_point_num1;
+        c2.clu_point_num=new_clu_point_num2;
 
-        break;
         iter++;
     }
     return;
@@ -593,7 +700,7 @@ int main()
     setbuf(stdout, 0);
     srand(time(NULL));
     // 初始化数据信息
-    int data_num = 20, dimension = 5;
+    int data_num = 8192, dimension = 5;
     vector<point> point_list, c1_data, c2_data;
     // vector<point> point_list, c1_data, c2_data;
     // tmp_data(point_list);

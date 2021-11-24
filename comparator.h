@@ -221,6 +221,7 @@ public:
 
   vector<int> decrypt_vec_index(vector<Ctxt> ctxt_vec);
 
+  void dist_mark_to_ss(vector<Ctxt> ctxt_vec, vector<int>& ss1, vector<int>& ss2);
 
 };
 }

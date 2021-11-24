@@ -15,7 +15,7 @@ struct point
 struct kd_node
 {
     long int node_point_num;          // number of points in current node
-    vector<Ctxt>ctxt_node_point_num;
+    vector<Ctxt>ctxt_node_point_num;  // 虽然只有一个数，但是这样比较方便初始化
     vector<int> N;                    // secret share of division info, size = data_num
     vector<int> node_sum_x;           // Σxi*Ni, size = dimension
     vector<int> ptxt_node_min;        // 记录明文node中的最大最小值-->麻了，不ss了
@@ -68,9 +68,6 @@ public:
     // 计算距离结果的ef
     vector<vector<int>> calculate_dist_res_ef(vector<int>para);
 
-    // 计算Ni*Ki
-    void exclude_clusters(int node_index);
-
     // 计算avg*Ni --> size= data_num*dimension
     void calculate_avg_N(vector<vector<int>>&e, vector<vector<int>>&f, vector<int>avg, int node_index);
 
@@ -79,6 +76,11 @@ public:
 
     // 计算自己的平方！
     vector<vector<int>> cal_vec_square(vector<int>arr);
+
+    // 更新簇中心
+    void update_clu_cen_ef(int node_index, vector<int>ptxt_mark, vector<vector<int>>& e, vector<vector<int>>& f);
+
+
 };
 
 class cloud_one : public cloud
@@ -116,6 +118,10 @@ public:
 
     //cal square final
     vector<int> cal_square_final(vector<vector<int>>ef);
+
+    // cal update clu cen final result
+    vector<vector<int>> update_clu_cen_final(vector<vector<int>>& e, vector<vector<int>>& f);
+
 };
 
 class cloud_two : public cloud
@@ -170,5 +176,8 @@ public:
     vector<int> cal_vznum_final(vector<vector<int>>ef);
 
     vector<int> cal_square_final(vector<vector<int>>ef);
+
+    // cal update clu cen final result
+    vector<vector<int>> update_clu_cen_final(vector<vector<int>>& e, vector<vector<int>>& f);
     
 };

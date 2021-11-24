@@ -166,14 +166,34 @@ void cloud::calculate_avg_N(vector<vector<int>> &e, vector<vector<int>> &f, vect
     }
 }
 
-vector<vector<int>> cloud::cal_vec_square(vector<int>arr){
-    vector<vector<int>>ef(dimension, vector<int>(2));
+vector<vector<int>> cloud::cal_vec_square(vector<int> arr)
+{
+    vector<vector<int>> ef(arr.size(), vector<int>(2));
 
-    for(int i=0;i<arr.size();i++){
-        ef[i][0] = arr[i] - beaver_list[i][0];//arr -a
-        ef[i][1] = arr[i]- beaver_list[i][1]; // arr -b
+    for (int i = 0; i < arr.size(); i++)
+    {
+        ef[i][0] = arr[i] - beaver_list[i][0]; // arr -a
+        ef[i][1] = arr[i] - beaver_list[i][1]; // arr -b
     }
     return ef;
+}
+
+void cloud::update_clu_cen_ef(int node_index, vector<int> ptxt_mark, vector<vector<int>> &e, vector<vector<int>> &f)
+{
+    vector<int> num = kd_tree[node_index].node_sum_x;
+    num.push_back(kd_tree[node_index].node_point_num);
+
+    e = vector<vector<int>>(num.size(), vector<int>(ptxt_mark.size()));
+    f = vector<vector<int>>(e);
+
+    for (int i = 0; i < e.size(); i++)
+    {
+        for (int j = 0; j < ptxt_mark.size(); j++)
+        {
+            e[i][j] = num[i] - beaver_list[i][0];       // num -a
+            f[i][j] = ptxt_mark[j] - beaver_list[i][1]; // mark - b
+        }
+    }
 }
 
 // cloud_one
@@ -482,19 +502,50 @@ vector<int> cloud_two::cal_vznum_final(vector<vector<int>> ef)
     return res;
 }
 
-
-vector<int> cloud_one::cal_square_final(vector<vector<int>>ef){
-    vector<int>result(ef.size());
-    for(int i=0;i<ef.size();i++){
-        result[i]=ef[i][0]*beaver_list[i][1]+ef[i][1]*beaver_list[i][0]+beaver_list[i][2];
+vector<int> cloud_one::cal_square_final(vector<vector<int>> ef)
+{
+    vector<int> result(ef.size());
+    for (int i = 0; i < ef.size(); i++)
+    {
+        result[i] = ef[i][0] * beaver_list[i][1] + ef[i][1] * beaver_list[i][0] + beaver_list[i][2];
     }
     return result;
 }
 
-vector<int> cloud_two::cal_square_final(vector<vector<int>>ef){
-    vector<int>result(ef.size());
-    for(int i=0;i<ef.size();i++){
-        result[i]=ef[i][1]*ef[i][0] + ef[i][0]*beaver_list[i][1]+ef[i][1]*beaver_list[i][0]+beaver_list[i][2];
+vector<int> cloud_two::cal_square_final(vector<vector<int>> ef)
+{
+    vector<int> result(ef.size());
+    for (int i = 0; i < ef.size(); i++)
+    {
+        result[i] = ef[i][1] * ef[i][0] + ef[i][0] * beaver_list[i][1] + ef[i][1] * beaver_list[i][0] + beaver_list[i][2];
     }
     return result;
+}
+
+// cal update clu cen final result
+vector<vector<int>> cloud_one::update_clu_cen_final(vector<vector<int>> &e, vector<vector<int>> &f)
+{
+    vector<vector<int>> result(e);
+    for (int i = 0; i < e.size(); i++)
+    {
+        for (int j = 0; j < e[0].size(); j++)
+        {
+            result[i][j] = e[i][j] * beaver_list[i][1] + f[i][j] * beaver_list[i][0] + beaver_list[i][2];
+        }
+    }
+    return result; //暂存结果啦
+}
+
+// cal update clu cen final result
+vector<vector<int>> cloud_two::update_clu_cen_final(vector<vector<int>> &e, vector<vector<int>> &f)
+{
+    vector<vector<int>>result(e);
+    for (int i = 0; i < e.size(); i++)
+    {
+        for (int j = 0; j < e[0].size(); j++)
+        {
+            e[i][j] = e[i][j] * f[i][j] + e[i][j] * beaver_list[i][1] + f[i][j] * beaver_list[i][0] + beaver_list[i][2];
+        }
+    }
+    return e; //暂存结果啦
 }

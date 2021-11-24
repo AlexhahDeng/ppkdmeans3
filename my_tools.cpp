@@ -254,6 +254,12 @@ vector<Ctxt> Comparator::encrypt_vector(vector<int> x)
 	// 但是有点搞的是，加密整数，计算后如果是负数，再比较就没问题
 
 	// 开始对输入进行拆分
+	if(*max_element(x.begin(), x.end())>input_range){
+		for(int i=0;i<x.size();i++){
+			x[i] /= 1000;
+		}
+		// cout<<"有距离超过范围-->截断"<<1000<<endl;
+	}// SOLUTION 如果有距离超过范围，直接截断把！
 	for (int i = 0; i < x.size(); ++i)
 	{
 		input_x = x[i];
@@ -366,12 +372,17 @@ vector<Ctxt> Comparator::encrypt_dist(vector<int> x, int& clo_k_index)
 	// 没法加密负数，那么，只好，保证输入大于0吧！
 	// 但是有点搞的是，加密整数，计算后如果是负数，再比较就没问题
 
-	// 开始对输入进行拆分
+	//开始对输入进行拆分
+	if(*max_element(x.begin(), x.end())>input_range){
+		for(int i=0;i<x.size();i++){
+			x[i] /= 10000;
+		}
+		// cout<<"有距离超过范围-->截断"<<10000<<endl;
+	}// SOLUTION 如果有距离超过范围，直接截断把！
 	for (int i = 0; i < x.size(); ++i)
 	{
 		input_x = x[i];
 		
-		// input_x = x[i] % input_range; // FIXME 超过范围还没想到很好的办法，现在就简单粗暴，直接mod范围，肯定是有问题的
 		if (input_x < 0)
 		{
 			cout << "无法加密负数" << endl;
@@ -389,7 +400,7 @@ vector<Ctxt> Comparator::encrypt_dist(vector<int> x, int& clo_k_index)
 			input_x = input_range - 1;
 		} // SOLUTION 特别处理，如果距离为0，就设为max
 
-		clo_k_index = x[clo_k_index]<x[i]?clo_k_index:i;
+		clo_k_index = x[clo_k_index]<input_x?clo_k_index:i;
 
 		if (m_verbose)
 		{
@@ -741,5 +752,16 @@ void Comparator::he_to_ss(vector<Ctxt> vec, vector<int> &ss1, vector<int> &ss2)
 		int ctxt = decrypt_index(vec[i]);//解密内容
 		ss1[i] = rand()%(ctxt+1);
 		ss2[i] = ctxt - ss1[i];
+	}
+}
+
+void Comparator::dist_mark_to_ss(vector<Ctxt> ctxt_vec, vector<int>& ss1, vector<int>& ss2){
+	for(int i=0;i<ctxt_vec.size();i++){
+		int ptxt = decrypt_index(ctxt_vec[i]);
+
+		ptxt = ptxt==0?0:1;
+
+		ss1[i]=rand() % 10;
+		ss2[i]=ptxt - ss1[i];
 	}
 }
