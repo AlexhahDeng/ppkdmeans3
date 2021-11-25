@@ -351,8 +351,6 @@ vector<int> cal_dist(cloud_one &c1, cloud_two &c2, int node_index, int tot_can_n
 		result[i] = (c1.calculate_dist_res(ef1) + c2.calculate_dist_res(ef1)) * n;
 
 	} // 计算中心到第i个簇的距离
-	  //	end = clock();
-	  //	cout<<std::fixed<<"计算距离的时间："<<(double)(end - start) / CLOCKS_PER_SEC << endl;
 
 	return result;
 }

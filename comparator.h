@@ -223,6 +223,8 @@ public:
 
   void dist_mark_to_ss(vector<Ctxt> ctxt_vec, vector<int>& ss1, vector<int>& ss2);
 
+  vector<Ctxt> encrypt_dist_vk(vector<int> x);
+
 };
 }
 

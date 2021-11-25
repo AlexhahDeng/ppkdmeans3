@@ -129,7 +129,7 @@ void filtering2(cloud_one &c1, cloud_two &c2)
                     vector<int> distclo_kv = mul_two(c1, c2, clo_min_znum, vector<int>{knum_square[0][clo_k_index], knum_square[1][clo_k_index]});
 
                     // 加密距离并进行比较
-                    vector<Ctxt> enc_dist = c1.comparator->encrypt_vector(vector<int>{distkv[0] + distkv[1], distclo_kv[0] + distclo_kv[1]});
+                    vector<Ctxt> enc_dist = c1.comparator->encrypt_dist_vk(vector<int>{distkv[0] + distkv[1], distclo_kv[0] + distclo_kv[1]});
                     c1.comparator->compare(less_than, enc_dist[1], enc_dist[0]); // dist[z*,v]<dist[z,v]?
                     long com_res = c1.comparator->dec_compare_res(less_than);
 
@@ -138,11 +138,6 @@ void filtering2(cloud_one &c1, cloud_two &c2)
                         c1.kd_tree[node_index * 2 + 1].candidate_k[k_index] = c1.kd_tree[node_index].candidate_k[k_index];
                     if (node_index * 2 + 2 < c1.kd_tree.size())
                         c1.kd_tree[node_index * 2 + 2].candidate_k[k_index] = c1.kd_tree[node_index].candidate_k[k_index];
-
-                    //                    if(com_res)
-                    //                        cout<<"prune"<<endl;
-                    //                    else
-                    //                        cout<<"not prune"<<endl;
                 }
 
                 int tot_can_k = 0;
@@ -236,6 +231,7 @@ void filtering2(cloud_one &c1, cloud_two &c2)
         c2.clu_point_num = new_clu_point_num2;
 
         iter++;
+        break;
     }
     return;
 }
@@ -413,19 +409,7 @@ int main()
 
     // 构造kd tree
     generate_kd_tree2(c1, c2);
-    // int node_sum = 0;
-    // for (int i = 0; i < c1.kd_tree.size(); i++)
-    // {
-    //     int count = 0;
-    //     for (int j = 0; j < data_num; j++)
-    //     {
-    //         if(c1.kd_tree[i].N[j] + c2.kd_tree[i].N[j]==1){
-    //             cout<<j<<",";
-    //             count++;
-    //         }
-    //     }
-    //     cout <<"-->tot points: "<<count<< endl;
-    // }
+
     // 聚类过程
     filtering2(c1, c2);
 

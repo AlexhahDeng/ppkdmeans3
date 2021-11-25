@@ -254,12 +254,6 @@ vector<Ctxt> Comparator::encrypt_vector(vector<int> x)
 	// 但是有点搞的是，加密整数，计算后如果是负数，再比较就没问题
 
 	// 开始对输入进行拆分
-	if(*max_element(x.begin(), x.end())>input_range){
-		for(int i=0;i<x.size();i++){
-			x[i] /= 1000;
-		}
-		// cout<<"有距离超过范围-->截断"<<1000<<endl;
-	}// SOLUTION 如果有距离超过范围，直接截断把！
 	for (int i = 0; i < x.size(); ++i)
 	{
 		input_x = x[i];
@@ -321,18 +315,14 @@ vector<Ctxt> Comparator::encrypt_vector(vector<int> x)
 		// result.push_back(ctxt_x);
 
 	} // 每个数字加密为一个ciphertext，packing的数字都一样
-	// Ctxt ct_res(m_pk);
-	// compare(ct_res, result[0],result[1]);
-	// result[0].multiplyBy(result[1]);
-	// print_decrypted(result[0]);
-	// end = clock();
-	// cout<<std::fixed<<"加密数组的时间："<<(double)(end - start)/CLOCKS_PER_SEC<<"s"<<endl;
 
 	return result;
 }
-vector<Ctxt> Comparator::encrypt_dist(vector<int> x, int& clo_k_index)
+
+vector<Ctxt> Comparator::encrypt_dist_vk(vector<int> x)
 {
 	clock_t start, end;
+	// start = clock();
 	Ctxt ctxt_x(m_pk);
 	vector<Ctxt> result(x.size(), ctxt_x);						  // 密文数组结果
 	const EncryptedArray &ea = m_context.getEA();				  // 获取加密数组
@@ -357,6 +347,9 @@ vector<Ctxt> Comparator::encrypt_dist(vector<int> x, int& clo_k_index)
 		// input_range = power_long(field_size, expansion_len);
 		input_range = power_long(digit_base, m_expansionLen); // 计算比较数字的最大范围
 
+	// cout << "最大输入：" << input_range << endl;
+	// cout << "一个密文可以包含的数字：" << numbers_size << endl;
+
 	//! 存放加解密的结果
 	vector<ZZX> expected_result(occupied_slots);
 	vector<ZZX> decrypted(occupied_slots);
@@ -368,21 +361,17 @@ vector<Ctxt> Comparator::encrypt_dist(vector<int> x, int& clo_k_index)
 	unsigned long input_x;
 	ZZX pol_slot;
 
-	// FIXME 事情呢是这么个事儿
-	// 没法加密负数，那么，只好，保证输入大于0吧！
-	// 但是有点搞的是，加密整数，计算后如果是负数，再比较就没问题
-
-	//开始对输入进行拆分
-	if(*max_element(x.begin(), x.end())>input_range){
-		for(int i=0;i<x.size();i++){
-			x[i] /= 10000;
+	// 开始对输入进行拆分
+	if (*max_element(x.begin(), x.end()) > input_range)
+	{
+		for (int i = 0; i < x.size(); i++)
+		{
+			x[i] /= input_range;
 		}
-		// cout<<"有距离超过范围-->截断"<<10000<<endl;
-	}// SOLUTION 如果有距离超过范围，直接截断把！
+	} // SOLUTION 普通的两数比较，直接除以范围把！
 	for (int i = 0; i < x.size(); ++i)
 	{
 		input_x = x[i];
-		
 		if (input_x < 0)
 		{
 			cout << "无法加密负数" << endl;
@@ -391,16 +380,9 @@ vector<Ctxt> Comparator::encrypt_dist(vector<int> x, int& clo_k_index)
 
 		if (input_x > input_range)
 		{
-			cout << input_x << " 距离超过加密范围..." << endl;
+			cout << input_x << " 数据超过加密范围..." << endl;
 			input_x = input_range - 1; // FIXME 超过范围就直接设置成最大值
 		}
-
-		if (input_x == 0)
-		{
-			input_x = input_range - 1;
-		} // SOLUTION 特别处理，如果距离为0，就设为max
-
-		clo_k_index = x[clo_k_index]<input_x?clo_k_index:i;
 
 		if (m_verbose)
 		{
@@ -447,12 +429,126 @@ vector<Ctxt> Comparator::encrypt_dist(vector<int> x, int& clo_k_index)
 		// result.push_back(ctxt_x);
 
 	} // 每个数字加密为一个ciphertext，packing的数字都一样
-	// Ctxt ct_res(m_pk);
-	// compare(ct_res, result[0],result[1]);
-	// result[0].multiplyBy(result[1]);
-	// print_decrypted(result[0]);
-	// end = clock();
-	// cout<<std::fixed<<"加密数组的时间："<<(double)(end - start)/CLOCKS_PER_SEC<<"s"<<endl;
+
+	return result;
+}
+vector<Ctxt> Comparator::encrypt_dist(vector<int> x, int &clo_k_index)
+{
+	clock_t start, end;
+	Ctxt ctxt_x(m_pk);
+	vector<Ctxt> result(x.size(), ctxt_x);						  // 密文数组结果
+	const EncryptedArray &ea = m_context.getEA();				  // 获取加密数组
+	long nslots = ea.size();									  //! 提取槽slots的数量
+	unsigned long p = m_context.getP();							  // p的值
+	unsigned long ord_p = m_context.getOrdP();					  // p的次数
+	unsigned long numbers_size = nslots / m_expansionLen;		  //! 一个密文中包含的数字
+	unsigned long occupied_slots = numbers_size * m_expansionLen; //! 编码数字所需的槽数
+
+	// encoding base, ((p+1)/2)^d
+	// if 2-variable comparison polynomial is used, it must be p^d
+	unsigned long enc_base = (p + 1) >> 1; // 俺懂了，p=7，那么(p+1)>>1 = 4， 所以二次编码的时候，就是以4为底
+	if (m_type == BI || m_type == TAN)
+		enc_base = p;
+	unsigned long digit_base = power_long(enc_base, m_slotDeg); // m_slotDeg 是初始参数d，这里d=2
+
+	// 检查field_size^expansion_len的值在64比特内
+	int space_bit_size = static_cast<int>(ceil(m_expansionLen * log2(digit_base)));
+
+	unsigned long input_range = ULONG_MAX;
+	if (space_bit_size < 64)
+		// input_range = power_long(field_size, expansion_len);
+		input_range = power_long(digit_base, m_expansionLen); // 计算比较数字的最大范围
+
+	//! 存放加解密的结果
+	vector<ZZX> expected_result(occupied_slots);
+	vector<ZZX> decrypted(occupied_slots);
+
+	// 对文本和模式构建明文多项式
+	vector<ZZX> pol_x(nslots);
+
+	//! 输入的内容
+	unsigned long input_x;
+	ZZX pol_slot;
+
+
+	//开始对输入进行拆分
+	while (*max_element(x.begin(), x.end()) > input_range)
+	{
+		for (int i = 0; i < x.size(); i++)
+		{
+			x[i] = x[i] + input_range - 1;
+			x[i] = x[i] / input_range;
+		}
+	} // SOLUTION 如果有距离超过范围，0会变成inputrange-1，除完以后还是0，其他的肯定是input range的倍数
+
+	for (int i = 0; i < x.size(); ++i)
+	{
+		input_x = x[i];
+
+		if (input_x < 0)
+		{
+			cout << "无法加密负数" << endl;
+			exit(0);
+		}
+
+		if (input_x > input_range)
+		{
+			cout << input_x << " 距离超过加密范围..." << endl;
+			input_x = input_range - 1; // FIXME 超过范围就直接设置成最大值
+		}
+
+		if (input_x == 0)
+		{
+			input_x = input_range - 1;
+		} // SOLUTION 特别处理，如果距离为0，就设为max
+
+		clo_k_index = x[clo_k_index] < input_x ? clo_k_index : i;
+
+		if (m_verbose)
+		{
+			cout << "Input " << i << endl;
+			cout << input_x << endl;
+		} // 判断是否输出信息
+
+		for (int j = 0; j < numbers_size; ++j)
+		{
+
+			vector<long> decomp_int_x;
+			vector<long> decomp_char;
+
+			digit_decomp(decomp_int_x, input_x, digit_base, m_expansionLen); // 分解数字
+
+			if (m_verbose && !j)
+			{
+				cout << "Input decomposition into digits" << endl;
+				for (int k = 0; k < m_expansionLen; k++)
+					cout << decomp_int_x[k] << endl;
+			} // 输出分解结果
+
+			for (int k = 0; k < m_expansionLen; ++k)
+			{ // 对槽进行编码
+				// 分解数字
+				int_to_slot(pol_slot, decomp_int_x[k], enc_base);
+				pol_x[j * m_expansionLen + k] = pol_slot;
+			}
+		} // encode-->packing-->encrypt
+
+		if (m_verbose)
+		{
+			cout << "Input" << endl;
+			for (int i = 0; i < nslots; i++)
+			{
+				printZZX(cout, pol_x[i], ord_p);
+				cout << endl;
+			}
+		} // 输出槽编码的结果
+
+		//! 加密
+		// Ctxt ctxt_x(m_pk);
+		ea.encrypt(result[i], m_pk, pol_x);
+		// result.push_back(ctxt_x);
+
+	} // 每个数字加密为一个ciphertext，packing的数字都一样
 
 	return result;
 }
@@ -551,7 +647,7 @@ int Comparator::decrypt_index(Ctxt ctxt)
 //大概0.003s
 vector<int> Comparator::decrypt_vec_index(vector<Ctxt> ctxt_vec)
 {
-	clock_t sta,end;
+	clock_t sta, end;
 	sta = clock();
 	// helib::Ptxt<helib::BGV> ptxt(m_context);
 	int p = m_context.getP();
@@ -562,7 +658,7 @@ vector<int> Comparator::decrypt_vec_index(vector<Ctxt> ctxt_vec)
 
 	for (int k = 0; k < ctxt_vec.size(); k++)
 	{
-		// int ptxt_index = 0;	
+		// int ptxt_index = 0;
 		// helib::Ptxt<helib::BGV> ptxt(m_context);
 
 		// m_sk.Decrypt(ptxt, ctxt_vec[k]);
@@ -585,10 +681,10 @@ vector<int> Comparator::decrypt_vec_index(vector<Ctxt> ctxt_vec)
 		// }
 		// cout<<ptxt_index<<endl;
 		// ptxt_vec[k] = ptxt_index;
-		ptxt_vec[k]=decrypt_index(ctxt_vec[k]);
+		ptxt_vec[k] = decrypt_index(ctxt_vec[k]);
 	}
 	end = clock();
-	cout<<"解密数组用时"<<(double)(end-sta)/CLOCKS_PER_SEC<<"S"<<endl;
+	cout << "解密数组用时" << (double)(end - sta) / CLOCKS_PER_SEC << "S" << endl;
 	return ptxt_vec;
 }
 
@@ -748,20 +844,23 @@ void Comparator::print_ctxt_info(string msg, vector<Ctxt> ctxt)
 void Comparator::he_to_ss(vector<Ctxt> vec, vector<int> &ss1, vector<int> &ss2)
 {
 	// vector<int>ss = decrypt_vec_index(vec);// 解密所有内容
-	for(int i=0;i<vec.size();i++){
-		int ctxt = decrypt_index(vec[i]);//解密内容
-		ss1[i] = rand()%(ctxt+1);
+	for (int i = 0; i < vec.size(); i++)
+	{
+		int ctxt = decrypt_index(vec[i]); //解密内容
+		ss1[i] = rand() % (ctxt + 1);
 		ss2[i] = ctxt - ss1[i];
 	}
 }
 
-void Comparator::dist_mark_to_ss(vector<Ctxt> ctxt_vec, vector<int>& ss1, vector<int>& ss2){
-	for(int i=0;i<ctxt_vec.size();i++){
+void Comparator::dist_mark_to_ss(vector<Ctxt> ctxt_vec, vector<int> &ss1, vector<int> &ss2)
+{
+	for (int i = 0; i < ctxt_vec.size(); i++)
+	{
 		int ptxt = decrypt_index(ctxt_vec[i]);
 
-		ptxt = ptxt==0?0:1;
+		ptxt = ptxt == 0 ? 0 : 1;
 
-		ss1[i]=rand() % 10;
-		ss2[i]=ptxt - ss1[i];
+		ss1[i] = rand() % 10;
+		ss2[i] = ptxt - ss1[i];
 	}
 }
