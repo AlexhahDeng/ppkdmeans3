@@ -15,35 +15,35 @@ struct point
 struct kd_node
 {
     long int node_point_num;          // number of points in current node
-    vector<Ctxt>ctxt_node_point_num;  // 虽然只有一个数，但是这样比较方便初始化
+    vector<Ctxt> ctxt_node_point_num; // 虽然只有一个数，但是这样比较方便初始化
     vector<int> N;                    // secret share of division info, size = data_num
     vector<int> node_sum_x;           // Σxi*Ni, size = dimension
     vector<int> ptxt_node_min;        // 记录明文node中的最大最小值-->麻了，不ss了
     vector<int> ptxt_node_max;
-    vector<Ctxt> ctxt_node_sum;       // 记录密文和
-    vector<Ctxt> node_min;            // store min value of every dimension in curr node, size = dimension 
-    vector<Ctxt> node_max;            // store max value of every dimension in curr node, size = dimension 
-    vector<Ctxt> ctxt_candi_k;        
-    vector<int> candidate_k;          // possible cluster belonging to
+    vector<Ctxt> ctxt_node_sum; // 记录密文和(非秘密共享值)
+    vector<Ctxt> node_min;      // store min value of every dimension in curr node, size = dimension
+    vector<Ctxt> node_max;      // store max value of every dimension in curr node, size = dimension
+    vector<Ctxt> ctxt_candi_k;
+    vector<int> candidate_k; // possible cluster belonging to
 
-    bool isClustered = false;         // 判断是否已经属于某个簇，true--则不进行任何操作，将child的属性设置为true；false则继续计算
+    bool isClustered = false; // 判断是否已经属于某个簇，true--则不进行任何操作，将child的属性设置为true；false则继续计算
 };
 
-class cloud 
+class cloud
 {
 public:
-    int k;                           // number of clusters
-    int data_num;                    // number of data record
-    int dimension;                   // dimension of a single point
+    int k;         // number of clusters
+    int data_num;  // number of data record
+    int dimension; // dimension of a single point
     // Ctxt ctxt_one
     Comparator *comparator;          // comparator for later comparison
     vector<point> point_list;        // store data for secret sharing
     vector<vector<int>> beaver_list; // beaver triple list for multiplication, size = data_num×3
     vector<kd_node> kd_tree;         // store data division info
 
-    vector<vector<int>> clu_cen;     // size = k × dimension, no need to initialize
-    vector<int>clu_point_num;        // len = k, update during iteration
-    vector<int>mul_point_num;        // multiply the number of points in clusters
+    vector<vector<int>> clu_cen; // size = k × dimension, no need to initialize
+    vector<int> clu_point_num;   // len = k, update during iteration
+    vector<int> mul_point_num;   // multiply the number of points in clusters
 
     cloud(vector<point> point_list, int data_num, int dimension, Comparator *comparator, int k);
 
@@ -60,33 +60,31 @@ public:
     vector<Ctxt> encrypt_variance(vector<int> vari);
 
     // 计算(αi*αi+1)的中间结果e，f
-    vector<vector<int>> calculate_po_num_ef(vector<int>&v);
+    vector<vector<int>> calculate_po_num_ef(vector<int> &v);
 
     // 计算距离的中间结果para的e，f
     vector<vector<int>> calculate_dist_para_ef(int node_index, int k_index);
 
     // 计算距离结果的ef
-    vector<vector<int>> calculate_dist_res_ef(vector<int>para);
+    vector<vector<int>> calculate_dist_res_ef(vector<int> para);
 
     // 计算avg*Ni --> size= data_num*dimension
-    void calculate_avg_N(vector<vector<int>>&e, vector<vector<int>>&f, vector<int>avg, int node_index);
+    void calculate_avg_N(vector<vector<int>> &e, vector<vector<int>> &f, vector<int> avg, int node_index);
 
     // 计算v*|z|的中间结果
-    vector<vector<int>> cal_vznum_ef(vector<int>v, int k_index);
+    vector<vector<int>> cal_vznum_ef(vector<int> v, int k_index);
 
     // 计算自己的平方！
-    vector<vector<int>> cal_vec_square(vector<int>arr);
+    vector<vector<int>> cal_vec_square(vector<int> arr);
 
     // 更新簇中心
-    void update_clu_cen_ef(int node_index, vector<int>ptxt_mark, vector<vector<int>>& e, vector<vector<int>>& f);
-
-
+    void update_clu_cen_ef(int node_index, vector<int> ptxt_mark, vector<vector<int>> &e, vector<vector<int>> &f);
 };
 
 class cloud_one : public cloud
 {
 public:
-    vector<vector<Ctxt>> ctxt_clu_cen;  // 密文的簇中心数据，方便在非叶节点部分，计算距离，进行prune操作
+    vector<vector<Ctxt>> ctxt_clu_cen; // 密文的簇中心数据，方便在非叶节点部分，计算距离，进行prune操作
 
     //! 按道理来说有个shuffling rules，这里先不写（问题可能有点大，但我不想写
 
@@ -105,23 +103,22 @@ public:
     Ctxt max_variance(vector<Ctxt> enc_variance, vector<Ctxt> zero_one);
 
     // cloud one using ef to get final result f*a1 + e*b1 + c1
-    vector<int> calculate_mul_final(vector<vector<int>>& ef);
+    vector<int> calculate_mul_final(vector<vector<int>> &ef);
 
     // cloud one calculate secret sharing distance parameters
-    vector<int> calculate_dist_para(vector<vector<int>>ef);
+    vector<int> calculate_dist_para(vector<vector<int>> ef);
 
     // cloud one calculate final distance result
-    int calculate_dist_res(vector<vector<int>>ef);
+    int calculate_dist_res(vector<vector<int>> ef);
 
     // cal v*|z| final res
-    vector<int> cal_vznum_final(vector<vector<int>>ef);
+    vector<int> cal_vznum_final(vector<vector<int>> ef);
 
     //cal square final
-    vector<int> cal_square_final(vector<vector<int>>ef);
+    vector<int> cal_square_final(vector<vector<int>> ef);
 
     // cal update clu cen final result
-    vector<vector<int>> update_clu_cen_final(vector<vector<int>>& e, vector<vector<int>>& f);
-
+    vector<vector<int>> update_clu_cen_final(vector<vector<int>> &e, vector<vector<int>> &f);
 };
 
 class cloud_two : public cloud
@@ -164,20 +161,19 @@ public:
     int decrypt_index(Ctxt enc_var_index);
 
     // cloud two using ef to calculate final result e*f + f*α2 + e*b2 + c2
-    vector<int> calculate_mul_final(vector<vector<int>>& ef);
+    vector<int> calculate_mul_final(vector<vector<int>> &ef);
 
     // cloud two calculate secret sharing distance parameters
     vector<int> calculate_dist_para(vector<vector<int>> ef);
 
     // cloud two calculate final distance result
-    int calculate_dist_res(vector<vector<int>>ef);
+    int calculate_dist_res(vector<vector<int>> ef);
 
     //
-    vector<int> cal_vznum_final(vector<vector<int>>ef);
+    vector<int> cal_vznum_final(vector<vector<int>> ef);
 
-    vector<int> cal_square_final(vector<vector<int>>ef);
+    vector<int> cal_square_final(vector<vector<int>> ef);
 
     // cal update clu cen final result
-    vector<vector<int>> update_clu_cen_final(vector<vector<int>>& e, vector<vector<int>>& f);
-    
+    vector<vector<int>> update_clu_cen_final(vector<vector<int>> &e, vector<vector<int>> &f);
 };
