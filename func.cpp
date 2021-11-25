@@ -196,8 +196,12 @@ void ini_clu_cen(cloud_one &c1, cloud_two &c2)
 	//			continue;
 	//		ran_index[count++] = k_index;
 	//	}
-	vector<int> ran_index{1, 2, 3};
+//	vector<int> ran_index{1, 2, 3};
 
+    vector<int> ran_index(c1.k);
+    for(int i=0;i<ran_index.size();i++){
+        ran_index[i] = rand() % c1.data_num;
+    }
 	for (auto k_index : ran_index)
 	{
 		c1.clu_cen.push_back(c1.point_list[k_index].data);

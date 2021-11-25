@@ -65,9 +65,6 @@ void filtering2(cloud_one &c1, cloud_two &c2)
 
         for (int node_index = 0; node_index < c1.kd_tree.size(); node_index++)
         {
-            // cout << "*******************************" << endl
-            //      << "正在聚类node " << node_index << endl;
-
             if (c1.kd_tree[node_index].isClustered)
             {
                 if (2 * node_index + 1 < c1.kd_tree.size())
@@ -79,8 +76,8 @@ void filtering2(cloud_one &c1, cloud_two &c2)
 
             int clo_k_index = 0;
             vector<long int> dist = cal_dist(c1, c2, node_index, 0);                   //计算node到每个簇的距离，非candidate的簇距离为0
-            vector<Ctxt> ctxt_dist = c1.comparator->encrypt_dist(dist, clo_k_index);   //加密距离
-            vector<Ctxt> min_dist_mark = c1.comparator->min_dist(ctxt_dist, ctxt_one); //求最近簇的标识
+            vector<Ctxt> ctxt_dist = c1.comparator->encrypt_dist(dist, clo_k_index);               //加密距离
+            vector<Ctxt> min_dist_mark = c1.comparator->min_dist(ctxt_dist, ctxt_one);      //求最近簇的标识
 
             if (c1.kd_tree[node_index].node_point_num > 3)
             { // not leaf node
@@ -94,10 +91,6 @@ void filtering2(cloud_one &c1, cloud_two &c2)
                         ctxt_clo_k[k] += ctxt_value;
                     }
                 } // 计算z*-->距离最近的簇
-
-                // 最近中心转ss
-                // vector<int> clo_k1(c1.dimension), clo_k2(clo_k1);
-                // c1.comparator->he_to_ss(ctxt_clo_k, clo_k1, clo_k2);
 
                 // 开始遍历所有簇
                 for (int k_index = 0; k_index < c1.k; k_index++)
@@ -230,10 +223,23 @@ void filtering2(cloud_one &c1, cloud_two &c2)
         end = clock();
         cout << "tot time " << (double)(end - sta) / CLOCKS_PER_SEC << "s" << endl;
 
-        c1.clu_cen = new_clu_cen1;
-        c2.clu_cen = new_clu_cen2;
-        c1.clu_point_num = new_clu_point_num1;
-        c2.clu_point_num = new_clu_point_num2;
+//        c1.clu_cen = new_clu_cen1;
+//        c2.clu_cen = new_clu_cen2;
+//        c1.clu_point_num = new_clu_point_num1;
+//        c2.clu_point_num = new_clu_point_num2;
+
+        // 利用除法看下正确性把！
+        for(int i=0;i<new_clu_cen1.size();i++){
+            for(int j=0;j<new_clu_cen1[0].size();j++){
+                if(new_clu_point_num1[i])
+                    c1.clu_cen[i][j]=(new_clu_cen1[i][j]+new_clu_cen2[i][j])/new_clu_point_num1[i];
+                else
+                    c1.clu_cen[i][j]=0;
+                c2.clu_cen[i][j]=0;
+            }
+        }
+        c1.clu_point_num = vector<int>(3, 1);
+        c2.clu_point_num = vector<int>(3, 0);
 
         for(int i=0;i<c1.kd_tree.size();i++){
             c1.kd_tree[i].isClustered = false;
@@ -393,7 +399,7 @@ int main()
     setbuf(stdout, 0);
     srand(time(NULL));
     // 初始化数据信息
-    int data_num = 100, dimension = 5;
+    int data_num = 8192, dimension = 5;
     vector<point> point_list, c1_data, c2_data;
 
     // 读取数据
