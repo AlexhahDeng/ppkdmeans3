@@ -63,19 +63,21 @@ public:
     vector<vector<int>> calculate_po_num_ef(vector<int> &v);
 
     // 计算距离的中间结果para的e，f
-    vector<vector<int>> calculate_dist_para_ef(int node_index, int k_index);
+    vector<vector<long int>> calculate_dist_para_ef(int node_index, int k_index);
 
     // 计算距离结果的ef
-    vector<vector<int>> calculate_dist_res_ef(vector<int> para);
+    vector<vector<long int>> calculate_dist_res_ef(vector<long int> para);
 
     // 计算avg*Ni --> size= data_num*dimension
     void calculate_avg_N(vector<vector<int>> &e, vector<vector<int>> &f, vector<int> avg, int node_index);
 
     // 计算v*|z|的中间结果
-    vector<vector<int>> cal_vznum_ef(vector<int> v, int k_index);
+    vector<vector<long int>> cal_vznum_ef(vector<long int> v, int k_index);
 
     // 计算自己的平方！
-    vector<vector<int>> cal_vec_square(vector<int> arr);
+    vector<vector<long int>> cal_vec_square(vector<int> arr);
+
+    vector<vector<long int>> cal_vec_square(vector<long int> arr);
 
     // 更新簇中心
     void update_clu_cen_ef(int node_index, vector<int> ptxt_mark, vector<vector<int>> &e, vector<vector<int>> &f);
@@ -106,16 +108,16 @@ public:
     vector<int> calculate_mul_final(vector<vector<int>> &ef);
 
     // cloud one calculate secret sharing distance parameters
-    vector<int> calculate_dist_para(vector<vector<int>> ef);
+    vector<long int> calculate_dist_para(vector<vector<long int>> ef);
 
     // cloud one calculate final distance result
-    int calculate_dist_res(vector<vector<int>> ef);
+    long int calculate_dist_res(vector<vector<long int>> ef);
 
     // cal v*|z| final res
-    vector<int> cal_vznum_final(vector<vector<int>> ef);
+    vector<long int> cal_vznum_final(vector<vector<long int>> ef);
 
     //cal square final
-    vector<int> cal_square_final(vector<vector<int>> ef);
+    vector<long int> cal_square_final(vector<vector<long int>> ef);
 
     // cal update clu cen final result
     vector<vector<int>> update_clu_cen_final(vector<vector<int>> &e, vector<vector<int>> &f);
@@ -164,15 +166,15 @@ public:
     vector<int> calculate_mul_final(vector<vector<int>> &ef);
 
     // cloud two calculate secret sharing distance parameters
-    vector<int> calculate_dist_para(vector<vector<int>> ef);
+    vector<long int> calculate_dist_para(vector<vector<long int>> ef);
 
     // cloud two calculate final distance result
-    int calculate_dist_res(vector<vector<int>> ef);
+    long int calculate_dist_res(vector<vector<long int>> ef);
 
     //
-    vector<int> cal_vznum_final(vector<vector<int>> ef);
+    vector<long int> cal_vznum_final(vector<vector<long int>> ef);
 
-    vector<int> cal_square_final(vector<vector<int>> ef);
+    vector<long int> cal_square_final(vector<vector<long int>> ef);
 
     // cal update clu cen final result
     vector<vector<int>> update_clu_cen_final(vector<vector<int>> &e, vector<vector<int>> &f);

@@ -4,125 +4,139 @@
 	<Project>
 		<Option title="pp3"/>
 		<Option makefile_is_custom="1"/>
-		<Option compiler="gcc"/>
-		<Option virtualFolders="CMake Files\;CMake Files\..\;CMake Files\..\..\;CMake Files\..\..\..\;CMake Files\..\..\..\..\;CMake Files\..\..\..\..\usr\;CMake Files\..\..\..\..\usr\local\;CMake Files\..\..\..\..\usr\local\helib_pack\;CMake Files\..\..\..\..\usr\local\helib_pack\share\;CMake Files\..\..\..\..\usr\local\helib_pack\share\cmake\;CMake Files\..\..\..\..\usr\local\helib_pack\share\cmake\helib\;"/>
+		<Option compiler="clang"/>
+		<Option virtualFolders="CMake Files\;CMake Files\..\;CMake Files\..\..\;CMake Files\..\..\helib_install\;CMake Files\..\..\helib_install\helib_pack\;CMake Files\..\..\helib_install\helib_pack\share\;CMake Files\..\..\helib_install\helib_pack\share\cmake\;CMake Files\..\..\helib_install\helib_pack\share\cmake\helib\;"/>
 		<Build>
 			<Target title="all">
-				<Option working_dir="/home/dd/Ubu20/ppkdmeans3"/>
+				<Option working_dir="/home/sonwi/CodeMaster/ppkdmeans3"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -f &quot;/home/dd/Ubu20/ppkdmeans3/Makefile&quot;  VERBOSE=1 all"/>
-					<CompileFile command="/usr/bin/make -f &quot;/home/dd/Ubu20/ppkdmeans3/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -f &quot;/home/dd/Ubu20/ppkdmeans3/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -f &quot;/home/dd/Ubu20/ppkdmeans3/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j36 -f &quot;/home/sonwi/CodeMaster/ppkdmeans3/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j36 -f &quot;/home/sonwi/CodeMaster/ppkdmeans3/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j36 -f &quot;/home/sonwi/CodeMaster/ppkdmeans3/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j36 -f &quot;/home/sonwi/CodeMaster/ppkdmeans3/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="rebuild_cache">
-				<Option working_dir="/home/dd/Ubu20/ppkdmeans3"/>
+				<Option working_dir="/home/sonwi/CodeMaster/ppkdmeans3"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -f &quot;/home/dd/Ubu20/ppkdmeans3/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
-					<CompileFile command="/usr/bin/make -f &quot;/home/dd/Ubu20/ppkdmeans3/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -f &quot;/home/dd/Ubu20/ppkdmeans3/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -f &quot;/home/dd/Ubu20/ppkdmeans3/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j36 -f &quot;/home/sonwi/CodeMaster/ppkdmeans3/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j36 -f &quot;/home/sonwi/CodeMaster/ppkdmeans3/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j36 -f &quot;/home/sonwi/CodeMaster/ppkdmeans3/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j36 -f &quot;/home/sonwi/CodeMaster/ppkdmeans3/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="edit_cache">
-				<Option working_dir="/home/dd/Ubu20/ppkdmeans3"/>
+				<Option working_dir="/home/sonwi/CodeMaster/ppkdmeans3"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -f &quot;/home/dd/Ubu20/ppkdmeans3/Makefile&quot;  VERBOSE=1 edit_cache"/>
-					<CompileFile command="/usr/bin/make -f &quot;/home/dd/Ubu20/ppkdmeans3/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -f &quot;/home/dd/Ubu20/ppkdmeans3/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -f &quot;/home/dd/Ubu20/ppkdmeans3/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j36 -f &quot;/home/sonwi/CodeMaster/ppkdmeans3/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j36 -f &quot;/home/sonwi/CodeMaster/ppkdmeans3/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j36 -f &quot;/home/sonwi/CodeMaster/ppkdmeans3/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j36 -f &quot;/home/sonwi/CodeMaster/ppkdmeans3/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="pp3">
-				<Option output="/home/dd/Ubu20/ppkdmeans3/pp3" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/dd/Ubu20/ppkdmeans3"/>
+				<Option output="/home/sonwi/CodeMaster/ppkdmeans3/pp3" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/sonwi/CodeMaster/ppkdmeans3"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
-				<Option compiler="gcc"/>
+				<Option compiler="clang"/>
 				<Compiler>
 					<Add option="-DHELIB_THREADS"/>
 					<Add option="-DHELIB_BOOT_THREADS"/>
-					<Add directory="/home/dd/Ubu20/ppkdmeans3"/>
-					<Add directory="/usr/local/helib_pack/include"/>
+					<Add directory="/home/sonwi/CodeMaster/ppkdmeans3"/>
+					<Add directory="/home/sonwi/helib_install/helib_pack/include"/>
+					<Add directory="/usr/bin/../lib/gcc/x86_64-linux-gnu/9/../../../../include/c++/9"/>
+					<Add directory="/usr/bin/../lib/gcc/x86_64-linux-gnu/9/../../../../include/x86_64-linux-gnu/c++/9"/>
+					<Add directory="/usr/bin/../lib/gcc/x86_64-linux-gnu/9/../../../../include/c++/9/backward"/>
+					<Add directory="/usr/lib/llvm-13/lib/clang/13.0.0/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -f &quot;/home/dd/Ubu20/ppkdmeans3/Makefile&quot;  VERBOSE=1 pp3"/>
-					<CompileFile command="/usr/bin/make -f &quot;/home/dd/Ubu20/ppkdmeans3/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -f &quot;/home/dd/Ubu20/ppkdmeans3/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -f &quot;/home/dd/Ubu20/ppkdmeans3/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j36 -f &quot;/home/sonwi/CodeMaster/ppkdmeans3/Makefile&quot;  VERBOSE=1 pp3"/>
+					<CompileFile command="/usr/bin/make -j36 -f &quot;/home/sonwi/CodeMaster/ppkdmeans3/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j36 -f &quot;/home/sonwi/CodeMaster/ppkdmeans3/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j36 -f &quot;/home/sonwi/CodeMaster/ppkdmeans3/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="pp3/fast">
-				<Option output="/home/dd/Ubu20/ppkdmeans3/pp3" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/dd/Ubu20/ppkdmeans3"/>
+				<Option output="/home/sonwi/CodeMaster/ppkdmeans3/pp3" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/sonwi/CodeMaster/ppkdmeans3"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
-				<Option compiler="gcc"/>
+				<Option compiler="clang"/>
 				<Compiler>
 					<Add option="-DHELIB_THREADS"/>
 					<Add option="-DHELIB_BOOT_THREADS"/>
-					<Add directory="/home/dd/Ubu20/ppkdmeans3"/>
-					<Add directory="/usr/local/helib_pack/include"/>
+					<Add directory="/home/sonwi/CodeMaster/ppkdmeans3"/>
+					<Add directory="/home/sonwi/helib_install/helib_pack/include"/>
+					<Add directory="/usr/bin/../lib/gcc/x86_64-linux-gnu/9/../../../../include/c++/9"/>
+					<Add directory="/usr/bin/../lib/gcc/x86_64-linux-gnu/9/../../../../include/x86_64-linux-gnu/c++/9"/>
+					<Add directory="/usr/bin/../lib/gcc/x86_64-linux-gnu/9/../../../../include/c++/9/backward"/>
+					<Add directory="/usr/lib/llvm-13/lib/clang/13.0.0/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -f &quot;/home/dd/Ubu20/ppkdmeans3/Makefile&quot;  VERBOSE=1 pp3/fast"/>
-					<CompileFile command="/usr/bin/make -f &quot;/home/dd/Ubu20/ppkdmeans3/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -f &quot;/home/dd/Ubu20/ppkdmeans3/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -f &quot;/home/dd/Ubu20/ppkdmeans3/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j36 -f &quot;/home/sonwi/CodeMaster/ppkdmeans3/Makefile&quot;  VERBOSE=1 pp3/fast"/>
+					<CompileFile command="/usr/bin/make -j36 -f &quot;/home/sonwi/CodeMaster/ppkdmeans3/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j36 -f &quot;/home/sonwi/CodeMaster/ppkdmeans3/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j36 -f &quot;/home/sonwi/CodeMaster/ppkdmeans3/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/home/dd/Ubu20/ppkdmeans3/cloud.cpp">
+		<Unit filename="/home/sonwi/CodeMaster/ppkdmeans3/cloud.cpp">
 			<Option target="pp3"/>
 		</Unit>
-		<Unit filename="/home/dd/Ubu20/ppkdmeans3/cloud.h">
+		<Unit filename="/home/sonwi/CodeMaster/ppkdmeans3/cloud.h">
 			<Option target="pp3"/>
 		</Unit>
-		<Unit filename="/home/dd/Ubu20/ppkdmeans3/comparator.cpp">
+		<Unit filename="/home/sonwi/CodeMaster/ppkdmeans3/comparator.cpp">
 			<Option target="pp3"/>
 		</Unit>
-		<Unit filename="/home/dd/Ubu20/ppkdmeans3/comparator.h">
+		<Unit filename="/home/sonwi/CodeMaster/ppkdmeans3/comparator.h">
 			<Option target="pp3"/>
 		</Unit>
-		<Unit filename="/home/dd/Ubu20/ppkdmeans3/func.cpp">
+		<Unit filename="/home/sonwi/CodeMaster/ppkdmeans3/func.cpp">
 			<Option target="pp3"/>
 		</Unit>
-		<Unit filename="/home/dd/Ubu20/ppkdmeans3/func.h">
+		<Unit filename="/home/sonwi/CodeMaster/ppkdmeans3/func.h">
 			<Option target="pp3"/>
 		</Unit>
-		<Unit filename="/home/dd/Ubu20/ppkdmeans3/my_tools.cpp">
+		<Unit filename="/home/sonwi/CodeMaster/ppkdmeans3/my_tools.cpp">
 			<Option target="pp3"/>
 		</Unit>
-		<Unit filename="/home/dd/Ubu20/ppkdmeans3/my_tools.h">
+		<Unit filename="/home/sonwi/CodeMaster/ppkdmeans3/my_tools.h">
 			<Option target="pp3"/>
 		</Unit>
-		<Unit filename="/home/dd/Ubu20/ppkdmeans3/pp3.cpp">
+		<Unit filename="/home/sonwi/CodeMaster/ppkdmeans3/pp3.cpp">
 			<Option target="pp3"/>
 		</Unit>
-		<Unit filename="/home/dd/Ubu20/ppkdmeans3/tools.cpp">
+		<Unit filename="/home/sonwi/CodeMaster/ppkdmeans3/tools.cpp">
 			<Option target="pp3"/>
 		</Unit>
-		<Unit filename="/home/dd/Ubu20/ppkdmeans3/tools.h">
+		<Unit filename="/home/sonwi/CodeMaster/ppkdmeans3/tools.h">
 			<Option target="pp3"/>
 		</Unit>
-		<Unit filename="/home/dd/Ubu20/ppkdmeans3/CMakeLists.txt">
+		<Unit filename="/home/sonwi/CodeMaster/ppkdmeans3/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
-		<Unit filename="/home/dd/Ubu20/ppkdmeans3/../../../../usr/local/helib_pack/share/cmake/helib/helibConfig.cmake">
-			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\helib_pack\share\cmake\helib\"/>
+		<Unit filename="/home/sonwi/CodeMaster/ppkdmeans3/../../helib_install/helib_pack/share/cmake/helib/helibConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\helib_install\helib_pack\share\cmake\helib\"/>
 		</Unit>
-		<Unit filename="/home/dd/Ubu20/ppkdmeans3/../../../../usr/local/helib_pack/share/cmake/helib/helibConfigVersion.cmake">
-			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\helib_pack\share\cmake\helib\"/>
+		<Unit filename="/home/sonwi/CodeMaster/ppkdmeans3/../../helib_install/helib_pack/share/cmake/helib/helibConfigVersion.cmake">
+			<Option virtualFolder="CMake Files\..\..\helib_install\helib_pack\share\cmake\helib\"/>
 		</Unit>
-		<Unit filename="/home/dd/Ubu20/ppkdmeans3/../../../../usr/local/helib_pack/share/cmake/helib/helibTargets-relwithdebinfo.cmake">
-			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\helib_pack\share\cmake\helib\"/>
+		<Unit filename="/home/sonwi/CodeMaster/ppkdmeans3/../../helib_install/helib_pack/share/cmake/helib/helibTargets-relwithdebinfo.cmake">
+			<Option virtualFolder="CMake Files\..\..\helib_install\helib_pack\share\cmake\helib\"/>
 		</Unit>
-		<Unit filename="/home/dd/Ubu20/ppkdmeans3/../../../../usr/local/helib_pack/share/cmake/helib/helibTargets.cmake">
-			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\helib_pack\share\cmake\helib\"/>
+		<Unit filename="/home/sonwi/CodeMaster/ppkdmeans3/../../helib_install/helib_pack/share/cmake/helib/helibTargets.cmake">
+			<Option virtualFolder="CMake Files\..\..\helib_install\helib_pack\share\cmake\helib\"/>
 		</Unit>
 	</Project>
 </CodeBlocks_project_file>

@@ -319,7 +319,7 @@ vector<Ctxt> Comparator::encrypt_vector(vector<int> x)
 	return result;
 }
 
-vector<Ctxt> Comparator::encrypt_dist_vk(vector<int> x)
+vector<Ctxt> Comparator::encrypt_dist_vk(vector<long int> x)
 {
 	clock_t start, end;
 	// start = clock();
@@ -362,13 +362,12 @@ vector<Ctxt> Comparator::encrypt_dist_vk(vector<int> x)
 	ZZX pol_slot;
 
 	// 开始对输入进行拆分
-	if (*max_element(x.begin(), x.end()) > input_range)
+	for (int i = 0; i < x.size(); i++)
 	{
-		for (int i = 0; i < x.size(); i++)
-		{
-			x[i] /= input_range;
-		}
-	} // SOLUTION 普通的两数比较，直接除以范围把！
+		x[i] += 1;
+		long double tmp = log((long double)x[i]);
+		x[i] = tmp * 1000;
+	}
 	for (int i = 0; i < x.size(); ++i)
 	{
 		input_x = x[i];
@@ -432,7 +431,7 @@ vector<Ctxt> Comparator::encrypt_dist_vk(vector<int> x)
 
 	return result;
 }
-vector<Ctxt> Comparator::encrypt_dist(vector<int> x, int &clo_k_index)
+vector<Ctxt> Comparator::encrypt_dist(vector<long int> x, int &clo_k_index)
 {
 	clock_t start, end;
 	Ctxt ctxt_x(m_pk);
@@ -470,16 +469,13 @@ vector<Ctxt> Comparator::encrypt_dist(vector<int> x, int &clo_k_index)
 	unsigned long input_x;
 	ZZX pol_slot;
 
-
 	//开始对输入进行拆分
-	while (*max_element(x.begin(), x.end()) > input_range)
+	for (int i = 0; i < x.size(); i++)
 	{
-		for (int i = 0; i < x.size(); i++)
-		{
-			x[i] = x[i] + input_range - 1;
-			x[i] = x[i] / input_range;
-		}
-	} // SOLUTION 如果有距离超过范围，0会变成inputrange-1，除完以后还是0，其他的肯定是input range的倍数
+		x[i] += 1;
+		long double tmp = log((long double)x[i]);
+		x[i] = tmp * 1000;
+	}
 
 	for (int i = 0; i < x.size(); ++i)
 	{

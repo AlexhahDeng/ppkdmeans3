@@ -16,18 +16,18 @@ using namespace std;
 //! tools for myself
 
 // 对每个维度的数据进行快速排序
-void quick_sort(vector<point>& s, int dimension, int l, int r);
+void quick_sort(vector<point> &s, int dimension, int l, int r);
 
 // 随机生成数据，但是不考虑能否正确聚类
-void random(vector<point>& point_list, int n, int m);
+void random(vector<point> &point_list, int n, int m);
 
 // 读取需要聚类的数据
 vector<point> read_data(int data_num, int dimension);
 // 拆分数据
-void divide_data(vector<point>point_list, int data_range, vector<point>&c1, vector<point>&c2);
+void divide_data(vector<point> point_list, int data_range, vector<point> &c1, vector<point> &c2);
 
 // 对数据排序
-vector<vector<int>> sort_data(vector<point>point_list);
+vector<vector<int>> sort_data(vector<point> point_list);
 
 /**
  * @brief 生成beaver三元组
@@ -37,12 +37,12 @@ vector<vector<int>> sort_data(vector<point>point_list);
  * @param c1_list 赋给c1
  * @param c2_list 赋给c2
  */
-void generate_beaver_set(int n, int data_range, vector<vector<int>>&c1_list, vector<vector<int>>&c2_list);
+void generate_beaver_set(int n, int data_range, vector<vector<int>> &c1_list, vector<vector<int>> &c2_list);
 
 // 固定化测试数据
 void tmp_data(vector<point> &point_list);
 
-// func: 
+// func:
 /**
  * @brief 用户初始化簇中心，确保点不重复--checked
  * 
@@ -51,7 +51,7 @@ void tmp_data(vector<point> &point_list);
  */
 void ini_clu_cen(cloud_one &c1, cloud_two &c2);
 
-// func: 
+// func:
 /**
  * @brief 用户初始化候选中心和初始簇中心标识给root--checked
  * 
@@ -63,7 +63,7 @@ void ini_candidate_k(cloud_one &c1, cloud_two &c2);
 /**
  * @brief 预计算簇中心连乘的结果，最后get{α1...αk,α}存入c1 and c2 *checked
  */
-void mul_clu_point_num(cloud_one& c1, cloud_two& c2);
+void mul_clu_point_num(cloud_one &c1, cloud_two &c2);
 
 /**
  * @brief 向量内互不相同元素按顺序两两相乘，返回数组的size=k
@@ -73,13 +73,12 @@ void mul_clu_point_num(cloud_one& c1, cloud_two& c2);
  * @param node_index 该节点到簇的距离
  * @return vector<int> 到每个簇的距离, 除去不在候选中心的距离-->设置为0
  */
-vector<int> cal_dist(cloud_one &c1, cloud_two &c2, int node_index, int tot_can_num);
+vector<long int> cal_dist(cloud_one &c1, cloud_two &c2, int node_index, int tot_can_num);
 
+vector<vector<long int>> cal_v_znum(cloud_one &c1, cloud_two &c2, vector<long int> v1, vector<long int> v2, int k_index);
 
-vector<vector<int>> cal_v_znum(cloud_one &c1, cloud_two &c2, vector<int> v1, vector<int> v2, int k_index);
+vector<long int> cal_vz_sqaure(cloud_one &c1, cloud_two &c2, vector<vector<long int>> vz, int k_index);
 
-vector<int> cal_vz_sqaure(cloud_one &c1, cloud_two &c2, vector<vector<int>>vz, int k_index);
+vector<vector<long int>> cal_knum_square(cloud_one &c1, cloud_two &c2);
 
-vector<vector<int>> cal_knum_square(cloud_one &c1, cloud_two& c2);
-
-vector<int> mul_two(cloud_one &c1, cloud_two &c2, vector<int> numa, vector<int> numb);
+vector<long int> mul_two(cloud_one &c1, cloud_two &c2, vector<long int> numa, vector<long int> numb);

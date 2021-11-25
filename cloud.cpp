@@ -83,10 +83,10 @@ vector<vector<int>> cloud::calculate_po_num_ef(vector<int> &v)
     return result;
 }
 
-vector<vector<int>> cloud::calculate_dist_res_ef(vector<int> para)
+vector<vector<long int>> cloud::calculate_dist_res_ef(vector<long int> para)
 {
     // 0--Σc^2, 1--Σk^2, 2--Σci*ki, 3--α^2, 4--αj^2, 5--ααj，para的长度为6
-    vector<vector<int>> result(3, vector<int>(2)); // 总共三项
+    vector<vector<long int>> result(3, vector<long int>(2)); // 总共三项
 
     int i = 0;
     result[i][0] = para[0] - beaver_list[i][0]; // c^2 - a = e
@@ -103,9 +103,9 @@ vector<vector<int>> cloud::calculate_dist_res_ef(vector<int> para)
     return result;
 }
 
-vector<vector<int>> cloud::calculate_dist_para_ef(int node_index, int k_index)
+vector<vector<long int>> cloud::calculate_dist_para_ef(int node_index, int k_index)
 {
-    vector<vector<int>> ef(dimension * 3 + 3, vector<int>(2));
+    vector<vector<long int>> ef(dimension * 3 + 3, vector<long int>(2));
     // 按照node中心{c0...cd},{k0...kd},{α, αj}的顺序依次排开
     int i = 0;
     while (i < dimension)
@@ -143,9 +143,9 @@ vector<vector<int>> cloud::calculate_dist_para_ef(int node_index, int k_index)
     return ef;
 }
 
-vector<vector<int>> cloud::cal_vznum_ef(vector<int> v, int k_index)
+vector<vector<long int>> cloud::cal_vznum_ef(vector<long int> v, int k_index)
 {
-    vector<vector<int>> ef(v.size(), vector<int>(2)); // dimension*2, 0--e, 1--f
+    vector<vector<long int>> ef(v.size(), vector<long int>(2)); // dimension*2, 0--e, 1--f
     for (int i = 0; i < v.size(); i++)
     {
         ef[i][0] = v[i] - beaver_list[i][0];                   // v[i] -a
@@ -166,9 +166,9 @@ void cloud::calculate_avg_N(vector<vector<int>> &e, vector<vector<int>> &f, vect
     }
 }
 
-vector<vector<int>> cloud::cal_vec_square(vector<int> arr)
+vector<vector<long int>> cloud::cal_vec_square(vector<long int> arr)
 {
-    vector<vector<int>> ef(arr.size(), vector<int>(2));
+    vector<vector<long int>> ef(arr.size(), vector<long int>(2));
 
     for (int i = 0; i < arr.size(); i++)
     {
@@ -177,7 +177,17 @@ vector<vector<int>> cloud::cal_vec_square(vector<int> arr)
     }
     return ef;
 }
+vector<vector<long int>> cloud::cal_vec_square(vector<int> arr)
+{
+    vector<vector<long int>> ef(arr.size(), vector<long int>(2));
 
+    for (int i = 0; i < arr.size(); i++)
+    {
+        ef[i][0] = arr[i] - beaver_list[i][0]; // arr -a
+        ef[i][1] = arr[i] - beaver_list[i][1]; // arr -b
+    }
+    return ef;
+}
 void cloud::update_clu_cen_ef(int node_index, vector<int> ptxt_mark, vector<vector<int>> &e, vector<vector<int>> &f)
 {
     vector<int> num = kd_tree[node_index].node_sum_x;
@@ -253,15 +263,15 @@ vector<int> cloud_one::calculate_mul_final(vector<vector<int>> &ef)
     return result;
 }
 
-vector<int> cloud_one::calculate_dist_para(vector<vector<int>> ef)
+vector<long int> cloud_one::calculate_dist_para(vector<vector<long int>> ef)
 {
-    vector<int> para(ef.size());
+    vector<long int> para(ef.size());
     for (int i = 0; i < ef.size(); i++)
     {
         para[i] = ef[i][0] * beaver_list[i][1] + ef[i][1] * beaver_list[i][0] + beaver_list[i][2];
     }
-    vector<int> result(6);
-    int sum_c_square = 0, sum_k_square = 0, c_mul_k = 0, i = 0;
+    vector<long int> result(6);
+    long int sum_c_square = 0, sum_k_square = 0, c_mul_k = 0, i = 0;
     // Σc^2
     while (i < dimension)
         sum_c_square += para[i++];
@@ -284,9 +294,9 @@ vector<int> cloud_one::calculate_dist_para(vector<vector<int>> ef)
     return result;
 }
 
-int cloud_one::calculate_dist_res(vector<vector<int>> ef)
+long int cloud_one::calculate_dist_res(vector<vector<long int>> ef)
 {
-    vector<int> para(ef.size());
+    vector<long int> para(ef.size());
     for (int i = 0; i < ef.size(); i++)
     {
         para[i] = ef[i][0] * beaver_list[i][1] + ef[i][1] * beaver_list[i][0] + beaver_list[i][2];
@@ -294,9 +304,9 @@ int cloud_one::calculate_dist_res(vector<vector<int>> ef)
     return para[0] - 2 * para[1] + para[2];
 }
 
-vector<int> cloud_one::cal_vznum_final(vector<vector<int>> ef)
+vector<long int> cloud_one::cal_vznum_final(vector<vector<long int>> ef)
 {
-    vector<int> res(ef.size());
+    vector<long int> res(ef.size());
 
     for (int i = 0; i < ef.size(); i++)
     {
@@ -340,20 +350,14 @@ vector<vector<int>> cloud_two::calculate_xi_Ni_square(vector<vector<int>> &e, ve
     return result;
 }
 
-vector<int> cloud_two::calculate_sec_part(vector<vector<int>> ef, int n)
-{
+vector<int> cloud_two::calculate_sec_part(vector<vector<int>> ef, int n) {
     // n is the number of points in this tree node
     vector<int> result(ef.size(), 0);
     for (int i = 0; i < ef.size(); ++i)
-        result[i] = int((ef[i][0] * ef[i][1] + ef[i][1] * beaver_list[i][0] + ef[i][0] * beaver_list[i][1] + beaver_list[i][2]) / n);
+        result[i] = int((ef[i][0] * ef[i][1] + ef[i][1] * beaver_list[i][0] + ef[i][0] * beaver_list[i][1] +
+                         beaver_list[i][2]) / n);
 
     return result;
-}
-
-int cloud_two::decrypt_index(Ctxt enc_var_index)
-{
-
-    return 1;
 }
 
 void cloud_two::divide_data_set(Ctxt enc_index, cloud_one &c1, vector<int> &N, int curr_data_num, int N_index)
@@ -448,15 +452,15 @@ vector<int> cloud_two::calculate_mul_final(vector<vector<int>> &ef)
     return result;
 }
 
-vector<int> cloud_two::calculate_dist_para(vector<vector<int>> ef)
+vector<long int> cloud_two::calculate_dist_para(vector<vector<long int >> ef)
 {
-    vector<int> para(ef.size());
+    vector<long int> para(ef.size());
     for (int i = 0; i < ef.size(); i++)
     {
         para[i] = ef[i][1] * ef[i][0] + ef[i][0] * beaver_list[i][1] + ef[i][1] * beaver_list[i][0] + beaver_list[i][2];
     }
 
-    vector<int> result(6);
+    vector<long int> result(6);
     int sum_c_square = 0, sum_k_square = 0, c_mul_k = 0, i = 0;
     // Σc^2
     while (i < dimension)
@@ -480,9 +484,9 @@ vector<int> cloud_two::calculate_dist_para(vector<vector<int>> ef)
     return result;
 }
 
-int cloud_two::calculate_dist_res(vector<vector<int>> ef)
+long int cloud_two::calculate_dist_res(vector<vector<long int>> ef)
 {
-    vector<int> para(ef.size());
+    vector<long int> para(ef.size());
     for (int i = 0; i < ef.size(); i++)
     {
         para[i] = ef[i][0] * ef[i][1] + ef[i][0] * beaver_list[i][1] + ef[i][1] * beaver_list[i][0] + beaver_list[i][2];
@@ -490,9 +494,9 @@ int cloud_two::calculate_dist_res(vector<vector<int>> ef)
     return para[0] - 2 * para[1] + para[2];
 }
 
-vector<int> cloud_two::cal_vznum_final(vector<vector<int>> ef)
+vector<long int> cloud_two::cal_vznum_final(vector<vector<long int>> ef)
 {
-    vector<int> res(ef.size());
+    vector<long int> res(ef.size());
 
     for (int i = 0; i < ef.size(); i++)
     {
@@ -502,9 +506,9 @@ vector<int> cloud_two::cal_vznum_final(vector<vector<int>> ef)
     return res;
 }
 
-vector<int> cloud_one::cal_square_final(vector<vector<int>> ef)
+vector<long int> cloud_one::cal_square_final(vector<vector<long int>> ef)
 {
-    vector<int> result(ef.size());
+    vector<long int> result(ef.size());
     for (int i = 0; i < ef.size(); i++)
     {
         result[i] = ef[i][0] * beaver_list[i][1] + ef[i][1] * beaver_list[i][0] + beaver_list[i][2];
@@ -512,9 +516,9 @@ vector<int> cloud_one::cal_square_final(vector<vector<int>> ef)
     return result;
 }
 
-vector<int> cloud_two::cal_square_final(vector<vector<int>> ef)
+vector<long int> cloud_two::cal_square_final(vector<vector<long int>> ef)
 {
-    vector<int> result(ef.size());
+    vector<long int> result(ef.size());
     for (int i = 0; i < ef.size(); i++)
     {
         result[i] = ef[i][1] * ef[i][0] + ef[i][0] * beaver_list[i][1] + ef[i][1] * beaver_list[i][0] + beaver_list[i][2];
