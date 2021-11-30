@@ -46,7 +46,7 @@ void filtering2(cloud_one &c1, cloud_two &c2)
     Ctxt less_than = ctxt_one;
 
     int iter = 0;
-    while (iter < 5)
+    while (iter < 10)
     {
         cout << "**********iteration" << iter << "**********" << endl;
         clock_t sta, end;
@@ -223,27 +223,27 @@ void filtering2(cloud_one &c1, cloud_two &c2)
         end = clock();
         cout << "tot time " << (double)(end - sta) / CLOCKS_PER_SEC << "s" << endl;
 
-//        c1.clu_cen = new_clu_cen1;
-//        c2.clu_cen = new_clu_cen2;
-//        c1.clu_point_num = new_clu_point_num1;
-//        c2.clu_point_num = new_clu_point_num2;
+       c1.clu_cen = new_clu_cen1;
+       c2.clu_cen = new_clu_cen2;
+       c1.clu_point_num = new_clu_point_num1;
+       c2.clu_point_num = new_clu_point_num2;
 
         // 利用除法看下正确性把！
-        for(int i=0;i<new_clu_cen1.size();i++){
-            for(int j=0;j<new_clu_cen1[0].size();j++){
-                if(new_clu_point_num1[i])
-                    c1.clu_cen[i][j]=(new_clu_cen1[i][j]+new_clu_cen2[i][j])/new_clu_point_num1[i];
-                else
-                    c1.clu_cen[i][j]=0;
-                c2.clu_cen[i][j]=0;
-            }
-        }
-        c1.clu_point_num = vector<int>(3, 1);
-        c2.clu_point_num = vector<int>(3, 0);
+        // for(int i=0;i<new_clu_cen1.size();i++){
+        //     for(int j=0;j<new_clu_cen1[0].size();j++){
+        //         if(new_clu_point_num1[i])
+        //             c1.clu_cen[i][j]=(new_clu_cen1[i][j]+new_clu_cen2[i][j])/new_clu_point_num1[i];
+        //         else
+        //             c1.clu_cen[i][j]=0;
+        //         c2.clu_cen[i][j]=0;
+        //     }
+        // }
+        // c1.clu_point_num = vector<int>(3, 1);
+        // c2.clu_point_num = vector<int>(3, 0);
 
-        for(int i=0;i<c1.kd_tree.size();i++){
-            c1.kd_tree[i].isClustered = false;
-        }
+        // for(int i=0;i<c1.kd_tree.size();i++){
+        //     c1.kd_tree[i].isClustered = false;
+        // }
 
         iter++;
     }
@@ -399,7 +399,7 @@ int main()
     setbuf(stdout, 0);
     srand(time(NULL));
     // 初始化数据信息
-    int data_num = 8192, dimension = 5;
+    int data_num = 20, dimension = 5;
     vector<point> point_list, c1_data, c2_data;
 
     // 读取数据
